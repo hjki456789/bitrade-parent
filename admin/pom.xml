@@ -155,13 +155,13 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <!-- main 入口 -->
+<!--                <configuration>
+                    &lt;!&ndash; main 入口 &ndash;&gt;
                     <mainClass>cn.ztuo.bitrade.WebApplication</mainClass>
-                    <!-- 设置为ZIP，此模式下spring-boot-maven-plugin会将Manifest.MF文件中的Main-Class设置为org.springframework.boot.loader.PropertiesLauncher -->
+                    &lt;!&ndash; 设置为ZIP，此模式下spring-boot-maven-plugin会将Manifest.MF文件中的Main-Class设置为org.springframework.boot.loader.PropertiesLauncher &ndash;&gt;
                     <layout>ZIP</layout>
                     <outputDirectory>${user.dir}/target</outputDirectory>
-                    <!-- 需要包含的jar包 -->
+                    &lt;!&ndash; 需要包含的jar包 &ndash;&gt;
                     <includes>
                         <include>
                             <groupId>cn.ztuo.bitrade</groupId>
@@ -181,6 +181,7 @@
                         </include>
                     </includes>
                 </configuration>
+                -->
                 <executions>
                     <execution>
                         <goals>

@@ -40,7 +40,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.jdk_version>1.8</project.build.jdk_version>
 		<!-- spring -->
-		<spring-cloud.version>Hoxton.RC2</spring-cloud.version>
+		<spring-cloud.version>Hoxton.SR8</spring-cloud.version>
 		<spring-boot_version>2.2.1.RELEASE</spring-boot_version>
 		<!-- 数据库连接 -->
 		<druid_version>1.1.21</druid_version>
