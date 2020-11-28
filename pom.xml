@@ -26,7 +26,8 @@
         <module>netty</module>
 		<module>gateway</module>
 		<module>wallet</module>
-    </modules>
+		<module>vote</module>
+	</modules>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
