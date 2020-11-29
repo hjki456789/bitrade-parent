@@ -234,4 +234,43 @@ public class Coin {
     @OneToMany(fetch = FetchType.EAGER, mappedBy="coin")
     @JsonIgnore
     private List<CoinChainRelation> coinChainRelationList;
+
+
+    private String contractAddress;
+    private int chainType;
+    private int enablePool;
+    private int coinArea;
+
+    public Coin() {
+        this.status = CommonStatus.NORMAL;
+        this.enableRpc = BooleanEnum.IS_TRUE;
+        this.sort = 10;
+        this.canWithdraw = BooleanEnum.IS_TRUE;
+        this.canRecharge = BooleanEnum.IS_TRUE;
+        this.canTransfer = BooleanEnum.IS_TRUE;
+        this.canAutoWithdraw = BooleanEnum.IS_FALSE;
+        this.isPlatformCoin = BooleanEnum.IS_FALSE;
+        this.hasLegal = false;
+        this.minerFee = BigDecimal.ZERO;
+        this.minRechargeAmount = BigDecimal.ZERO;
+        this.maxDailyWithdrawRate = BigDecimal.ZERO;
+        this.coinArea = 0;
+    }
+
+    public Coin(String name) {
+        this.status = CommonStatus.NORMAL;
+        this.enableRpc = BooleanEnum.IS_TRUE;
+        this.sort = 10;
+        this.canWithdraw = BooleanEnum.IS_TRUE;
+        this.canRecharge = BooleanEnum.IS_TRUE;
+        this.canTransfer = BooleanEnum.IS_TRUE;
+        this.canAutoWithdraw = BooleanEnum.IS_FALSE;
+        this.isPlatformCoin = BooleanEnum.IS_FALSE;
+        this.hasLegal = false;
+        this.minerFee = BigDecimal.ZERO;
+        this.minRechargeAmount = BigDecimal.ZERO;
+        this.maxDailyWithdrawRate = BigDecimal.ZERO;
+        this.coinArea = 0;
+        this.name = name;
+    }
 }

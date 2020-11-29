@@ -20,4 +20,10 @@ public class MemberWalletDTO extends BaseMemberDTO{
     private BigDecimal allBalance ;
 
     private String address ;
+
+    private BigDecimal blockBalance;
+
+    public MemberWalletDTO() {
+        this.blockBalance = BigDecimal.ZERO;
+    }
 }
