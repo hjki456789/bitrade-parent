@@ -14,6 +14,24 @@ public class SysConstant {
 
     public static final String SESSION_MEMBER = "API_MEMBER";
 
+    public static final String PHONE_WITHDRAW_MONEY_CODE_PREFIX = "PHONE_WITHDRAW_MONEY_CODE_PREFIX_";
+
+    public static final String PHONE_trade_CODE_PREFIX = "PHONE_trade_CODE_PREFIX_";
+    public static final String PHONE_REG_CODE_PREFIX = "PHONE_REG_CODE_";
+    public static final String PHONE_RESET_TRANS_CODE_PREFIX = "PHONE_RESET_TRANS_CODE_";
+
+    public static final String PHONE_UPDATE_PASSWORD_PREFIX = "PHONE_UPDATE_PASSWORD_";
+    public static final String PHONE_ADD_ADDRESS_PREFIX = "PHONE_ADD_ADDRESS_";
+
+    public static final String API_BIND_CODE_PREFIX = "API_BIND_CODE_PREFIX_";
+    public static final String EMAIL_UNTIE_CODE_PREFIX = "EMAIL_UNTIE_CODE_";
+    public static final String CONTRACT_API_BIND_CODE_PREFIX = "CONTRACT_API_BIND_CODE_PREFIX";
+    public static final String CONTRACT_API_DELETE_CODE_PREFIX = "CONTRACT_API_DELETE_CODE_PREFIX";
+    public static final String ADD_ADDRESS_CODE_PREFIX = "ADD_ADDRESS_CODE_";
+    public static final String RESET_PASSWORD_CODE_PREFIX = "RESET_PASSWORD_CODE_";
+    public static final String PHONE_CHANGE_CODE_PREFIX = "PHONE_CHANGE_CODE_";
+    public static final String RESET_GOOGLE_CODE_PREFIX = "RESET_PASSWORD_CODE_";
+
     /**
      * 验证码
      */
@@ -162,7 +180,7 @@ public class SysConstant {
      * 用户币币交易订单时间限制
      */
     public static final String USER_ADD_EXCHANGE_ORDER_TIME_LIMIT= "USER_ADD_EXCHANGE_ORDER_TIME_LIMIT_";
-    public static final int USER_ADD_EXCHANGE_ORDER_TIME_LIMIT_EXPIRE_TIME= 20;
+    public static final int USER_ADD_EXCHANGE_ORDER_TIME_LIMIT_EXPIRE_TIME= 100;
 
     /**
      * 空投锁

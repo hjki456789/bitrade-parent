@@ -35,7 +35,14 @@ public enum AdminModule {
     ANNOUNCEMENT("通知公告"),
     APP("APP版本管理"),
     COIN("币种管理"),
-    EMPLOYEE("管理员管理");
+    EMPLOYEE("管理员管理"),
+    CONTRACT("CONTRACT"),
+    LOTTERY("LOTTERY"),
+    ROBOT("ROBOT"),
+    UNBLOCK("UNBLOCK"),
+    INSURANCE("FINANCE"),
+    CONTRACTSTRATEGY("CONTRACTSTRATEGY"),
+    DEPOSIT("FINANCE");
     @Setter
     private String title;
 }

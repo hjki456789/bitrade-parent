@@ -35,7 +35,26 @@ public enum TransactionType implements BaseEnum {
     COIN_TWO_OTC("币币转入法币"),//24
     OTC_TWO_COIN("法币转入币币"),//25
     LOAN_RECORD("借贷流水"),//26
-    REPAYMENT_LOAN("还款流水");//27
+    REPAYMENT_LOAN("还款流水"),
+    COIN_TWO_CONTRACT("币币账户转入合约账户"),
+    CONTRACT_TWO_CONIN("合约账户转入币币账户"),
+    UNBLOCK_RELEASE("解封区锁仓解锁"),
+    BUY_LOTTERY("购买抽奖次数"),
+    COIN_TWO_COIN_BLOCK("币币账户转入币币锁仓账户"),
+    LOTTERY_WINNER("中奖"),
+    ADMIN_FROZEN_RECHARGE("冻结人工充值"),
+    ADMIN_BLOCK_RECHARGE("锁仓人工充值"),
+    DEPOSIT_ADD("托管理财支出"),
+    DEPOSIT_BREAK("托管理财赎回"),
+    DEPOSIT_PROFIT_STATIC("托管理财静态收益"),
+    DEPOSIT_PROFIT_RECOMMEND("托管理财动态收益"),
+    COIN_TWO_DOUBLEDIRECTION("币币账户转入双仓合约账户"),
+    DOUBLEDIRECTION_TWO_COIN("双仓合约账户转入币币账户"),
+    FEE_PROFIT_RECOMMEND("合约手续费分红"),
+    CONTRACT_PROFIT_RECOMMEND("双仓合约盈利返回"),
+    CONTRACT_LOSS_RECOMMEND("双仓合约亏损30%返回"),
+    MEMBER_DEPOSIT_ADD_BALANCE("新增充币记录增加币币账户可用余额");
+
 
     private String cnName;
     @Override

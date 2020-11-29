@@ -27,6 +27,7 @@
 		<module>gateway</module>
 		<module>wallet</module>
 		<module>vote</module>
+        <module>contract-core</module>
 	</modules>
 
 	<parent>

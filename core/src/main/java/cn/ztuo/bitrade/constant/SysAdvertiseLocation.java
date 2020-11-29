@@ -19,7 +19,12 @@ public enum SysAdvertiseLocation implements BaseEnum {
     //pc 首页轮播
     PC_SHUFFLING("pc首页轮播"),
     //app 分类广告
-    APP_CLASSIFICATION("app首页广告(中部)");
+    APP_CLASSIFICATION("app首页广告(中部)"),
+    PC_HOME_BG("pc首页背景"),
+    PC_COIN_CONVERT_BG("pc兑币页背景"),
+    PC_COIN_FA_BG("pc法币页背景"),
+    PC_HELP_BG("pc帮助页背景"),
+    PC_ADVICE_BG("pc公告页背景");
     @Setter
     private String cnName;
     @Override

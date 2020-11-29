@@ -1,25 +1,24 @@
 package cn.ztuo.bitrade.constant;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import cn.ztuo.bitrade.core.BaseEnum;
+import cn.ztuo.bitrade.core.*;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * @author Seven
- * @date 2019年01月22日
- */
+import java.beans.*;
 @AllArgsConstructor
 @Getter
-public enum AppealStatus implements BaseEnum {
-    NOT_PROCESSED("未处理"),
-    PROCESSED("已处理");
+public enum CommissionType implements BaseEnum
+{
+    PROFIT_LOSS("盈亏返佣"),
+    FEE("手续费返佣");
+
     @Setter
     private String cnName;
 
-    @Override
     @JsonValue
+    @Override
     public int getOrdinal() {
         return this.ordinal();
     }
