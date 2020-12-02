@@ -66,4 +66,18 @@ public class EmaySMSProvider implements SMSProvider {
         }
         return result;
     }
+    @Override
+    public MessageResult sendTemplateMessage(final String mobilePhone, final String templateId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public MessageResult sendInternationalMessage(final String content, final String phone, final String... templateId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public MessageResult sendNationalMessage(final String content, final String nationCode, final String phone) throws Exception {
+        return null;
+    }
 }

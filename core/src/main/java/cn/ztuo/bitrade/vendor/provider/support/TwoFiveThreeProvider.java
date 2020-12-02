@@ -62,8 +62,8 @@ public class TwoFiveThreeProvider implements SMSProvider {
     }
 
     @Override
-    public MessageResult sendInternationalMessage(String code, String phone) throws Exception {
-        return sendSingleMessage(phone, code);
+    public MessageResult sendInternationalMessage(String content, String phone,String... templateId) throws Exception {
+        return this.sendSingleMessage(phone, content);
     }
 
     public MessageResult sendLoginMessage(String ip,String phone) throws Exception {
@@ -78,5 +78,15 @@ public class TwoFiveThreeProvider implements SMSProvider {
             mr.setMessage("操作成功");
         }
         return mr;
+    }
+
+    @Override
+    public MessageResult sendNationalMessage(final String content, final String nationCode, final String phone) throws Exception {
+        return null;
+    }
+
+    @Override
+    public MessageResult sendTemplateMessage(final String mobilePhone, final String templateId) throws Exception {
+        return null;
     }
 }

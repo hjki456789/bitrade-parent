@@ -59,12 +59,12 @@ public class YunpianSMSProvider implements SMSProvider {
 //    }
 
     @Override
-    public MessageResult sendInternationalMessage(String code, String phone) throws IOException, DocumentException {
-        code = String.format("【coinmany】Your verification code is %s", code);
+    public MessageResult sendInternationalMessage(final String mobile, String content, final String... templateId) throws IOException, DocumentException {
+        content = String.format("【coinmany】Your verification code is %s", content);
         Map<String, String> params = new HashMap<String, String>();
         params.put("apikey", apikey);
-        params.put("text", code);
-        params.put("mobile", phone);
+        params.put("text", content);
+        params.put("mobile", mobile);
         String resultXml= HttpSend.yunpianPost(gateway, params);
         log.info("result = {}", resultXml);
         return parseXml(resultXml);
@@ -102,5 +102,14 @@ public class YunpianSMSProvider implements SMSProvider {
             result.setMessage(myJsonObject.getString("msg"));
         }
         return result;
+    }
+
+    @Override
+    public MessageResult sendNationalMessage(final String content, final String nationCode, final String phone) throws Exception {
+        return null;
+    }
+    @Override
+    public MessageResult sendTemplateMessage(final String mobilePhone, final String templateId) throws Exception {
+        return null;
     }
 }

@@ -32,12 +32,26 @@ public class SendCloudSMSProvider implements SMSProvider {
         return sendTemplateMessage(39150, mobile, false, ImmutableMap.of("code", verifyCode));
     }
 
+
     @Override
+    public MessageResult sendTemplateMessage(final String mobilePhone, final String templateId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public MessageResult sendInternationalMessage(final String content, final String phone, final String... templateId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public MessageResult sendNationalMessage(final String content, final String nationCode, final String phone) throws Exception {
+        return null;
+    }
+
     public MessageResult sendInternationalMessage(String code, String phone) throws Exception {
         return sendTemplateMessage(39151, phone, true, ImmutableMap.of("code", code));
     }
 
-    @Override
     public MessageResult sendTemplateMessage(int templateId, String phone, boolean isInternational, Map<String, String> params) throws Exception {
         SendCloudSms sms = new SendCloudSms();
         if(isInternational){

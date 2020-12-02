@@ -7,8 +7,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -61,9 +63,30 @@ public class HttpClientUtil {
                 }
             }
         }catch(Exception ex){
-            ex.printStackTrace();
+            log.error("get请求异常！",ex);
         }
         return result;
+    }
+
+    public static String httpPostWithJSON(final String url, final String json) throws Exception {
+        String body = "";
+        try {
+            HttpClient httpClient = HttpClients.createDefault();
+            HttpPost httpPost = new HttpPost(url);
+            httpPost.addHeader("Content-type", "application/json; charset=utf-8");
+            httpPost.setHeader("Accept", "application/json");
+            StringEntity se = new StringEntity(json, "UTF-8");
+            httpPost.setEntity(se);
+            HttpResponse response = httpClient.execute(httpPost);
+            body = EntityUtils.toString(response.getEntity());
+            return body;
+        }
+        catch (Exception e) {
+            log.error("httpPostWithJSON请求异常！",e);
+        }
+        finally {
+            return body;
+        }
     }
 }
 

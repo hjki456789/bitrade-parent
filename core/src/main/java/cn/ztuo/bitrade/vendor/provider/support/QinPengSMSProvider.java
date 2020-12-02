@@ -83,4 +83,18 @@ public class QinPengSMSProvider implements SMSProvider {
         String content=sendLoginMessage(ip)+"【BD】";
         return sendSingleMessage(content,phone);
     }
+    @Override
+    public MessageResult sendTemplateMessage(final String mobilePhone, final String templateId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public MessageResult sendInternationalMessage(final String content, final String phone, final String... templateId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public MessageResult sendNationalMessage(final String content, final String nationCode, final String phone) throws Exception {
+        return null;
+    }
 }

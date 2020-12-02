@@ -112,11 +112,11 @@ public class HuaXinSMSProvider implements SMSProvider {
     }
 
     @Override
-    public MessageResult sendInternationalMessage(String code, String phone) throws IOException, DocumentException {
-        code =String.format("[%s]Verification Code:%s.If you don't send it, ignore it.", sign, code);
+    public MessageResult sendInternationalMessage(String content, final String phone, final String... templateId) throws IOException, DocumentException {
+        content =String.format("[%s]Verification Code:%s.If you don't send it, ignore it.", sign, content);
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(internationalGateway);
-        String result = encodeHexStr(8, code);
+        String result = encodeHexStr(8, content);
         httpPost.setConfig(RequestConfig.custom()
                 .build());
         httpPost.addHeader("Content-type","application/x-www-form-urlencoded;charset=UTF-8");
@@ -203,6 +203,15 @@ public class HuaXinSMSProvider implements SMSProvider {
             sb.append(sTemp.toUpperCase());
         }
         return sb.toString();
+    }
+    @Override
+    public MessageResult sendNationalMessage(final String content, final String nationCode, final String phone) throws Exception {
+        return null;
+    }
+
+    @Override
+    public MessageResult sendTemplateMessage(final String mobilePhone, final String templateId) throws Exception {
+        return null;
     }
 
 

@@ -45,9 +45,7 @@ public interface SMSProvider {
      * @param phone
      * @return
      */
-    default MessageResult sendInternationalMessage(String code, String phone) throws Exception {
-        return null;
-    }
+     MessageResult sendInternationalMessage(String code, String phone,String... templateIds) throws Exception;
 
 
     /**
@@ -57,13 +55,16 @@ public interface SMSProvider {
      * @param phone 手机号
      * @return
      */
-    default MessageResult sendTemplateMessage(int templateId, String phone, boolean isInternational, Map<String, String> params) throws Exception {
-        return null;
-    }
+    MessageResult sendTemplateMessage(String phone, String templateId) throws Exception;
+
+    MessageResult sendNationalMessage(String content, String nationCode,String phone) throws Exception;
+
 
     default String sendLoginMessage(String ip){
         return String.format("您已经登录，登录IP：%s",ip);
     }
+
+
 
     public MessageResult sendLoginMessage(String ip, String phone) throws Exception;
 }
