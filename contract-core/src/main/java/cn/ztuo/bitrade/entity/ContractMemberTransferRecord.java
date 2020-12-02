@@ -2,6 +2,9 @@ package cn.ztuo.bitrade.entity;
 
 import java.io.*;
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.*;
 import java.util.*;
 import com.fasterxml.jackson.annotation.*;
@@ -28,55 +31,55 @@ public class ContractMemberTransferRecord implements Serializable
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
     private long sequence;
-    
+
     public String getId() {
         return this.id;
     }
-    
+
     public Member getMember() {
         return this.member;
     }
-    
+
     public Member getOrginalProxyMember() {
         return this.orginalProxyMember;
     }
-    
+
     public Member getNewProxyMember() {
         return this.newProxyMember;
     }
-    
+
     public Date getCreateTime() {
         return this.createTime;
     }
-    
+
     public long getSequence() {
         return this.sequence;
     }
-    
+
     public void setId(final String id) {
         this.id = id;
     }
-    
+
     public void setMember(final Member member) {
         this.member = member;
     }
-    
+
     public void setOrginalProxyMember(final Member orginalProxyMember) {
         this.orginalProxyMember = orginalProxyMember;
     }
-    
+
     public void setNewProxyMember(final Member newProxyMember) {
         this.newProxyMember = newProxyMember;
     }
-    
+
     public void setCreateTime(final Date createTime) {
         this.createTime = createTime;
     }
-    
+
     public void setSequence(final long sequence) {
         this.sequence = sequence;
     }
-    
+
     @Override
     public boolean equals(final Object o) {
         if (o == this) {
@@ -153,11 +156,11 @@ public class ContractMemberTransferRecord implements Serializable
         }
         return false;
     }
-    
+
     protected boolean canEqual(final Object other) {
         return other instanceof ContractMemberTransferRecord;
     }
-    
+
     @Override
     public int hashCode() {
         final int PRIME = 59;
@@ -176,7 +179,7 @@ public class ContractMemberTransferRecord implements Serializable
         result = result * 59 + (int)($sequence >>> 32 ^ $sequence);
         return result;
     }
-    
+
     @Override
     public String toString() {
         return "ContractMemberTransferRecord(id=" + this.getId() + ", member=" + this.getMember() + ", orginalProxyMember=" + this.getOrginalProxyMember() + ", newProxyMember=" + this.getNewProxyMember() + ", createTime=" + this.getCreateTime() + ", sequence=" + this.getSequence() + ")";

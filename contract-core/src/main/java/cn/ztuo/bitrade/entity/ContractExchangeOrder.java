@@ -9,6 +9,8 @@ import cn.ztuo.bitrade.entity.enumConstants.*;
 import java.util.*;
 import com.fasterxml.jackson.annotation.*;
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table
@@ -87,7 +89,7 @@ public class ContractExchangeOrder implements Serializable
     private Integer contractType;
     private Integer walletType;
     private Integer isOneClickOrder;
-    
+
     public ContractExchangeOrder() {
         this.openPrice = BigDecimal.ZERO;
         this.price = BigDecimal.ZERO;
@@ -106,311 +108,311 @@ public class ContractExchangeOrder implements Serializable
         this.walletType = 0;
         this.isOneClickOrder = 0;
     }
-    
+
     public long getId() {
         return this.id;
     }
-    
+
     public Member getMember() {
         return this.member;
     }
-    
+
     public ContractMember getContractMember() {
         return this.contractMember;
     }
-    
+
     public String getSymbol() {
         return this.symbol;
     }
-    
+
     public ContractOrderSide getSide() {
         return this.side;
     }
-    
+
     public ContractOrderType getType() {
         return this.type;
     }
-    
+
     public BigDecimal getOpenPrice() {
         return this.openPrice;
     }
-    
+
     public BigDecimal getPrice() {
         return this.price;
     }
-    
+
     public BigDecimal getLimitTriggerPrice() {
         return this.limitTriggerPrice;
     }
-    
+
     public BigDecimal getLimitPrice() {
         return this.limitPrice;
     }
-    
+
     public BigDecimal getCapitalAmount() {
         return this.capitalAmount;
     }
-    
+
     public BigDecimal getAmount() {
         return this.amount;
     }
-    
+
     public String getCoinId() {
         return this.coinId;
     }
-    
+
     public BigDecimal getLeverMultiple() {
         return this.leverMultiple;
     }
-    
+
     public BooleanEnum getIfStopLoss() {
         return this.ifStopLoss;
     }
-    
+
     public BigDecimal getStopLossPrice() {
         return this.stopLossPrice;
     }
-    
+
     public BooleanEnum getIfStopProfit() {
         return this.ifStopProfit;
     }
-    
+
     public BigDecimal getStopProfitPrice() {
         return this.stopProfitPrice;
     }
-    
+
     public ContractOrderStatus getStatus() {
         return this.status;
     }
-    
+
     public String getOriginIp() {
         return this.originIp;
     }
-    
+
     public Long getLeaderMemberId() {
         return this.leaderMemberId;
     }
-    
+
     public ContractOrderOrigin getOrigin() {
         return this.origin;
     }
-    
+
     public long getVersion() {
         return this.version;
     }
-    
+
     public Date getCreateTime() {
         return this.createTime;
     }
-    
+
     public long getSequence() {
         return this.sequence;
     }
-    
+
     public ContractExchangeOrderClose getOrderClose() {
         return this.orderClose;
     }
-    
+
     public ContractExchangeOrderFee getOrderFee() {
         return this.orderFee;
     }
-    
+
     public ContractExchangeOrderCancel getOrderCancel() {
         return this.orderCancel;
     }
-    
+
     public ContractExchangeOrderTigger getOrderTigger() {
         return this.orderTigger;
     }
-    
+
     public BigDecimal getSymbolCurrentPrice() {
         return this.symbolCurrentPrice;
     }
-    
+
     public BigDecimal getHoldInterest() {
         return this.holdInterest;
     }
-    
+
     public BigDecimal getFee() {
         return this.fee;
     }
-    
+
     public BigDecimal getCalculateProfit() {
         return this.calculateProfit;
     }
-    
+
     public String getNodeName() {
         return this.nodeName;
     }
-    
+
     public Date getBuyTime() {
         return this.buyTime;
     }
-    
+
     public Integer getContractType() {
         return this.contractType;
     }
-    
+
     public Integer getWalletType() {
         return this.walletType;
     }
-    
+
     public Integer getIsOneClickOrder() {
         return this.isOneClickOrder;
     }
-    
+
     public void setId(final long id) {
         this.id = id;
     }
-    
+
     public void setMember(final Member member) {
         this.member = member;
     }
-    
+
     public void setContractMember(final ContractMember contractMember) {
         this.contractMember = contractMember;
     }
-    
+
     public void setSymbol(final String symbol) {
         this.symbol = symbol;
     }
-    
+
     public void setSide(final ContractOrderSide side) {
         this.side = side;
     }
-    
+
     public void setType(final ContractOrderType type) {
         this.type = type;
     }
-    
+
     public void setOpenPrice(final BigDecimal openPrice) {
         this.openPrice = openPrice;
     }
-    
+
     public void setPrice(final BigDecimal price) {
         this.price = price;
     }
-    
+
     public void setLimitTriggerPrice(final BigDecimal limitTriggerPrice) {
         this.limitTriggerPrice = limitTriggerPrice;
     }
-    
+
     public void setLimitPrice(final BigDecimal limitPrice) {
         this.limitPrice = limitPrice;
     }
-    
+
     public void setCapitalAmount(final BigDecimal capitalAmount) {
         this.capitalAmount = capitalAmount;
     }
-    
+
     public void setAmount(final BigDecimal amount) {
         this.amount = amount;
     }
-    
+
     public void setCoinId(final String coinId) {
         this.coinId = coinId;
     }
-    
+
     public void setLeverMultiple(final BigDecimal leverMultiple) {
         this.leverMultiple = leverMultiple;
     }
-    
+
     public void setIfStopLoss(final BooleanEnum ifStopLoss) {
         this.ifStopLoss = ifStopLoss;
     }
-    
+
     public void setStopLossPrice(final BigDecimal stopLossPrice) {
         this.stopLossPrice = stopLossPrice;
     }
-    
+
     public void setIfStopProfit(final BooleanEnum ifStopProfit) {
         this.ifStopProfit = ifStopProfit;
     }
-    
+
     public void setStopProfitPrice(final BigDecimal stopProfitPrice) {
         this.stopProfitPrice = stopProfitPrice;
     }
-    
+
     public void setStatus(final ContractOrderStatus status) {
         this.status = status;
     }
-    
+
     public void setOriginIp(final String originIp) {
         this.originIp = originIp;
     }
-    
+
     public void setLeaderMemberId(final Long leaderMemberId) {
         this.leaderMemberId = leaderMemberId;
     }
-    
+
     public void setOrigin(final ContractOrderOrigin origin) {
         this.origin = origin;
     }
-    
+
     public void setVersion(final long version) {
         this.version = version;
     }
-    
+
     public void setCreateTime(final Date createTime) {
         this.createTime = createTime;
     }
-    
+
     public void setSequence(final long sequence) {
         this.sequence = sequence;
     }
-    
+
     public void setOrderClose(final ContractExchangeOrderClose orderClose) {
         this.orderClose = orderClose;
     }
-    
+
     public void setOrderFee(final ContractExchangeOrderFee orderFee) {
         this.orderFee = orderFee;
     }
-    
+
     public void setOrderCancel(final ContractExchangeOrderCancel orderCancel) {
         this.orderCancel = orderCancel;
     }
-    
+
     public void setOrderTigger(final ContractExchangeOrderTigger orderTigger) {
         this.orderTigger = orderTigger;
     }
-    
+
     public void setSymbolCurrentPrice(final BigDecimal symbolCurrentPrice) {
         this.symbolCurrentPrice = symbolCurrentPrice;
     }
-    
+
     public void setHoldInterest(final BigDecimal holdInterest) {
         this.holdInterest = holdInterest;
     }
-    
+
     public void setFee(final BigDecimal fee) {
         this.fee = fee;
     }
-    
+
     public void setCalculateProfit(final BigDecimal calculateProfit) {
         this.calculateProfit = calculateProfit;
     }
-    
+
     public void setNodeName(final String nodeName) {
         this.nodeName = nodeName;
     }
-    
+
     public void setBuyTime(final Date buyTime) {
         this.buyTime = buyTime;
     }
-    
+
     public void setContractType(final Integer contractType) {
         this.contractType = contractType;
     }
-    
+
     public void setWalletType(final Integer walletType) {
         this.walletType = walletType;
     }
-    
+
     public void setIsOneClickOrder(final Integer isOneClickOrder) {
         this.isOneClickOrder = isOneClickOrder;
     }
-    
+
     @Override
     public boolean equals(final Object o) {
         if (o == this) {
@@ -886,11 +888,11 @@ public class ContractExchangeOrder implements Serializable
         }
         return false;
     }
-    
+
     protected boolean canEqual(final Object other) {
         return other instanceof ContractExchangeOrder;
     }
-    
+
     @Override
     public int hashCode() {
         final int PRIME = 59;
@@ -973,7 +975,7 @@ public class ContractExchangeOrder implements Serializable
         result = result * 59 + (($isOneClickOrder == null) ? 43 : $isOneClickOrder.hashCode());
         return result;
     }
-    
+
     @Override
     public String toString() {
         return "ContractExchangeOrder(id=" + this.getId() + ", member=" + this.getMember() + ", contractMember=" + this.getContractMember() + ", symbol=" + this.getSymbol() + ", side=" + this.getSide() + ", type=" + this.getType() + ", openPrice=" + this.getOpenPrice() + ", price=" + this.getPrice() + ", limitTriggerPrice=" + this.getLimitTriggerPrice() + ", limitPrice=" + this.getLimitPrice() + ", capitalAmount=" + this.getCapitalAmount() + ", amount=" + this.getAmount() + ", coinId=" + this.getCoinId() + ", leverMultiple=" + this.getLeverMultiple() + ", ifStopLoss=" + this.getIfStopLoss() + ", stopLossPrice=" + this.getStopLossPrice() + ", ifStopProfit=" + this.getIfStopProfit() + ", stopProfitPrice=" + this.getStopProfitPrice() + ", status=" + this.getStatus() + ", originIp=" + this.getOriginIp() + ", leaderMemberId=" + this.getLeaderMemberId() + ", origin=" + this.getOrigin() + ", version=" + this.getVersion() + ", createTime=" + this.getCreateTime() + ", sequence=" + this.getSequence() + ", orderClose=" + this.getOrderClose() + ", orderFee=" + this.getOrderFee() + ", orderCancel=" + this.getOrderCancel() + ", orderTigger=" + this.getOrderTigger() + ", symbolCurrentPrice=" + this.getSymbolCurrentPrice() + ", holdInterest=" + this.getHoldInterest() + ", fee=" + this.getFee() + ", calculateProfit=" + this.getCalculateProfit() + ", nodeName=" + this.getNodeName() + ", buyTime=" + this.getBuyTime() + ", contractType=" + this.getContractType() + ", walletType=" + this.getWalletType() + ", isOneClickOrder=" + this.getIsOneClickOrder() + ")";

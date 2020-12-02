@@ -6,11 +6,11 @@ import org.springframework.data.repository.query.*;
 import javax.transaction.*;
 import org.springframework.data.jpa.repository.*;
 
-public interface ContractCommissionRepository extends JpaRepository<ContractCommissionInfo, String>, JpaSpecificationExecutor<ContractCommissionInfo>, QueryDslPredicateExecutor<ContractCommissionInfo>
+public interface ContractCommissionRepository extends JpaRepository<ContractCommissionInfo, String>, JpaSpecificationExecutor<ContractCommissionInfo>, QuerydslPredicateExecutor<ContractCommissionInfo>
 {
     @Query(value = "select * from contract_commission_info where member_id = :memberId limit 1", nativeQuery = true)
     ContractCommissionInfo findByMemberId(@Param("memberId") final String p0);
-    
+
     @Transactional
     @Modifying
     @Query("update ContractCommissionInfo set status = :status,sys_user = :adminId where id =:id")
