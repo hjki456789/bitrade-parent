@@ -10,8 +10,8 @@ public class ContractExchangeOrderCancelService
 {
     @Autowired
     private ContractExchangeOrderCancelRepository contractExchangeOrderCancelRepository;
-    
+
     public ContractExchangeOrderCancel saveContractExchangeOrderCancel(final ContractExchangeOrderCancel cancel) {
-        return (ContractExchangeOrderCancel)this.contractExchangeOrderCancelRepository.saveAndFlush((Object)cancel);
+        return (ContractExchangeOrderCancel)this.contractExchangeOrderCancelRepository.saveAndFlush(cancel);
     }
 }

@@ -10,8 +10,8 @@ public class ContractExchangeOrderConditionRecordService
 {
     @Autowired
     private ContractExchangeOrderConditionRecordRepository recordRepository;
-    
+
     public ContractExchangeOrderConditionRecord save(final ContractExchangeOrderConditionRecord record) {
-        return (ContractExchangeOrderConditionRecord)this.recordRepository.saveAndFlush((Object)record);
+        return (ContractExchangeOrderConditionRecord)this.recordRepository.saveAndFlush(record);
     }
 }

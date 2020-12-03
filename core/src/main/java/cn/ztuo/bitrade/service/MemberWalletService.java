@@ -23,6 +23,7 @@ import cn.ztuo.bitrade.service.Base.BaseService;
 import cn.ztuo.bitrade.util.BigDecimalUtils;
 import cn.ztuo.bitrade.util.MessageResult;
 import cn.ztuo.bitrade.vo.ImportXmlVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,6 +35,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 @Service
+@Slf4j
 public class MemberWalletService extends BaseService {
     @Autowired
     private MemberWalletDao memberWalletDao;
@@ -484,5 +486,81 @@ public class MemberWalletService extends BaseService {
 
     public Integer findWalletForUpdate(Long memberId, Coin coin) {
         return memberWalletDao.findWalletForUpdate(memberId, coin.getName());
+    }
+
+
+    @Transactional(rollbackFor = { Exception.class })
+    public int updateBalanceAndBlockBalance(final Long id, final BigDecimal balance, final BigDecimal blockBalance, final int version) {
+        return this.memberWalletDao.updateBalanceAndBlockBalance(id, balance, blockBalance, version);
+    }
+
+    @Transactional(rollbackFor = { Exception.class })
+    public int Balance2BlockBalance(final MemberWallet memberWallet, final BigDecimal amount) throws Exception {
+        final BigDecimal afterBalance = memberWallet.getBalance().subtract(amount);
+        final BigDecimal afterBlockBalance = memberWallet.getBlockBalance().add(amount);
+        final int num = this.memberWalletDao.updateBalanceAndBlockBalance(memberWallet.getId(), afterBalance, afterBlockBalance, memberWallet.getVersion());
+        if (num > 0) {
+            MemberTransaction transaction = new MemberTransaction();
+            transaction.setAmount(amount.negate());
+            transaction.setSymbol(memberWallet.getCoin().getName());
+            transaction.setAddress("");
+            transaction.setMemberId(memberWallet.getMemberId());
+            transaction.setType(TransactionType.COIN_TWO_COIN_BLOCK);
+            transaction.setFee(BigDecimal.ZERO);
+            transaction.setCreateTime(new Date());
+            transaction.setSequence(System.currentTimeMillis());
+            transaction = this.transactionService.save(transaction);
+            if (null == transaction) {
+                throw new InformationExpiredException("Information Expired");
+            }
+        }
+        return num;
+    }
+
+    public int updateFrozenBalance(final Long id, final BigDecimal frozenBalance) {
+        return this.memberWalletDao.updateFrozenBalance(id, frozenBalance);
+    }
+
+    @Transactional(rollbackFor = { Exception.class })
+    public void increaseMemberBalance(final Long walletId, final BigDecimal amount) {
+        log.info("-----------\u589e\u52a0\u4f59\u989d---------" + walletId + "---------------" + amount + "--------------");
+        final int num = this.memberWalletDao.increaseMemberBalance(walletId, amount);
+        if (num > 0) {
+            log.info("-----------\u589e\u52a0\u4f59\u989d\u6210\u529f---------" + walletId + "---------------" + amount + "--------------");
+        }
+        else {
+            log.info("-----------\u589e\u52a0\u4f59\u989d\u5931\u8d25---------" + walletId + "---------------" + amount + "--------------");
+        }
+    }
+
+    @Transactional(rollbackFor = { Exception.class })
+    public MessageResult freezeOneButtonSellBalance(final MemberWallet wallet, final BigDecimal amount) {
+        final BigDecimal balance = wallet.getBalance().subtract(amount);
+        final BigDecimal frozenBalance = wallet.getFrozenBalance().add(amount);
+        final int ret = this.memberWalletDao.updateWalletBalanceAndFrozenBalance(wallet.getId(), balance, frozenBalance, wallet.getVersion());
+        if (ret > 0) {
+            return MessageResult.success();
+        }
+        return MessageResult.error("Information Expired");
+    }
+
+    public int updateBalanceAndFrozenBalance(final Long id, final BigDecimal balance, final BigDecimal frozenBalance) {
+        return this.memberWalletDao.updateBalanceAndFrozenBalance(id, balance, frozenBalance);
+    }
+
+    @Transactional(rollbackFor = { Exception.class })
+    public void increaseBalance(final Long walletId, final BigDecimal amount, final int version) {
+        log.info("-----------\u589e\u52a0\u4f59\u989d---------" + walletId + "---------------" + amount + "--------------" + version);
+        final int num = this.memberWalletDao.increaseBalance(walletId, amount, version);
+        if (num > 0) {
+            log.info("-----------\u589e\u52a0\u4f59\u989d\u6210\u529f---------" + walletId + "---------------" + amount + "--------------" + version);
+        }
+        else {
+            log.info("-----------\u589e\u52a0\u4f59\u989d\u5931\u8d25---------" + walletId + "---------------" + amount + "--------------" + version);
+        }
+    }
+    @Transactional(rollbackFor = { Exception.class })
+    public void decreaseBalance(final Long walletId, final BigDecimal amount, final int version) {
+        this.memberWalletDao.decreaseBalance(walletId, amount, version);
     }
 }

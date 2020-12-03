@@ -1,11 +1,10 @@
 package cn.ztuo.bitrade.service;
 
+import com.querydsl.core.types.Predicate;
 import org.springframework.stereotype.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.dao.*;
-import com.querydsl.core.types.*;
 import java.util.*;
-import java.io.*;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.*;
 import cn.ztuo.bitrade.util.*;
@@ -14,7 +13,6 @@ import cn.ztuo.bitrade.entity.enumConstants.*;
 import cn.ztuo.bitrade.constant.*;
 import cn.ztuo.bitrade.entity.*;
 import org.springframework.transaction.annotation.*;
-import javax.persistence.criteria.*;
 
 @Service
 public class ContractNodeService
@@ -33,7 +31,7 @@ public class ContractNodeService
     private MemberService memberService;
     @Autowired
     private MemberPromotionService memberPromotionService;
-    
+
     public Page<ContractNode> findAllContractNode(final Predicate predicate, final Pageable pageable) {
         final List<ContractNode> contractNodeList = new ArrayList<ContractNode>();
         final Page<Member> memberPage = (Page<Member>)this.memberService.findAll(predicate, pageable);
@@ -49,8 +47,8 @@ public class ContractNodeService
         }
         return (Page<ContractNode>)new PageImpl((List)contractNodeList, pageable, memberPage.getTotalElements());
     }
-    
-    public Page<ContractNode> findAllPromotionContractNode(final Predicate predicate, final Pageable pageable) {
+
+    public Page<ContractNode> findAllPromotionContractNode(final Predicate predicate,Pageable pageable) {
         final List<ContractNode> contractNodeList = new ArrayList<ContractNode>();
         final Page<MemberPromotion> memberPromotionsPage = (Page<MemberPromotion>)this.memberPromotionService.findAll(predicate, pageable);
         if (memberPromotionsPage == null) {
@@ -64,58 +62,58 @@ public class ContractNodeService
         }
         return (Page<ContractNode>)new PageImpl((List)contractNodeList);
     }
-    
+
     public Page<ContractNode> findAll(final Predicate predicate, final Pageable pageable) {
         final Page<ContractNode> page = (Page<ContractNode>)this.contractNodeRepository.findAll(predicate, pageable);
         if (page != null && page.getContent() != null) {
             for (final ContractNode contractNode : page.getContent()) {
-                final Member member = (Member)this.memberDao.findOne((Serializable)contractNode.getMemberId());
+                final Member member = (Member)this.memberDao.getOne(contractNode.getMemberId());
                 contractNode.setMember(member);
             }
         }
         return page;
     }
-    
+
     public List<ContractNode> findList(final ContractNode contractNode) {
         final Specification<ContractNode> spec = (Specification<ContractNode>)((root, criteriaQuery, criteriaBuilder) -> {
             if (contractNode.getEnable() != null) {
-                criteriaQuery.where((Expression)criteriaBuilder.equal((Expression)root.get("enable"), (Object)contractNode.getEnable()));
+                criteriaQuery.where(criteriaBuilder.equal(root.get("enable"), (Object)contractNode.getEnable()));
             }
             if (contractNode.getNodeLevel() != null) {
-                criteriaQuery.where((Expression)criteriaBuilder.equal((Expression)root.get("nodeLevel"), (Object)contractNode.getNodeLevel()));
+                criteriaQuery.where(criteriaBuilder.equal(root.get("nodeLevel"), (Object)contractNode.getNodeLevel()));
             }
             if (contractNode.getMemberStatus() != null) {
-                criteriaQuery.where((Expression)criteriaBuilder.equal((Expression)root.get("memberStatus"), (Object)contractNode.getMemberStatus()));
+                criteriaQuery.where(criteriaBuilder.equal(root.get("memberStatus"), (Object)contractNode.getMemberStatus()));
             }
             return null;
         });
         final Sort.Order order = new Sort.Order(Sort.Direction.ASC, "id");
-        final Sort sort = new Sort(new Sort.Order[] { order });
+        final Sort sort = Sort.by(new Sort.Order[] { order });
         return (List<ContractNode>)this.contractNodeRepository.findAll((Specification)spec, sort);
     }
-    
+
     public ContractNode findOne(final String nodeId) {
-        final ContractNode contractNode = (ContractNode)this.contractNodeRepository.findOne((Serializable)nodeId);
+        final ContractNode contractNode = (ContractNode)this.contractNodeRepository.getOne(nodeId);
         if (contractNode != null) {
-            final Member member = (Member)this.memberDao.findOne((Serializable)contractNode.getMemberId());
+            final Member member = (Member)this.memberDao.getOne(contractNode.getMemberId());
             contractNode.setMember(member);
         }
         return contractNode;
     }
-    
+
     public List<ContractNode> findListByMemberStatuses(final List<Integer> memberStatuses) {
         return this.contractNodeRepository.findListByMemberStatuses(memberStatuses);
     }
-    
+
     public ContractNode findByMemberId(final Long memberId) {
         final ContractNode contractNode = this.contractNodeRepository.findByMemberId(memberId);
         if (contractNode != null) {
-            final Member member = (Member)this.memberDao.findOne((Serializable)contractNode.getMemberId());
+            final Member member = (Member)this.memberDao.getOne(contractNode.getMemberId());
             contractNode.setMember(member);
         }
         return contractNode;
     }
-    
+
     @Transactional(rollbackFor = { Exception.class })
     public MessageResult addContractNode(final ContractNode contractNode) {
         final Long memberId = contractNode.getMemberId();
@@ -141,21 +139,21 @@ public class ContractNodeService
                 this.contractWalletFlowRecordService.saveRecord(contractWalletFlowRecord);
             }
             final VirtualRechargeFrozenFlow virtualRechargeFrozenFlow = new VirtualRechargeFrozenFlow(memberId, coinId, virtualRechargeAmount, contractWallet.getVirtualRechargeFrozenBalance(), VirtualRechargeFrozenFlowOperationType.BE_NODE);
-            this.virtualRechargeFrozenFlowRepository.save((Object)virtualRechargeFrozenFlow);
-            this.contractNodeRepository.save((Object)contractNode);
+            this.virtualRechargeFrozenFlowRepository.save(virtualRechargeFrozenFlow);
+            this.contractNodeRepository.save(contractNode);
             this.memberDao.updateIfNode(memberId, IfNodeType.NODE);
         }
         return MessageResult.success("SUCCESS");
     }
-    
+
     public ContractNode save(final ContractNode contractNode) {
-        return (ContractNode)this.contractNodeRepository.save((Object)contractNode);
+        return (ContractNode)this.contractNodeRepository.save(contractNode);
     }
-    
+
     public int updateEnable(final String id, final Integer enable) {
         return this.contractNodeRepository.updateEnable(id, enable);
     }
-    
+
     public void delete(final String[] ids) {
         for (final String id : ids) {
             final ContractNode contractNode = this.findOne(id);
@@ -164,7 +162,7 @@ public class ContractNodeService
             }
         }
     }
-    
+
     @Transactional(rollbackFor = { Exception.class })
     public MessageResult addDepositAmount(final ContractNode contractNode, final BigDecimal depositAmountAdd, final BigDecimal virtualRechargeAmountAdd) {
         final Long memberId = contractNode.getMemberId();
@@ -178,7 +176,7 @@ public class ContractNodeService
         }
         contractNode.setDepositAmount(contractNode.getDepositAmount().add(depositAmountAdd));
         contractNode.setVirtualRechargeAmount(contractNode.getVirtualRechargeAmount().add(virtualRechargeAmountAdd));
-        this.contractNodeRepository.save((Object)contractNode);
+        this.contractNodeRepository.save(contractNode);
         contractWallet.setBalance(contractWallet.getBalance().subtract(depositAmountAdd));
         contractWallet.setVirtualRechargeFrozenBalance(contractWallet.getVirtualRechargeFrozenBalance().add(virtualRechargeAmountAdd));
         final int num = this.contractWalletService.updateContractWalletBalance(contractWallet);
@@ -190,35 +188,35 @@ public class ContractNodeService
                 this.contractWalletFlowRecordService.saveRecord(contractWalletFlowRecord);
             }
             final VirtualRechargeFrozenFlow virtualRechargeFrozenFlow = new VirtualRechargeFrozenFlow(memberId, coinId, virtualRechargeAmountAdd, contractWallet.getVirtualRechargeFrozenBalance(), VirtualRechargeFrozenFlowOperationType.ADD_DEPOSITAMOUNT);
-            this.virtualRechargeFrozenFlowRepository.save((Object)virtualRechargeFrozenFlow);
+            this.virtualRechargeFrozenFlowRepository.save(virtualRechargeFrozenFlow);
         }
         return MessageResult.success("SUCCESS");
     }
-    
+
     @Transactional(rollbackFor = { Exception.class })
     public MessageResult addMarketManager(final Long memberId, final String nodeName, final BigDecimal profitLossReturnRate) {
         final int num = this.memberDao.updateIfNode(memberId, IfNodeType.MARKET);
         if (num > 0) {
             final BigDecimal init = new BigDecimal(0);
             final ContractNode contractNode = new ContractNode(memberId, nodeName, init, profitLossReturnRate, init, init, init, init, init, init, IfNodeType.MARKET, Integer.valueOf(1));
-            this.contractNodeRepository.save((Object)contractNode);
+            this.contractNodeRepository.save(contractNode);
             return MessageResult.success("SUCCESS");
         }
         return MessageResult.error("FAIL");
     }
-    
+
     @Transactional(rollbackFor = { Exception.class })
     public MessageResult addProxy(final Long memberId, final String nodeName, final BigDecimal feeReturnRate, final BigDecimal profitLossReturnRate, final BigDecimal holdFeeReturnRate) {
         final int num = this.memberDao.updateIfNode(memberId, IfNodeType.PROXY);
         if (num > 0) {
             final BigDecimal init = new BigDecimal(0);
             final ContractNode contractNode = new ContractNode(memberId, nodeName, feeReturnRate, profitLossReturnRate, holdFeeReturnRate, init, init, init, init, init, IfNodeType.PROXY, Integer.valueOf(1));
-            this.contractNodeRepository.save((Object)contractNode);
+            this.contractNodeRepository.save(contractNode);
             return MessageResult.success("SUCCESS");
         }
         return MessageResult.error("FAIL");
     }
-    
+
     @Transactional(rollbackFor = { Exception.class })
     public MessageResult cancel(final Long memberId) {
         final int num = this.memberDao.updateIfNode(memberId, IfNodeType.COMMON);
@@ -228,13 +226,13 @@ public class ContractNodeService
         }
         return MessageResult.error("FAIL");
     }
-    
+
     @Transactional(rollbackFor = { Exception.class })
     public int updateVirtualRechargeAmount(final Long memberId, final BigDecimal virtualRechargeAmount) {
         final ContractNode contractNode = this.contractNodeRepository.findByMemberId(memberId);
         if (contractNode != null) {
             contractNode.setVirtualRechargeAmount(virtualRechargeAmount);
-            this.contractNodeRepository.save((Object)contractNode);
+            this.contractNodeRepository.save(contractNode);
             return 1;
         }
         return 0;

@@ -1,8 +1,6 @@
 package cn.ztuo.bitrade.dao;
 
-import cn.ztuo.bitrade.constant.BooleanEnum;
-import cn.ztuo.bitrade.constant.CertifiedBusinessStatus;
-import cn.ztuo.bitrade.constant.CommonStatus;
+import cn.ztuo.bitrade.constant.*;
 import cn.ztuo.bitrade.dao.base.BaseDao;
 import cn.ztuo.bitrade.entity.Member;
 import org.springframework.data.jpa.repository.Modifying;
@@ -127,4 +125,28 @@ public interface MemberDao extends BaseDao<Member> {
 
     @Query(value = "select id from member_wallet where member_id = :memberId for update", nativeQuery = true)
     List<Integer> selectMemberWalletForUpdate(@Param("memberId") Long memberId);
+
+    @Transactional(rollbackFor = { Exception.class })
+    @Modifying
+    @Query("update Member set inviter_id = :inviterId where id = :memberId")
+    int updateInviterId(@Param("memberId") final Long p0, @Param("inviterId") final Long p1);
+
+    @Transactional
+    @Modifying
+    @Query("update Member set ifNode = :ifNode where id = :memberId")
+    int updateIfNode(@Param("memberId") final Long p0, @Param("ifNode") final IfNodeType p1);
+
+
+    @Transactional
+    @Modifying
+    @Query("update Member set userType = :userType where id = :memberId")
+    int updateUserType(@Param("memberId") final Long p0, @Param("userType") final UserType p1);
+
+    @Transactional
+    @Modifying
+    @Query("update Member set memberGradeId = :memberGradeId where id = :memberId")
+    int updateMemberGradeId(@Param("memberId") final Long p0, @Param("memberGradeId") final long p1);
+
+
+
 }

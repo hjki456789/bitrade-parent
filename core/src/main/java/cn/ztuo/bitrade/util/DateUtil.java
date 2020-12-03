@@ -1,5 +1,6 @@
 package cn.ztuo.bitrade.util;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
@@ -399,5 +400,137 @@ public class DateUtil {
         cal.setTime(getThisWeekMonday(date));
         cal.add(Calendar.DATE, 7);
         return cal.getTime();
+    }
+
+    public static Date getThisMonthFirstDay(final Date date) {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(5, 1);
+        return cal.getTime();
+    }
+
+    public static Date getLastMonthFirstDay(final Date date) {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(getThisMonthFirstDay(date));
+        cal.add(2, -1);
+        return cal.getTime();
+    }
+
+    public static Date getNextMonthFirstDay(final Date date) {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(getThisMonthFirstDay(date));
+        cal.add(2, 1);
+        return cal.getTime();
+    }
+
+    public static Date getTimestamp(final Date date) {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.getTime();
+    }
+
+    public static Date nDaysBaseOnDate(final Date date, final int nDay) {
+        final Calendar now = Calendar.getInstance();
+        now.setTime(date);
+        now.set(5, now.get(5) + nDay);
+        return now.getTime();
+    }
+
+    public static long getLaterTime(final Date date, final Integer num, final Integer type) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        if (type == 1) {
+            calendar.add(5, num);
+        }
+        else if (type == 2) {
+            calendar.add(2, num);
+        }
+        else {
+            if (type != 3) {
+                return 0L;
+            }
+            calendar.add(1, num);
+        }
+        return calendar.getTime().getTime();
+    }
+
+    public static long getDays(long minSequence, long maxSequence) {
+        if (minSequence >= maxSequence) {
+            return 0L;
+        }
+        try {
+            final String dateMin = DateFormatUtils.format(minSequence, "yyyyMMdd");
+            final String dateMax = DateFormatUtils.format(maxSequence, "yyyyMMdd");
+            final DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            minSequence = dateFormat.parse(dateMin).getTime();
+            maxSequence = dateFormat.parse(dateMax).getTime();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (maxSequence - minSequence) / 86400000L;
+    }
+
+    public static long getTodaySequence() {
+        try {
+            final String date = DateFormatUtils.format(System.currentTimeMillis(), "yyyyMMdd");
+            final DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            return dateFormat.parse(date).getTime();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
+    public static long getYesterdaySequence() {
+        try {
+            final String date = DateFormatUtils.format(System.currentTimeMillis() - 86400000L, "yyyyMMdd");
+            final DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            return dateFormat.parse(date).getTime();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
+    public static Date getYesterdayZeroDate(final Date date) {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(getZeroDate(date));
+        cal.add(5, -1);
+        return cal.getTime();
+    }
+
+    public static Date getZeroDate(final Date date) {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(11, 0);
+        cal.set(12, 0);
+        cal.set(13, 0);
+        return cal.getTime();
+    }
+
+    public static Date getTomorrowZeroDate(final Date date) {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(getZeroDate(date));
+        cal.add(5, 1);
+        return cal.getTime();
+    }
+
+    public static Long getStartTimeOfDay(final Date now) {
+        try {
+            final Calendar calendar = Calendar.getInstance();
+            calendar.setTime(now);
+            calendar.set(11, 0);
+            calendar.set(12, 0);
+            calendar.set(13, 0);
+            calendar.set(14, 0);
+            return calendar.getTimeInMillis();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
     }
 }

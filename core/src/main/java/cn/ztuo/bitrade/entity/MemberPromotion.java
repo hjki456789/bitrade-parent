@@ -23,4 +23,16 @@ public class MemberPromotion {
 
     @Enumerated(EnumType.ORDINAL)
     private PromotionLevel level;
+
+    //york新增
+    @JoinColumn(name = "inviteesId", updatable = false, insertable = false)
+    @OneToOne
+    private Member member;
+
+    public MemberPromotion() {
+    }
+
+    public MemberPromotion(Long inviteesId) {
+        this.inviteesId = inviteesId;
+    }
 }

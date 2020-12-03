@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.validation.constraints.NotBlank;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -306,4 +307,135 @@ public class Member {
      */
     @Temporal(TemporalType.TIMESTAMP)
     private Date tokenWebExpireTime;
+
+
+
+    private IfNodeType ifNode;
+    private UserType userType;
+    private int platType;
+    private Integer ifFixMemberGrade;
+    @Transient
+    private Long proxyId;
+    @Transient
+    private ContractNode contractNode;
+    @Transient
+    private OperateType operate;
+    @Transient
+    private BigDecimal memberYesterdayProfitLossAmount;
+    @Transient
+    private BigDecimal memberWeekProfitLossAmount;
+    @Transient
+    private BigDecimal memberTotalProfitLossAmount;
+    @Transient
+    private BigDecimal teamYesterdayProfitLossAmount;
+    @Transient
+    private BigDecimal teamWeekProfitLossAmount;
+    @Transient
+    private BigDecimal teamTotalProfitLossAmount;
+    @Transient
+    private BigDecimal ethChargeAmount;
+    @Transient
+    private BigDecimal btcChargeAmount;
+    @Transient
+    private BigDecimal usdtChargeAmount;
+    @Transient
+    private String memberGradeName;
+    @Transient
+    private String inviterUsername;
+    @Transient
+    private String inviterMobile;
+    @Transient
+    private String inviterEmail;
+    @Transient
+    private BigDecimal yesterdayFee;
+    @Transient
+    private BigDecimal thisWeekFee;
+    @Transient
+    private BigDecimal totalFee;
+    @Transient
+    private BigDecimal teamYesterdayFee;
+    @Transient
+    private BigDecimal teamThisWeekFee;
+    @Transient
+    private BigDecimal teamTotalFee;
+
+
+
+    public Member() {
+        this.googleState = 0;
+        this.status = CommonStatus.NORMAL;
+        this.transactions = 0;
+        this.appealTimes = 0;
+        this.appealSuccessTimes = 0;
+        this.firstLevel = 0;
+        this.secondLevel = 0;
+        this.thirdLevel = 0;
+        this.realNameStatus = RealNameStatus.NOT_CERTIFIED;
+        this.loginCount = 0;
+        this.certifiedBusinessStatus = CertifiedBusinessStatus.NOT_CERTIFIED;
+        this.publishAdvertise = BooleanEnum.IS_TRUE;
+        this.transactionStatus = BooleanEnum.IS_TRUE;
+        this.signInAbility = true;
+        this.channelId = 0L;
+        this.isChannel = BooleanEnum.IS_FALSE;
+        this.loginLock = BooleanEnum.IS_FALSE;
+        this.integration = 0L;
+        this.memberGradeId = 1L;
+        this.generalizeTotal = 0L;
+        this.memberYesterdayProfitLossAmount = BigDecimal.ZERO;
+        this.memberWeekProfitLossAmount = BigDecimal.ZERO;
+        this.memberTotalProfitLossAmount = BigDecimal.ZERO;
+        this.teamYesterdayProfitLossAmount = BigDecimal.ZERO;
+        this.teamWeekProfitLossAmount = BigDecimal.ZERO;
+        this.teamTotalProfitLossAmount = BigDecimal.ZERO;
+        this.ethChargeAmount = BigDecimal.ZERO;
+        this.btcChargeAmount = BigDecimal.ZERO;
+        this.usdtChargeAmount = BigDecimal.ZERO;
+        this.yesterdayFee = BigDecimal.ZERO;
+        this.thisWeekFee = BigDecimal.ZERO;
+        this.totalFee = BigDecimal.ZERO;
+        this.teamYesterdayFee = BigDecimal.ZERO;
+        this.teamThisWeekFee = BigDecimal.ZERO;
+        this.teamTotalFee = BigDecimal.ZERO;
+    }
+
+
+    public Member(final Long id) {
+        this.googleState = 0;
+        this.status = CommonStatus.NORMAL;
+        this.transactions = 0;
+        this.appealTimes = 0;
+        this.appealSuccessTimes = 0;
+        this.firstLevel = 0;
+        this.secondLevel = 0;
+        this.thirdLevel = 0;
+        this.realNameStatus = RealNameStatus.NOT_CERTIFIED;
+        this.loginCount = 0;
+        this.certifiedBusinessStatus = CertifiedBusinessStatus.NOT_CERTIFIED;
+        this.publishAdvertise = BooleanEnum.IS_TRUE;
+        this.transactionStatus = BooleanEnum.IS_TRUE;
+        this.signInAbility = true;
+        this.channelId = 0L;
+        this.isChannel = BooleanEnum.IS_FALSE;
+        this.loginLock = BooleanEnum.IS_FALSE;
+        this.integration = 0L;
+        this.memberGradeId = 1L;
+        this.generalizeTotal = 0L;
+        this.memberYesterdayProfitLossAmount = BigDecimal.ZERO;
+        this.memberWeekProfitLossAmount = BigDecimal.ZERO;
+        this.memberTotalProfitLossAmount = BigDecimal.ZERO;
+        this.teamYesterdayProfitLossAmount = BigDecimal.ZERO;
+        this.teamWeekProfitLossAmount = BigDecimal.ZERO;
+        this.teamTotalProfitLossAmount = BigDecimal.ZERO;
+        this.ethChargeAmount = BigDecimal.ZERO;
+        this.btcChargeAmount = BigDecimal.ZERO;
+        this.usdtChargeAmount = BigDecimal.ZERO;
+        this.yesterdayFee = BigDecimal.ZERO;
+        this.thisWeekFee = BigDecimal.ZERO;
+        this.totalFee = BigDecimal.ZERO;
+        this.teamYesterdayFee = BigDecimal.ZERO;
+        this.teamThisWeekFee = BigDecimal.ZERO;
+        this.teamTotalFee = BigDecimal.ZERO;
+        this.id = id;
+    }
 }

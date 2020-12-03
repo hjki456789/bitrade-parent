@@ -11,15 +11,15 @@ public class ContractExchangeOrderInterestService
 {
     @Autowired
     private ContractExchangeOrderInterestRepository contractExchangeOrderInterestRepository;
-    
+
     public BigDecimal sumInterestBalanceByOrderId(final Long orderId) {
         return this.contractExchangeOrderInterestRepository.sumInterestBalanceByOrderId(orderId);
     }
-    
+
     public ContractExchangeOrderInterest save(final ContractExchangeOrderInterest interest) {
-        return (ContractExchangeOrderInterest)this.contractExchangeOrderInterestRepository.saveAndFlush((Object)interest);
+        return (ContractExchangeOrderInterest)this.contractExchangeOrderInterestRepository.saveAndFlush(interest);
     }
-    
+
     public BigDecimal sumInterestFeeByMemberId(final long memberId, final int status, final int walletType) {
         return this.contractExchangeOrderInterestRepository.sumInterestFeeByMemberId(memberId, status, walletType);
     }

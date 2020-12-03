@@ -1,5 +1,6 @@
 package cn.ztuo.bitrade.service;
 
+import com.querydsl.core.types.Predicate;
 import org.springframework.stereotype.*;
 import cn.ztuo.bitrade.dao.*;
 import org.springframework.beans.factory.annotation.*;
@@ -28,11 +29,11 @@ public class ContractCommissionService
     private ContractWalletFlowRecordService contractWalletFlowRecordService;
     @Autowired
     protected JPAQueryFactory queryFactory;
-    
+
     public Page<ContractCommissionInfo> findAll(final Predicate predicate, final Pageable pageable) {
         return (Page<ContractCommissionInfo>)this.contractCommissionRepository.findAll(predicate, pageable);
     }
-    
+
     @Transactional(readOnly = true)
     public PageResult<ContractCommissionExcel> queryWhereOrPage(final List<BooleanExpression> booleanExpressionList, final Integer pageNo, final Integer pageSize) {
         final List<ContractCommissionExcel> resultList = new ArrayList<ContractCommissionExcel>();
@@ -58,7 +59,7 @@ public class ContractCommissionService
         }
         return (PageResult<ContractCommissionExcel>)new PageResult((List)resultList, Long.valueOf(jpaQuery.fetchCount()));
     }
-    
+
     private ContractCommissionExcel getContractCommissionExcelParam(final ContractCommissionInfo contractCommissionInfo) {
         final ContractCommissionExcel dto = new ContractCommissionExcel();
         final Member member = contractCommissionInfo.getMember();
@@ -75,23 +76,23 @@ public class ContractCommissionService
         dto.setStatus((status == 0) ? "\u672a\u53d1\u653e" : "\u5df2\u53d1\u653e");
         return dto;
     }
-    
+
     public ContractCommissionInfo findOne(final String id) {
-        return (ContractCommissionInfo)this.contractCommissionRepository.findOne((Serializable)id);
+        return (ContractCommissionInfo)this.contractCommissionRepository.getOne(id);
     }
-    
+
     public ContractCommissionInfo findByMemberId(final String memberId) {
         return this.contractCommissionRepository.findByMemberId(memberId);
     }
-    
+
     public int updateStatus(final String id, final Integer status, final String adminId) {
         return this.contractCommissionRepository.updateStatus(id, status, adminId);
     }
-    
+
     public void save(final ContractCommissionInfo contractCommissionInfo) {
-        this.contractCommissionRepository.save((Object)contractCommissionInfo);
+        this.contractCommissionRepository.save(contractCommissionInfo);
     }
-    
+
     @Transactional(rollbackFor = { Exception.class })
     public MessageResult grantCommissionPass(final ContractCommissionInfo dto) {
         final Long proxyId = dto.getProxyId();
@@ -104,7 +105,7 @@ public class ContractCommissionService
                 proxyWallet = this.contractWalletService.insertContractWallet(proxyId, coinId);
             }
             if (proxyWallet.getBalance().compareTo(amount) == -1) {
-                return MessageResult.error("\u4e0a\u7ea7\u8282\u70b9\u7528\u6237\u8d26\u6237\u4f59\u989d\u4e0d\u8db3\uff0c\u8fd4\u4f63\u5ba1\u6838\u5931\u8d25!");
+                return MessageResult.error("上级节点用户账户余额不足，返佣审核失败!");
             }
             proxyWallet.setBalance(proxyWallet.getBalance().subtract(amount));
             this.contractWalletService.updateContractWalletBalance(proxyWallet);

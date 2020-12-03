@@ -10,8 +10,8 @@ public class ContractWalletExplodeRecordService
 {
     @Autowired
     private ContractWalletExplodeRecordRepository contractWalletExplodeRecordRepository;
-    
+
     public ContractWalletExplodeRecord saveRecord(final ContractWalletExplodeRecord explodeRecord) {
-        return (ContractWalletExplodeRecord)this.contractWalletExplodeRecordRepository.saveAndFlush((Object)explodeRecord);
+        return (ContractWalletExplodeRecord)this.contractWalletExplodeRecordRepository.saveAndFlush(explodeRecord);
     }
 }

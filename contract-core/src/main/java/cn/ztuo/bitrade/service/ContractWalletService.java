@@ -28,31 +28,31 @@ public class ContractWalletService
     private ContractWalletFlowRecordService contractWalletFlowRecordService;
     @Autowired
     private MemberAccountOperateRecordService memberAccountOperateRecordService;
-    
+
     public Page<ContractWallet> findAll(final Predicate predicate, final Pageable pageable) {
         return (Page<ContractWallet>)this.contractWalletRepository.findAll(predicate, pageable);
     }
-    
+
     public int updateIsLock(final Long id, final Integer isLock) {
         return this.contractWalletRepository.updateIsLock(id, isLock);
     }
-    
+
     public ContractWallet findByMemberId(final long memberId) {
         return this.contractWalletRepository.findByMemberId(memberId);
     }
-    
+
     public ContractWallet findByMemberIdAndCoin(final long memberId, final String coinId) {
         return this.contractWalletRepository.findByMemberIdAndCoin(memberId, coinId);
     }
-    
+
     public ContractWallet findOne(final Long id) {
         return this.contractWalletRepository.findById(id);
     }
-    
+
     public int updateContractWalletBalance(final ContractWallet contractWallet) {
         return this.contractWalletRepository.updateContractWalletBalance(contractWallet.getBalance(), contractWallet.getFrozenBalance(), contractWallet.getVirtualRechargeFrozenBalance(), contractWallet.getId(), contractWallet.getVersion());
     }
-    
+
     @Transactional(rollbackFor = { Exception.class })
     public int changeBalance(final ContractWallet contractWallet, final BigDecimal changeBalance, final ContractWalletOperationType operationType, final String remark, final String adminId) {
         contractWallet.setBalance(contractWallet.getBalance().add(changeBalance));
@@ -87,7 +87,7 @@ public class ContractWalletService
         }
         return 0;
     }
-    
+
     public ContractWallet insertContractWallet(final Long memberId, final String coinId) {
         final ContractWallet contractWallet = new ContractWallet();
         contractWallet.setMember(new Member(memberId));
@@ -97,11 +97,11 @@ public class ContractWalletService
         contractWallet.setVirtualRechargeFrozenBalance(BigDecimal.ZERO);
         return this.save(contractWallet);
     }
-    
+
     public ContractWallet save(final ContractWallet contractWallet) {
-        return (ContractWallet)this.contractWalletRepository.saveAndFlush((Object)contractWallet);
+        return (ContractWallet)this.contractWalletRepository.saveAndFlush(contractWallet);
     }
-    
+
     @Transactional(rollbackFor = { Exception.class })
     public Integer coin2Contract(final MemberWallet memberWallet, final ContractWallet contractWallet, final BigDecimal amount) {
         this.memberWalletService.decreaseBalance(memberWallet.getId(), amount, memberWallet.getVersion());
@@ -123,7 +123,7 @@ public class ContractWalletService
         this.transactionService.save(transaction);
         return 1;
     }
-    
+
     @Transactional(rollbackFor = { Exception.class })
     public Integer Contract2Coin(final MemberWallet memberWallet, final ContractWallet contractWallet, final BigDecimal amount) {
         this.memberWalletService.increaseBalance(memberWallet.getId(), amount, memberWallet.getVersion());
@@ -145,7 +145,7 @@ public class ContractWalletService
         this.transactionService.save(transaction);
         return 1;
     }
-    
+
     static {
         log = LoggerFactory.getLogger((Class)ContractWalletService.class);
     }

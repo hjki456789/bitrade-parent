@@ -30,4 +30,7 @@ public class MemberDeposit {
 
     @Transient
     private String username ;
+
+    @Transient
+    private int isAddMemberBalance;
 }

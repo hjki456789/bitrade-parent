@@ -12,11 +12,11 @@ public class ContractConfigService
 {
     @Autowired
     private ContractConfigRepository contractConfigRepository;
-    
+
     public ContractConfig findByConfigKey(final String configKey) {
-        return (ContractConfig)this.contractConfigRepository.findOne((Serializable)configKey);
+        return (ContractConfig)this.contractConfigRepository.getOne(configKey);
     }
-    
+
     public List<ContractConfig> findAll() {
         return (List<ContractConfig>)this.contractConfigRepository.findAll();
     }

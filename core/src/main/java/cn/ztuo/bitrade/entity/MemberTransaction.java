@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import cn.ztuo.bitrade.constant.TransactionType;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -82,4 +84,37 @@ public class MemberTransaction {
      */
     @Enumerated(EnumType.ORDINAL)
     private BooleanEnum isQuick;
+
+    private Long sequence;
+    private BigDecimal afterBalance;
+    private Long fromMemberId;
+    @JoinColumn(name = "memberId", referencedColumnName = "id", insertable = false, updatable = false)
+    @OneToOne
+    @NotFound(action = NotFoundAction.IGNORE)
+    private Member member;
+    @Excel(name = "代理商ID", orderNum = "2", width = 25.0)
+    @Transient
+    private Long proxyId;
+    @Excel(name = "邮箱", orderNum = "4", width = 35.0)
+    @Transient
+    private String email;
+    @Excel(name = "手机号", orderNum = "3", width = 30.0)
+    @Transient
+    private String mobilePhone;
+    @Excel(name = "出入金类型", orderNum = "6", width = 25.0)
+    @Transient
+    private String typeName;
+    @Excel(name = "出入金", orderNum = "5", width = 30.0)
+    @Transient
+    private String amountStr;
+    private Long lotteryCount;
+
+
+
+
+    public MemberTransaction() {
+        this.fee = BigDecimal.ZERO;
+        this.flag = 0;
+        this.sequence = System.currentTimeMillis();
+    }
 }

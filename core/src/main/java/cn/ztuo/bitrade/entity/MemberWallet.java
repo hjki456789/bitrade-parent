@@ -64,4 +64,9 @@ public class MemberWallet {
      */
     @Column(columnDefinition = "decimal(20,8) comment '释放余额'")
     private BigDecimal releaseBalance;
+    /**
+     * 锁仓余额
+     */
+    @Column(columnDefinition = "decimal(18,8) comment '锁仓余额'")
+    private BigDecimal blockBalance;
 }

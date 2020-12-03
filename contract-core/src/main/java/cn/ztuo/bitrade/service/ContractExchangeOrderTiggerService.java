@@ -10,8 +10,8 @@ public class ContractExchangeOrderTiggerService
 {
     @Autowired
     private ContractExchangeOrderTiggerRepository contractExchangeOrderTiggerRepository;
-    
+
     public ContractExchangeOrderTigger save(final ContractExchangeOrderTigger tigger) {
-        return (ContractExchangeOrderTigger)this.contractExchangeOrderTiggerRepository.saveAndFlush((Object)tigger);
+        return (ContractExchangeOrderTigger)this.contractExchangeOrderTiggerRepository.saveAndFlush(tigger);
     }
 }

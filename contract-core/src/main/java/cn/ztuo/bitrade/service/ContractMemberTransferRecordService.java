@@ -13,14 +13,14 @@ public class ContractMemberTransferRecordService
 {
     @Autowired
     private ContractMemberTransferRecordRepository contractMemberTransferRecordRepository;
-    
+
     public Page<ContractMemberTransferRecord> findAll(final Predicate predicate, final Pageable pageable) {
         return (Page<ContractMemberTransferRecord>)this.contractMemberTransferRecordRepository.findAll(predicate, pageable);
     }
-    
+
     public ContractMemberTransferRecord save(final ContractMemberTransferRecord contractMemberTransferRecord) {
         contractMemberTransferRecord.setCreateTime(new Date());
         contractMemberTransferRecord.setSequence(System.currentTimeMillis());
-        return (ContractMemberTransferRecord)this.contractMemberTransferRecordRepository.save((Object)contractMemberTransferRecord);
+        return (ContractMemberTransferRecord)this.contractMemberTransferRecordRepository.save(contractMemberTransferRecord);
     }
 }

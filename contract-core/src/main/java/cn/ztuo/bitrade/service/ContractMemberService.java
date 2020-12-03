@@ -1,5 +1,6 @@
 package cn.ztuo.bitrade.service;
 
+import com.querydsl.core.types.Predicate;
 import org.springframework.stereotype.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.dao.*;
@@ -40,8 +41,8 @@ public class ContractMemberService
     private ContractExchangeOrderFeeService contractExchangeOrderFeeService;
     @Autowired
     protected JPAQueryFactory queryFactory;
-    
-    public Page<Member> findAllMemberPromotions(final Predicate predicate, final Pageable pageable) {
+
+    public Page<Member> findAllMemberPromotions(final Predicate predicate, PageModel pageable) {
         final List<Member> memberList = new ArrayList<Member>();
         final Page<MemberPromotion> memberPromotionsPage = (Page<MemberPromotion>)this.memberPromotionService.findAll(predicate, pageable);
         if (memberPromotionsPage != null) {
@@ -56,7 +57,7 @@ public class ContractMemberService
         }
         return (Page<Member>)new PageImpl((List)memberList);
     }
-    
+
     public Page<Member> findAllContractMember(final Predicate predicate, final Pageable pageable) {
         final Page<Member> memberPage = (Page<Member>)this.memberService.findAll(predicate, pageable);
         if (memberPage == null) {
@@ -67,7 +68,7 @@ public class ContractMemberService
         }
         return memberPage;
     }
-    
+
     public List<ContractMemberExcel> contractMemberExcel(final List<BooleanExpression> booleanExpressionList, final Integer pageNo, final Integer pageSize) {
         final List<ContractMemberExcel> resultList = new ArrayList<ContractMemberExcel>();
         try {
@@ -114,7 +115,7 @@ public class ContractMemberService
         }
         return resultList;
     }
-    
+
     private Member getMemberInfo(final Member member) {
         final IfNodeType ifNode = (member.getIfNode() == null) ? IfNodeType.COMMON : member.getIfNode();
         if (IfNodeType.COMMON.getOrdinal() != ifNode.getOrdinal()) {
@@ -215,19 +216,19 @@ public class ContractMemberService
         }
         return member;
     }
-    
+
     public Page<ContractMember> findAll(final Predicate predicate, final Pageable pageable) {
         return (Page<ContractMember>)this.contractMemberRepository.findAll(predicate, pageable);
     }
-    
+
     public ContractMember findByMemberId(final String memberId) {
         return this.contractMemberRepository.findByMemberId(memberId);
     }
-    
+
     public int updateRebateRate(final ContractMember contractMember) {
         return this.contractMemberRepository.updateRebateRate(contractMember.getMemberId().toString(), contractMember.getContractRebateRate(), contractMember.getSpotRebateRate(), contractMember.getVersion());
     }
-    
+
     public void updateIfProxy(final String[] memberIds, final Integer ifProxy) {
         for (final String memberId : memberIds) {
             final ContractMember contractMember = this.contractMemberRepository.findByMemberId(memberId);
@@ -236,11 +237,11 @@ public class ContractMemberService
             }
         }
     }
-    
+
     public int updateProxyId(final Long memberId, final Long proxyId, final Long version) {
         return this.contractMemberRepository.updateProxyId(memberId, proxyId, version);
     }
-    
+
     @Transactional
     public int addMemberTransfer(final Long memberId, final Long newProxyMemberId, final Long oldProxyMemberId, final Long contractMemberVersion) {
         final ContractMemberTransferRecord contractMemberTransferRecord = new ContractMemberTransferRecord();
@@ -254,11 +255,11 @@ public class ContractMemberService
         final int result = this.updateProxyId(memberId, newProxyMemberId, contractMemberVersion);
         return result;
     }
-    
+
     public ContractMember insert(final ContractMember contractMember) {
-        return (ContractMember)this.contractMemberRepository.saveAndFlush((Object)contractMember);
+        return (ContractMember)this.contractMemberRepository.saveAndFlush(contractMember);
     }
-    
+
     public void updateStatuses(final Long nodeMemberId, final List<Long> memberIds, final Integer status) {
         for (final Long memberId : memberIds) {
             ContractMember contractMember = this.contractMemberRepository.findByMemberId(memberId.toString());
@@ -274,7 +275,7 @@ public class ContractMemberService
                 record.setStatus(status);
                 record.setSequence(System.currentTimeMillis());
                 record.setTime(new Date());
-                this.contractMemberStatusRecordRepository.saveAndFlush((Object)record);
+                this.contractMemberStatusRecordRepository.saveAndFlush(record);
             }
             else {
                 contractMember = new ContractMember();
