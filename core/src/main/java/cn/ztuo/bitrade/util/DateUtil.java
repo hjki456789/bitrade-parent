@@ -533,4 +533,11 @@ public class DateUtil {
             return 0L;
         }
     }
+
+    public static Date getLastWeekMonday(final Date date) {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTime(getThisWeekMonday(date));
+        cal.add(5, -7);
+        return cal.getTime();
+    }
 }
