@@ -4,6 +4,7 @@ import cn.ztuo.bitrade.constant.*;
 import cn.ztuo.bitrade.dao.MemberWalletDao;
 import cn.ztuo.bitrade.util.BigDecimalUtils;
 import cn.ztuo.bitrade.util.Md5;
+import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -20,6 +21,7 @@ import cn.ztuo.bitrade.service.Base.BaseService;
 import cn.ztuo.bitrade.vo.ChannelVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -281,5 +283,78 @@ public class MemberService extends BaseService {
 
     public List<Integer> selectMemberWalletForUpdate(Long memberId) {
         return memberDao.selectMemberWalletForUpdate(memberId);
+    }
+
+    public int alterUserType(final Long memberId, final Integer userType) {
+        UserType type = UserType.COMMON;
+        if (UserType.LEAD_ORDER.getOrdinal() == userType) {
+            type = UserType.LEAD_ORDER;
+        }
+        return this.memberDao.updateUserType(memberId, type);
+    }
+
+    public List<Long> queryMemberIds(final Member member) {
+        final List<BooleanExpression> booleanExpressionList = new ArrayList<BooleanExpression>();
+        if (member != null) {
+            if (null != member.getId()) {
+                booleanExpressionList.add(QMember.member.id.eq(member.getId()));
+            }
+            if (!StringUtils.isEmpty(member.getUsername())) {
+                booleanExpressionList.add(QMember.member.username.like("%" + member.getUsername() + "%"));
+            }
+            if (!StringUtils.isEmpty(member.getMobilePhone())) {
+                booleanExpressionList.add(QMember.member.mobilePhone.like("%" + member.getMobilePhone() + "%"));
+            }
+            if (!StringUtils.isEmpty(member.getEmail())) {
+                booleanExpressionList.add(QMember.member.email.like("%" + member.getEmail() + "%"));
+            }
+        }
+        final JPAQuery<Member> jpaQuery = (JPAQuery<Member>)this.queryFactory.selectFrom((EntityPath)QMember.member).where((Predicate[])booleanExpressionList.toArray((Predicate[])new BooleanExpression[booleanExpressionList.size()]));
+        final List<Member> list = (List<Member>)jpaQuery.fetch();
+        if (!CollectionUtils.isEmpty(list)) {
+            final List<Long> members = new ArrayList<Long>();
+            for (final Member m : list) {
+                members.add(m.getId());
+            }
+            return members;
+        }
+        return null;
+    }
+
+    public int updateMemberGradeId(final Long memberId, final long memberGradeId) {
+        return this.memberDao.updateMemberGradeId(memberId, memberGradeId);
+    }
+
+    public List<Long> getPredicateMemberIds(final Long memberId, final String username, final String realName, final String mobilePhone, final String email) {
+        final List<Long> memberIds = new ArrayList<Long>();
+        final List<BooleanExpression> booleanExpressions = new ArrayList<BooleanExpression>();
+        if (memberId != null) {
+            booleanExpressions.add(QMember.member.id.eq(memberId));
+        }
+        if (!StringUtils.isEmpty(username)) {
+            booleanExpressions.add(QMember.member.username.like("%" + username + "%"));
+        }
+        if (!StringUtils.isEmpty(realName)) {
+            booleanExpressions.add(QMember.member.realName.like("%" + realName + "%"));
+        }
+        if (!StringUtils.isEmpty(mobilePhone)) {
+            booleanExpressions.add(QMember.member.mobilePhone.like("%" + mobilePhone + "%"));
+        }
+        if (!StringUtils.isEmpty(email)) {
+            booleanExpressions.add(QMember.member.email.like("%" + email + "%"));
+        }
+        if (org.springframework.util.CollectionUtils.isEmpty(booleanExpressions)) {
+            return memberIds;
+        }
+        final JPAQuery<Member> jpaQuery = (JPAQuery<Member>)this.queryFactory.selectFrom((EntityPath)QMember.member).where((Predicate[])booleanExpressions.toArray((Predicate[])new BooleanExpression[booleanExpressions.size()]));
+        jpaQuery.orderBy(QMember.member.id.desc());
+        final List<Member> list = (List<Member>)jpaQuery.fetch();
+        if (org.springframework.util.CollectionUtils.isEmpty(list)) {
+            memberIds.add(-1L);
+        }
+        for (final Member member : list) {
+            memberIds.add(member.getId());
+        }
+        return memberIds;
     }
 }

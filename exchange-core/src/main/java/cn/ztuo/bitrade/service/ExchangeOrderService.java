@@ -862,4 +862,8 @@ public class ExchangeOrderService extends BaseService {
     public int pushWaitingOrderByOrderId(String orderId) {
         return exchangeOrderRepository.pushWaitingOrderByOrderId(orderId);
     }
+
+    public List<ExchangeOrder> findOrdersBySymbol(final String symbol, final Long startTime, final Long endTime) {
+        return this.exchangeOrderRepository.findOrdersBySymbol(symbol, startTime, endTime);
+    }
 }

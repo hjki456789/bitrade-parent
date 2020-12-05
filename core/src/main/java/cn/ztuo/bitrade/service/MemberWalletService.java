@@ -563,4 +563,10 @@ public class MemberWalletService extends BaseService {
     public void decreaseBalance(final Long walletId, final BigDecimal amount, final int version) {
         this.memberWalletDao.decreaseBalance(walletId, amount, version);
     }
+
+    @Transactional(rollbackFor = { Exception.class })
+    public void increaseBalanceWithoutVersion(final Long walletId, final BigDecimal amount) {
+        this.memberWalletDao.increaseBalanceWithoutVersion(walletId, amount);
+    }
+
 }

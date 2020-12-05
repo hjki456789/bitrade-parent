@@ -60,4 +60,22 @@ public class MemberGrade {
      */
     private BigDecimal seDiscountRate;
 
+    private Long directNumber;
+    private Long teamNumber;
+    private BigDecimal commissionRate;
+    private BigDecimal fixInvestAmount;
+    private BigDecimal oneGenerationRate;
+    private BigDecimal twoGenerationRate;
+    private BigDecimal threeGenerationRate;
+    private BigDecimal fourGenerationRate;
+    private BigDecimal fiveGenerationRate;
+    private BigDecimal sixGenerationRate;
+    private BigDecimal sevenGenerationRate;
+    private BigDecimal eightGenerationRate;
+    private BigDecimal nineGenerationRate;
+    private BigDecimal tenGenerationRate;
+    private BigDecimal teamInvestAmount;
+    private BigDecimal feeCommissionRate;
+    private int peersNeed;
+
 }

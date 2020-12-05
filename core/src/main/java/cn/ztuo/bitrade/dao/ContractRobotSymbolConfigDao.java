@@ -11,7 +11,7 @@ import javax.transaction.*;
 import org.springframework.data.jpa.repository.*;
 
 @Repository
-public interface ContractRobotSymbolConfigDao extends BaseDao<ContractRobotSymbolConfig>
+public interface ContractRobotSymbolConfigDao extends JpaRepository<ContractRobotSymbolConfig, String>, JpaSpecificationExecutor<ContractRobotSymbolConfig>, QuerydslPredicateExecutor<ContractRobotSymbolConfig>
 {
     @Transactional
     @Modifying

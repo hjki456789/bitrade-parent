@@ -26,4 +26,8 @@ public class ExchangeOrderDetailService {
     public ExchangeOrderDetail save(ExchangeOrderDetail detail){
        return orderDetailRepository.save(detail);
     }
+
+    public List<ExchangeOrderDetail> findAllByOrderIdAndTime(final String orderId, final Long startTimestamp, final Long endTimestamp) {
+        return this.orderDetailRepository.findByOrderIdAndTimeGreaterThanEqualAndTimeLessThan(orderId, startTimestamp, endTimestamp);
+    }
 }

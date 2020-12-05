@@ -58,4 +58,8 @@ public interface ExchangeOrderRepository extends JpaRepository<ExchangeOrder, St
 
     @Query(value = "select * from exchange_order where order_id = :orderId for update", nativeQuery = true)
     Optional<ExchangeOrder> getOrderForUpdate(@Param("orderId") String orderId);
+
+
+    @Query("select exchange from ExchangeOrder exchange where exchange.symbol=:symbol and (exchange.completedTime is null or (exchange.completedTime>=:startTime and exchange.completedTime<=:endTime))")
+    List<ExchangeOrder> findOrdersBySymbol(@Param("symbol") final String symbol, @Param("startTime") final Long startTime, @Param("endTime") final Long endTime);
 }

@@ -171,4 +171,8 @@ public interface MemberWalletDao extends BaseDao<MemberWallet> {
     @Query("update MemberWallet wallet set  wallet.balance=:balance,  wallet.frozenBalance=:frozenBalance  where wallet.id=:id ")
     int updateBalanceAndFrozenBalance(@Param("id") final Long p0, @Param("balance") final BigDecimal p1, @Param("frozenBalance") final BigDecimal p2);
 
+    @Modifying
+    @Query("update MemberWallet wallet set wallet.balance = wallet.balance + :amount where wallet.id = :walletId")
+    int increaseBalanceWithoutVersion(@Param("walletId") final long p0, @Param("amount") final BigDecimal p1);
+
 }
