@@ -39,4 +39,6 @@ public interface ExchangeCoinRepository extends JpaRepository<ExchangeCoin, Stri
      */
     @Query("update ExchangeCoin set defaultSymbol='0' where defaultSymbol='1'")
     Integer updateDefaultSymbol();
+
+    List<ExchangeCoin> findExchangeCoinBySymbolArea(final int p0);
 }

@@ -35,7 +35,7 @@ public class RewardActivityRecordController extends BaseAdminController {
     public MessageResult merge(@Valid RewardActivitySetting setting) {
         String info = setting.getInfo();
         JSONObject object = new JSONObject();
-        object.put("amount",info);
+        object.put("amount", info);
         setting.setInfo(object.toJSONString());
         setting.setStatus(BooleanEnum.IS_TRUE);
         rewardActivitySettingService.save(setting);

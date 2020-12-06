@@ -1,15 +1,18 @@
 package cn.ztuo.bitrade.controller.member;
 
+import cn.ztuo.bitrade.annotation.AccessLog;
 import cn.ztuo.bitrade.annotation.MultiDataSource;
+import cn.ztuo.bitrade.constant.AdminModule;
+import cn.ztuo.bitrade.constant.IfNodeType;
 import cn.ztuo.bitrade.constant.PageModel;
 import cn.ztuo.bitrade.constant.TransactionType;
 import cn.ztuo.bitrade.controller.BaseController;
+import cn.ztuo.bitrade.entity.ContractMemberTransferRecord;
 import cn.ztuo.bitrade.entity.Member;
+import cn.ztuo.bitrade.entity.MemberPromotion;
 import cn.ztuo.bitrade.entity.QMember;
 import cn.ztuo.bitrade.model.screen.MemberScreen;
-import cn.ztuo.bitrade.service.InviteManagementService;
-import cn.ztuo.bitrade.service.MemberService;
-import cn.ztuo.bitrade.service.MemberTransactionService;
+import cn.ztuo.bitrade.service.*;
 import cn.ztuo.bitrade.system.CoinExchangeFactory;
 import cn.ztuo.bitrade.util.MessageResult;
 import cn.ztuo.bitrade.util.PredicateUtils;
@@ -52,6 +55,15 @@ public class InviteManagementController extends BaseController {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private LocaleMessageSourceService messageSource;
+
+    @Autowired
+    private MemberPromotionService memberPromotionService;
+
+    @Autowired
+    private ContractMemberTransferRecordService contractMemberTransferRecordService;
 
     /**
      * 邀请管理默认查询所有的用户
@@ -162,4 +174,50 @@ public class InviteManagementController extends BaseController {
         }
         return success(amount.setScale(2,BigDecimal.ROUND_HALF_UP));
     }
+    @RequestMapping(value = { "updateSuperiorMember" }, method = { RequestMethod.POST })
+    @AccessLog(module = AdminModule.CMS, operation = "更新用户上级用户")
+    public MessageResult updateSuperiorMember(@RequestParam("memberId") final Long memberId, @RequestParam("superiorMemberId") final Long superiorMemberId) {
+        if (memberId == null || superiorMemberId == null) {
+            return MessageResult.error("参数不能为空!");
+        }
+        if (memberId.equals(superiorMemberId)) {
+            return MessageResult.error("用户上级不可是用户自己!");
+        }
+        Long orginalProxyId = 0L;
+        final MemberPromotion memberPromotion = this.memberPromotionService.findByInviteesId(memberId);
+        if (memberPromotion != null) {
+            orginalProxyId = memberPromotion.getInviterId();
+            final Member member = memberPromotion.getMember();
+            if (member == null) {
+                return MessageResult.error("该用户不存在!");
+            }
+            if (member.getIfNode() != null && member.getIfNode().getOrdinal() != IfNodeType.COMMON.getOrdinal()) {
+                return MessageResult.error("节点、代理、市场管理员用户都不可修改其上级!");
+            }
+            if (memberPromotion.getInviterId().equals(superiorMemberId)) {
+                return MessageResult.error("该用户已属于该上级，无需转移!");
+            }
+        }
+        else {
+            final Member member = this.memberService.findOne(memberId);
+            if (member == null) {
+                return MessageResult.error("该用户不存在!");
+            }
+        }
+        final Member superiorMember = this.memberService.findOne(superiorMemberId);
+        if (superiorMember == null) {
+            return MessageResult.error("上级用户不存在!");
+        }
+        this.memberPromotionService.updateSuperiorMember(memberId, superiorMemberId);
+        ContractMemberTransferRecord contractMemberTransferRecord = new ContractMemberTransferRecord();
+        Member member2 = new Member(memberId);
+        Member orginalProxyMember = new Member(orginalProxyId);
+        Member newProxyMember = new Member(superiorMemberId);
+        contractMemberTransferRecord.setMember(member2);
+        contractMemberTransferRecord.setOrginalProxyMember(orginalProxyMember);
+        contractMemberTransferRecord.setNewProxyMember(newProxyMember);
+        this.contractMemberTransferRecordService.save(contractMemberTransferRecord);
+        return this.success(this.messageSource.getMessage("SUCCESS"));
+    }
+
 }

@@ -34,7 +34,7 @@ public class VoteController
     @Transactional(rollbackFor = { Exception.class })
     public MessageResult vote(final long preCoinId, final int amount, @SessionAttribute("API_MEMBER") final AuthMember user) {
         final PreCoin preCoin = this.preCoinService.findById(preCoinId);
-        if (preCoin.getVote().getStatus().equals((Object)BooleanEnum.IS_FALSE)) {
+        if (preCoin.getVote().getStatus().equals(BooleanEnum.IS_FALSE)) {
             return MessageResult.error("This vote has been closed");
         }
         final Coin coin = this.coinService.queryPlatformCoin();
@@ -73,7 +73,7 @@ public class VoteController
     public MessageResult voteInfo() {
         final MessageResult result = MessageResult.success();
         final Vote vote = this.voteService.findVote();
-        result.setData((Object)vote);
+        result.setData(vote);
         return result;
     }
 

@@ -17,18 +17,18 @@ public class ModuyunSMSProvider implements SMSProvider
     private String accesskey;
     private String secretkey;
     private String signId;
-    
+
     public ModuyunSMSProvider(final String gateway, final String accesskey, final String secretkey, final String signId) {
         this.gateway = gateway;
         this.accesskey = accesskey;
         this.secretkey = secretkey;
         this.signId = signId;
     }
-    
+
     public static String getName() {
         return "moduyun";
     }
-    
+
     public static void main(final String[] args) {
         try {
             final String gateway = "https://live.moduyun.com/sms/v2/sendsinglesms";
@@ -49,7 +49,7 @@ public class ModuyunSMSProvider implements SMSProvider
             e2.printStackTrace();
         }
     }
-    
+
     @Override
     public MessageResult sendSingleMessage(final String mobile, final String content) throws Exception {
         final List<String> params = new ArrayList<String>();
@@ -58,12 +58,12 @@ public class ModuyunSMSProvider implements SMSProvider
         final JSONObject json = this.sendWithParam(0, "86", mobile, this.signId, templateId, params, "");
         return this.parseResult(json);
     }
-    
+
     @Override
     public MessageResult sendInternationalMessage(final String content, final String phone, final String... templateIds) throws Exception {
         return null;
     }
-    
+
     @Override
     public MessageResult sendNationalMessage(final String content, String nationCode, final String phone) throws Exception {
         final List<String> params = new ArrayList<String>();
@@ -75,7 +75,7 @@ public class ModuyunSMSProvider implements SMSProvider
         final JSONObject json = this.sendWithParam(0, nationCode, phone, this.signId, templateId, params, "");
         return this.parseResult(json);
     }
-    
+
     @Override
     public MessageResult sendLoginMessage(final String ip, final String phone) throws Exception {
         final String content = "";
@@ -85,14 +85,14 @@ public class ModuyunSMSProvider implements SMSProvider
         final JSONObject json = this.sendWithParam(0, "86", phone, this.signId, templateId, params, "");
         return this.parseResult(json);
     }
-    
+
     @Override
     public MessageResult sendTemplateMessage(final String mobilePhone, final String templateId) throws Exception {
         final List<String> params = new ArrayList<String>();
         final JSONObject json = this.sendWithParam(0, "86", mobilePhone, this.signId, templateId, params, "");
         return this.parseResult(json);
     }
-    
+
     public JSONObject sendWithParam(final int type, final String nationcode, final String phoneNumber, final String signId, final String templateId, final List<String> params, String ext) throws Exception {
         if (null == ext) {
             ext = "";
@@ -103,18 +103,18 @@ public class ModuyunSMSProvider implements SMSProvider
         final String url = this.gateway;
         final JSONObject data = new JSONObject();
         final JSONObject tel = new JSONObject();
-        tel.put("nationcode", (Object)nationcode);
-        tel.put("mobile", (Object)phoneNumber);
-        data.put("signId", (Object)signId);
-        data.put("templateId", (Object)templateId);
+        tel.put("nationcode", nationcode);
+        tel.put("mobile", phoneNumber);
+        data.put("signId", signId);
+        data.put("templateId", templateId);
         data.put("type", type);
         if (params != null && params.size() > 0) {
-            data.put("params", (Object)this.smsParamsToJSONArray(params));
+            data.put("params", this.smsParamsToJSONArray(params));
         }
-        data.put("sig", (Object)this.strToHash(String.format("secretkey=%s&random=%d&time=%d&mobile=%s", this.secretkey, random, curTime, phoneNumber)));
-        data.put("tel", (Object)tel);
+        data.put("sig", this.strToHash(String.format("secretkey=%s&random=%d&time=%d&mobile=%s", this.secretkey, random, curTime, phoneNumber)));
+        data.put("tel", tel);
         data.put("time", curTime);
-        data.put("ext", (Object)ext);
+        data.put("ext", ext);
         final String wholeUrl = String.format("%s?accesskey=%s&random=%d", url, this.accesskey, random);
         final HttpURLConnection conn = this.getPostHttpConn(wholeUrl);
         final OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "utf-8");
@@ -137,11 +137,11 @@ public class ModuyunSMSProvider implements SMSProvider
         }
         else {
             json.put("result", httpRspCode);
-            json.put("errmsg", (Object)("http error " + httpRspCode + " " + conn.getResponseMessage()));
+            json.put("errmsg", ("http error " + httpRspCode + " " + conn.getResponseMessage()));
         }
         return json;
     }
-    
+
     public JSONObject send(final int type, final String nationCode, final String phoneNumber, final String msg, String extend, String ext) throws Exception {
         if (0 != type && 1 != type) {
             throw new Exception("type " + type + " error");
@@ -158,15 +158,15 @@ public class ModuyunSMSProvider implements SMSProvider
         final String url = this.gateway;
         final JSONObject data = new JSONObject();
         final JSONObject tel = new JSONObject();
-        tel.put("nationcode", (Object)nationCode);
-        tel.put("mobile", (Object)phoneNumber);
+        tel.put("nationcode", nationCode);
+        tel.put("mobile", phoneNumber);
         data.put("type", type);
-        data.put("msg", (Object)msg);
-        data.put("sig", (Object)this.strToHash(String.format("secretkey=%s&random=%d&time=%d&mobile=%s", this.secretkey, random, curTime, phoneNumber)));
-        data.put("tel", (Object)tel);
+        data.put("msg", msg);
+        data.put("sig", this.strToHash(String.format("secretkey=%s&random=%d&time=%d&mobile=%s", this.secretkey, random, curTime, phoneNumber)));
+        data.put("tel", tel);
         data.put("time", curTime);
-        data.put("extend", (Object)extend);
-        data.put("ext", (Object)ext);
+        data.put("extend", extend);
+        data.put("ext", ext);
         final String wholeUrl = String.format("%s?accesskey=%s&random=%d", url, this.accesskey, random);
         final HttpURLConnection conn = this.getPostHttpConn(wholeUrl);
         final OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "utf-8");
@@ -188,11 +188,11 @@ public class ModuyunSMSProvider implements SMSProvider
         }
         else {
             json.put("result", httpRspCode);
-            json.put("errmsg", (Object)("http error " + httpRspCode + " " + conn.getResponseMessage()));
+            json.put("errmsg", ("http error " + httpRspCode + " " + conn.getResponseMessage()));
         }
         return json;
     }
-    
+
     private MessageResult parseResult(final JSONObject json) {
         final MessageResult mr = new MessageResult(500, "\u7cfb\u7edf\u9519\u8bef");
         try {
@@ -206,15 +206,15 @@ public class ModuyunSMSProvider implements SMSProvider
         }
         return mr;
     }
-    
+
     public JSONArray smsParamsToJSONArray(final List<String> params) {
         final JSONArray smsParams = new JSONArray();
         for (int i = 0; i < params.size(); ++i) {
-            smsParams.put((Object)params.get(i));
+            smsParams.put(params.get(i));
         }
         return smsParams;
     }
-    
+
     public String strToHash(final String str) throws NoSuchAlgorithmException {
         final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
         final byte[] inputByteArray = str.getBytes();
@@ -222,7 +222,7 @@ public class ModuyunSMSProvider implements SMSProvider
         final byte[] resultByteArray = messageDigest.digest();
         return this.byteArrayToHex(resultByteArray);
     }
-    
+
     public String byteArrayToHex(final byte[] byteArray) {
         final char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
         final char[] resultCharArray = new char[byteArray.length * 2];
@@ -233,7 +233,7 @@ public class ModuyunSMSProvider implements SMSProvider
         }
         return new String(resultCharArray);
     }
-    
+
     public HttpURLConnection getPostHttpConn(final String url) throws Exception {
         final URL object = new URL(url);
         final HttpURLConnection conn = (HttpURLConnection)object.openConnection();
@@ -244,7 +244,7 @@ public class ModuyunSMSProvider implements SMSProvider
         conn.setRequestMethod("POST");
         return conn;
     }
-    
+
     static {
         log = LoggerFactory.getLogger((Class)ModuyunSMSProvider.class);
     }

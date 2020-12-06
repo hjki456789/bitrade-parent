@@ -63,8 +63,8 @@ public class ChuangRuiSMSProvider implements SMSProvider {
 
     @Override
     public MessageResult sendTemplateMessage(final String mobile, final String templateId) throws Exception {
-        ChuangRuiSMSProvider.log.info("sms templateId={}", (Object)templateId);
-        final HttpResponse<String> response = (HttpResponse<String>)Unirest.post(this.gateway).field("accesskey", (Object)this.username).field("secret", this.password).field("mobile", mobile).field("content", "").field("sign", this.sign).field("templateId", templateId).asString();
+        ChuangRuiSMSProvider.log.info("sms templateId={}", templateId);
+        final HttpResponse<String> response = (HttpResponse<String>)Unirest.post(this.gateway).field("accesskey", this.username).field("secret", this.password).field("mobile", mobile).field("content", "").field("sign", this.sign).field("templateId", templateId).asString();
         ChuangRuiSMSProvider.log.info(" mobile : " + mobile + "templateId : " + templateId);
         ChuangRuiSMSProvider.log.info("result = {}", response.getBody());
         return this.parseResult((String)response.getBody());
@@ -78,8 +78,8 @@ public class ChuangRuiSMSProvider implements SMSProvider {
         }
         final String sms_gateway = "http://intlapi.1cloudsp.com/intl/api/v2/send";
         final String sms_sign = "2520";
-        ChuangRuiSMSProvider.log.info("sms content={}", (Object)content);
-        final HttpResponse<String> response = (HttpResponse<String>)Unirest.post(sms_gateway).field("accesskey", (Object)this.username).field("secret", this.password).field("mobile", mobile).field("content", content).field("sign", sms_sign).field("templateId", templateId).asString();
+        ChuangRuiSMSProvider.log.info("sms content={}", content);
+        final HttpResponse<String> response = (HttpResponse<String>)Unirest.post(sms_gateway).field("accesskey", this.username).field("secret", this.password).field("mobile", mobile).field("content", content).field("sign", sms_sign).field("templateId", templateId).asString();
         ChuangRuiSMSProvider.log.info(" mobile : " + mobile + "content : " + content);
         ChuangRuiSMSProvider.log.info("result = {}", response.getBody());
         return this.parseResult((String)response.getBody());

@@ -28,7 +28,7 @@ public class ContractDoubleDirectionWalletController extends BaseAdminController
     @AccessLog(module = AdminModule.CONTRACT, operation = "用户双仓合约账户列表")
     public MessageResult list(final Long memberId) {
         final List<ContractDoubleDirectionWallet> all = (List<ContractDoubleDirectionWallet>)this.contractDoubleDirectionWalletService.queryByMemberId(memberId);
-        return this.success((Object)all);
+        return this.success(all);
     }
 
     @RequiresPermissions({ "contract:double-direction-wallet:page-query" })
@@ -45,7 +45,7 @@ public class ContractDoubleDirectionWalletController extends BaseAdminController
             pageModel.setDirection((List)directions);
         }
         final Page<ContractDoubleDirectionWallet> all = (Page<ContractDoubleDirectionWallet>)this.contractDoubleDirectionWalletService.findPage((List)memberIds, coinId, isLock, pageModel.getPageable());
-        return this.success((Object)all);
+        return this.success(all);
     }
 
     @RequiresPermissions({ "contract:double-direction-wallet:edit" })

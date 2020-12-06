@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/system/member-bonus")
 @Slf4j
-public class MemberBonusController extends BaseAdminController{
+public class MemberBonusController extends BaseAdminController {
     @Autowired
     private MemberBonusService memberBonusService;
     @Autowired
@@ -38,34 +38,35 @@ public class MemberBonusController extends BaseAdminController{
      * @param pageSize
      * @return
      */
-    @RequestMapping(value = "/page-query",method = RequestMethod.POST)
+    @RequestMapping(value = "/page-query", method = RequestMethod.POST)
     @RequiresPermissions("system:member-bonus:info")
-    public MessageResult findAllCondition(@RequestParam(value = "memberId",required = false)Long memberId,
-                                          @RequestParam(value = "phone",required = false)String phone,
+    public MessageResult findAllCondition(@RequestParam(value = "memberId", required = false) Long memberId,
+                                          @RequestParam(value = "phone", required = false) String phone,
                                           @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
-                                          @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize){
+                                          @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
 
-        if (memberId!=null) {
+        if (memberId != null) {
             log.info("==根据memberId查询所有分红记录===memberId:" + memberId);
-            return findByMemberId(memberId,pageNo-1,pageSize);
+            return findByMemberId(memberId, pageNo - 1, pageSize);
         }
         if (!StringUtils.isEmpty(phone)) {
-            log.info("==根据phone查询所有分红记录===phone:" +phone);
-            Member member=memberService.findByPhone(phone);
-            return findByMemberId(member.getId(),pageNo-1,pageSize);
+            log.info("==根据phone查询所有分红记录===phone:" + phone);
+            Member member = memberService.findByPhone(phone);
+            return findByMemberId(member.getId(), pageNo - 1, pageSize);
         }
-        if (memberId==null&&StringUtils.isEmpty(phone)) {
-            log.info("=====查询所有分红记录======" );
-            Page<MemberBonusDTO> page=memberBonusService.getMemberBounsPage(pageNo-1,pageSize);
+        if (memberId == null && StringUtils.isEmpty(phone)) {
+            log.info("=====查询所有分红记录======");
+            Page<MemberBonusDTO> page = memberBonusService.getMemberBounsPage(pageNo - 1, pageSize);
 
-            return  success(page);
+            return success(page);
         }
-       return success();
+        return success();
     }
+
     //根据memberId进行分红查询
-    public MessageResult findByMemberId(Long memberId,Integer pageNo,Integer pageSize){
-        Page<MemberBonusDTO> page=memberBonusService.getBonusByMemberIdPage(memberId,pageNo,pageSize);
-        log.info("id查询结果："+page.getContent());
-        return  success(page);
+    public MessageResult findByMemberId(Long memberId, Integer pageNo, Integer pageSize) {
+        Page<MemberBonusDTO> page = memberBonusService.getBonusByMemberIdPage(memberId, pageNo, pageSize);
+        log.info("id查询结果：" + page.getContent());
+        return success(page);
     }
 }

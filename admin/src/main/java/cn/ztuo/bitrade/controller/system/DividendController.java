@@ -65,7 +65,7 @@ public class DividendController extends BaseAdminController {
      */
     @RequestMapping(value = "/fee/info", method = RequestMethod.POST)
     @RequiresPermissions("system:dividend:fee-query")
-   // @AccessLog(module = AdminModule.SYSTEM, operation = "查看手续费信息")
+    // @AccessLog(module = AdminModule.SYSTEM, operation = "查看手续费信息")
     @ApiOperation(value = "查看手续费汇总信息")
     @MultiDataSource(name = "second")
     public MessageResult statisticsFee(@RequestParam(value = "start") Date start,
@@ -115,7 +115,6 @@ public class DividendController extends BaseAdminController {
         } else {
             return error("coin error");
         }*/
-
 
 
         if (dividendStartRecordService.matchRecord(start.getTime(), end.getTime(), unit).size() > 0) {

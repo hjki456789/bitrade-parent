@@ -56,6 +56,9 @@ public class MemberWalletController extends BaseAdminController {
     @Autowired
     private OtcWalletService otcWalletService;
 
+    @Autowired
+    private MemberAccountOperateRecordService memberAccountOperateRecordService;
+
 
     @RequiresPermissions("member:page-query")
     @PostMapping("balance")
@@ -182,7 +185,18 @@ public class MemberWalletController extends BaseAdminController {
         memberTransaction.setFeeUnit(unit);
         memberTransaction.setType(TransactionType.ADMIN_RECHARGE);
         memberTransaction.setCreateTime(DateUtil.getCurrentDate());
-        memberTransactionService.save(memberTransaction);
+        if (this.memberTransactionService.save(memberTransaction) != null) {
+            MemberAccountOperateRecord record = new MemberAccountOperateRecord();
+            record.setMemberId(uid);
+            record.setChangeAmount(amount);
+            record.setCoin(unit);
+            record.setBalanceType(BalanceTypeEnum.BALANCE);
+            record.setAccountType(AccountTypeEnum.COIN);
+            record.setAdminUserId((currentAdmin != null) ? currentAdmin.getId().toString() : "");
+            record.setSequence(Long.valueOf(System.currentTimeMillis()));
+            record.setCreateTime(new Date());
+            memberAccountOperateRecordService.save(record);
+        }
         memberWalletService.save(memberWallet);
         return success(messageSource.getMessage("SUCCESS"));
     }
@@ -318,6 +332,50 @@ public class MemberWalletController extends BaseAdminController {
         } else {
             return error(500, "账号不存在");
         }
+    }
+
+    @RequiresPermissions({ "member:member-wallet:recharge" })
+    @PostMapping({ "frozenBalanceRecharge" })
+    @AccessLog(module = AdminModule.MEMBER, operation = "冻结充币")
+    public MessageResult frozenBalanceRecharge(@RequestParam("unit") final String unit, @RequestParam("uid") final Long uid, @RequestParam("amount") final BigDecimal amount) {
+        Coin coin = this.coinService.findByUnit(unit);
+        if (coin == null) {
+            return this.error("币种不存在");
+        }
+        final MemberWallet memberWallet = this.memberWalletService.findByCoinAndMemberId(coin, uid);
+        Assert.notNull(memberWallet, "wallet null");
+        memberWallet.setFrozenBalance(memberWallet.getFrozenBalance().add(amount));
+        final MemberTransaction memberTransaction = new MemberTransaction();
+        memberTransaction.setFee(BigDecimal.ZERO);
+        memberTransaction.setAmount(amount);
+        memberTransaction.setMemberId(memberWallet.getMemberId());
+        memberTransaction.setSymbol(unit);
+        memberTransaction.setType(TransactionType.ADMIN_FROZEN_RECHARGE);
+        memberTransaction.setCreateTime(DateUtil.getCurrentDate());
+        this.memberTransactionService.save(memberTransaction);
+        return this.success(this.messageSource.getMessage("SUCCESS"));
+    }
+
+    @RequiresPermissions({ "member:member-wallet:recharge" })
+    @PostMapping({ "blockBalanceRecharge" })
+    @AccessLog(module = AdminModule.MEMBER, operation = "锁仓充币")
+    public MessageResult blockBalanceRecharge(@RequestParam("unit") final String unit, @RequestParam("uid") final Long uid, @RequestParam("amount") final BigDecimal amount) {
+        Coin coin = this.coinService.findByUnit(unit);
+        if (coin == null) {
+            return this.error("币种不存在");
+        }
+        final MemberWallet memberWallet = this.memberWalletService.findByCoinAndMemberId(coin, uid);
+        Assert.notNull(memberWallet, "wallet null");
+        memberWallet.setBlockBalance(memberWallet.getBlockBalance().add(amount));
+        final MemberTransaction memberTransaction = new MemberTransaction();
+        memberTransaction.setFee(BigDecimal.ZERO);
+        memberTransaction.setAmount(amount);
+        memberTransaction.setMemberId(memberWallet.getMemberId());
+        memberTransaction.setSymbol(unit);
+        memberTransaction.setType(TransactionType.ADMIN_BLOCK_RECHARGE);
+        memberTransaction.setCreateTime(DateUtil.getCurrentDate());
+        this.memberTransactionService.save(memberTransaction);
+        return this.success(this.messageSource.getMessage("SUCCESS"));
     }
 
 

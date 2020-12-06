@@ -158,7 +158,7 @@ public class ProxySchedule
                     else {
                         this.smsProvider.sendInternationalMessage("", mobilePhone, new String[] { "3330" });
                     }
-                    this.redisUtil.set(currentKey, (Object)System.currentTimeMillis(), 6L, TimeUnit.HOURS);
+                    this.redisUtil.set(currentKey, System.currentTimeMillis(), 6L, TimeUnit.HOURS);
                 }
                 else {
                     if (StringUtils.isEmpty((CharSequence)email)) {
@@ -170,7 +170,7 @@ public class ProxySchedule
                         continue;
                     }
                     this.sendDepositWarningEmail(email);
-                    this.redisUtil.set(currentKey, (Object)System.currentTimeMillis(), 6L, TimeUnit.HOURS);
+                    this.redisUtil.set(currentKey, System.currentTimeMillis(), 6L, TimeUnit.HOURS);
                 }
             }
         }
@@ -338,10 +338,10 @@ public class ProxySchedule
         final Configuration cfg = new Configuration(Configuration.VERSION_2_3_26);
         cfg.setClassForTemplateLoading((Class)this.getClass(), "/templates");
         final Template template = cfg.getTemplate("depositWarning.ftl");
-        final String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, (Object)model);
+        final String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
         helper.setText(html, true);
         this.javaMailSender.send(mimeMessage);
-        ProxySchedule.logger.info("send email for {},content:{}", (Object)email, (Object)html);
+        ProxySchedule.logger.info("send email for {},content:{}", email, html);
     }
 
     static {

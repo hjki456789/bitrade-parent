@@ -24,7 +24,7 @@ public class ContractStrategyCommonConfigManageController extends BaseAdminContr
         if (configList == null) {
             return MessageResult.error("配置信息不存在!");
         }
-        return this.success((Object)configList);
+        return this.success(configList);
     }
 
     @PostMapping({ "symbol-config/list" })
@@ -33,6 +33,6 @@ public class ContractStrategyCommonConfigManageController extends BaseAdminContr
         if (configList == null) {
             return MessageResult.error("配置信息不存在!");
         }
-        return this.success((Object)configList);
+        return this.success(configList);
     }
 }

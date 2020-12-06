@@ -53,6 +53,9 @@ public class MemberService extends BaseService {
     @Autowired
     private MemberWalletDao memberWalletDao;
 
+    @Autowired
+    private MemberApplicationService memberApplicationService;
+
     /**
      * 条件查询对象 pageNo pageSize 同时传时分页
      *
@@ -356,5 +359,30 @@ public class MemberService extends BaseService {
             memberIds.add(member.getId());
         }
         return memberIds;
+    }
+
+  /**
+   * 功能描述: 重置实名认证
+   * @auther:
+   * @Description
+   * @param: [member]
+   * @return: void
+   * @date: 2020/12/6 18:06
+   */
+    @Transactional
+    public void resetRealNameVerify(final Member member) {
+        member.setIdNumber(null);
+        member.setRealName(null);
+        member.setApplicationTime(null);
+        member.setRealNameStatus(RealNameStatus.AUDITING);
+        member.setMemberLevel(MemberLevelEnum.GENERAL);
+        member.setKycStatus(0);
+        this.save(member);
+        final MemberApplication application = this.memberApplicationService.findByMemberId(member.getId());
+        if (application != null) {
+            application.setAuditStatus(AuditStatus.AUDIT_ING);
+            application.setKycStatus(5);
+            this.memberApplicationService.save(application);
+        }
     }
 }

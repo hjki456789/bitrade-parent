@@ -42,7 +42,7 @@ public class ContractRobotController extends BaseAdminController
             pageModel.setDirection((List)directions);
         }
         final Page<ContractRobotSymbolConfig> all = (Page<ContractRobotSymbolConfig>)this.contractRobotSymbolConfigService.findAll(predicate, pageModel.getPageable());
-        return this.success((Object)all);
+        return this.success(all);
     }
 
     @PostMapping({ "symbol-config/detail" })
@@ -52,7 +52,7 @@ public class ContractRobotController extends BaseAdminController
         if (robotSymbolConfig == null) {
             return MessageResult.error("机器人配置信息不存在!");
         }
-        return this.success((Object)robotSymbolConfig);
+        return this.success(robotSymbolConfig);
     }
 
     @RequiresPermissions({ "contract-robot:symbol-config:add" })
@@ -77,7 +77,7 @@ public class ContractRobotController extends BaseAdminController
         try {
             final List<ContractRobotSymbolConfig> list = new ArrayList<ContractRobotSymbolConfig>();
             list.add(robotSymbolConfig);
-            this.kafkaTemplate.send("contract-exchange-start-robot", JSONObject.toJSONString((Object)list));
+            this.kafkaTemplate.send("contract-exchange-start-robot", JSONObject.toJSONString(list));
         }
         catch (Exception ex) {}
         return this.success(this.messageSource.getMessage("SUCCESS"));

@@ -159,4 +159,8 @@ public class ExchangeCoinService {
         Sort sort = Sort.by(order1,order2);
         return coinRepository.findAll(spec, sort);
     }
+
+    public List<ExchangeCoin> findAllBySymbolArea(final int symbolArea) {
+        return this.coinRepository.findExchangeCoinBySymbolArea(symbolArea);
+    }
 }

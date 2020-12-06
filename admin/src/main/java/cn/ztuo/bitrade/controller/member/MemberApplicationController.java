@@ -115,7 +115,7 @@ public class MemberApplicationController extends BaseAdminController {
         return success(all);
     }
 
-    @RequiresPermissions("member:member-application:page-query")
+    @RequiresPermissions("member:member-application:pass")
     @PatchMapping("{id}/pass")
     @AccessLog(module = AdminModule.MEMBER, operation = "用户认证信息审核通过")
     @ApiOperation(value = "用户认证信息审核通过")
@@ -132,7 +132,7 @@ public class MemberApplicationController extends BaseAdminController {
         return success();
     }
 
-    @RequiresPermissions("member:member-application:page-query")
+    @RequiresPermissions("member:member-application:no-pass")
     @PatchMapping("{id}/no-pass")
     @AccessLog(module = AdminModule.MEMBER, operation = "用户认证信息审核不通过")
     @ApiOperation(value = "用户认证信息审核不通过")

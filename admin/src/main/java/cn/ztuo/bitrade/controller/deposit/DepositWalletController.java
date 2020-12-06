@@ -28,7 +28,7 @@ public class DepositWalletController extends BaseAdminController
     @AccessLog(module = AdminModule.DEPOSIT, operation = "用户托管账户列表")
     public MessageResult list(final Long memberId) {
         final List<DepositWallet> all = (List<DepositWallet>)this.depositWalletService.queryByMemberId(memberId);
-        return this.success((Object)all);
+        return this.success(all);
     }
 
     @RequiresPermissions({ "deposit:wallet:page-query" })
@@ -45,7 +45,7 @@ public class DepositWalletController extends BaseAdminController
             pageModel.setDirection((List)directions);
         }
         final Page<DepositWallet> all = (Page<DepositWallet>)this.depositWalletService.findPage((List)memberIds, coinId, isLock, pageModel.getPageable());
-        return this.success((Object)all);
+        return this.success(all);
     }
 
     @RequiresPermissions({ "deposit:wallet:edit" })

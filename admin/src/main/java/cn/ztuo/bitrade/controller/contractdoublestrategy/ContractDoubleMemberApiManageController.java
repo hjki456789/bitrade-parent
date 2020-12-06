@@ -55,7 +55,7 @@ public class ContractDoubleMemberApiManageController extends BaseAdminController
                 return;
             });
         }
-        return this.success((Object)page);
+        return this.success(page);
     }
 
     public Predicate getPredicate(final ContractDoubleMemberApi config) {

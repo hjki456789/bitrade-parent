@@ -2,14 +2,15 @@ package cn.ztuo.bitrade.dao;
 
 import cn.ztuo.bitrade.dao.base.BaseDao;
 import cn.ztuo.bitrade.entity.Coin;
-import cn.ztuo.bitrade.entity.MemberWallet;
 import cn.ztuo.bitrade.entity.OtcWallet;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Description:
@@ -58,4 +59,19 @@ public interface OtcWalletDao extends BaseDao<OtcWallet> {
     @Modifying
     @Query("update OtcWallet wallet set wallet.balance = wallet.balance - :amount,wallet.frozenBalance=wallet.frozenBalance + :amount where wallet.id = :walletId and wallet.balance >= :amount")
     Integer freezeBalance(@Param("walletId") Long walletId, @Param("amount") BigDecimal amount);
+
+
+    @Query(value = "select * from otc_wallet where id = :id limit 1", nativeQuery = true)
+    Optional<OtcWallet> findById(@Param("id") final Long p0);
+
+    @Transactional
+    @Modifying
+    @Query("update OtcWallet set balance = :balance,frozenBalance=:frozenBalance,  releaseBalance=:releaseBalance,version=version+1  where id =:id and version=:version")
+    Integer updateOtcWalletBalance(@Param("id") final Long p0, @Param("balance") final BigDecimal p1, @Param("frozenBalance") final BigDecimal p2, @Param("releaseBalance") final BigDecimal p3, @Param("version") final Integer p4);
+
+    @Transactional
+    @Modifying
+    @Query("update OtcWallet set is_lock = :isLock where id =:id")
+    int updateIsLock(@Param("id") final Long p0, @Param("isLock") final Integer p1);
+
 }

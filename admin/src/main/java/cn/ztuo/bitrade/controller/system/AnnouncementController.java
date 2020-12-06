@@ -65,7 +65,7 @@ public class AnnouncementController extends BaseController {
     @PostMapping("top")
     @AccessLog(module = AdminModule.ANNOUNCEMENT, operation = "公告置顶")
     @ApiOperation(value = "公告置顶")
-    public MessageResult toTop(@RequestParam("id")long id){
+    public MessageResult toTop(@RequestParam("id") long id) {
         Announcement announcement = announcementService.findById(id);
         //int a = announcementService.getMaxSort();
         //announcement.setSort(a+1);
@@ -77,6 +77,7 @@ public class AnnouncementController extends BaseController {
 
     /**
      * 取消公告置顶
+     *
      * @param id
      * @return
      */
@@ -84,7 +85,7 @@ public class AnnouncementController extends BaseController {
     @PostMapping("down")
     @AccessLog(module = AdminModule.ANNOUNCEMENT, operation = "公告取消置顶")
     @ApiOperation(value = "公告取消置顶")
-    public MessageResult toDown(@RequestParam("id")long id){
+    public MessageResult toDown(@RequestParam("id") long id) {
         Announcement announcement = announcementService.findById(id);
         announcement.setIsTop("1");
         announcementService.save(announcement);
@@ -106,7 +107,7 @@ public class AnnouncementController extends BaseController {
             booleanExpressions.add(QAnnouncement.announcement.isShow.eq(isShow));
         }
         if (title != null) {
-            booleanExpressions.add(QAnnouncement.announcement.title.like("%"+title+"%"));
+            booleanExpressions.add(QAnnouncement.announcement.title.like("%" + title + "%"));
         }
         Predicate predicate = PredicateUtils.getPredicate(booleanExpressions);
         List<Sort.Direction> directions = new ArrayList<>();
@@ -131,7 +132,7 @@ public class AnnouncementController extends BaseController {
     @GetMapping("{id}/detail")
     @ApiOperation(value = "查询通知公告详情")
     @MultiDataSource(name = "second")
-   // @AccessLog(module = AdminModule.ANNOUNCEMENT, operation = "查询通知公告详情")
+    // @AccessLog(module = AdminModule.ANNOUNCEMENT, operation = "查询通知公告详情")
     public MessageResult detail(
             @PathVariable Long id) {
         Announcement announcement = announcementService.findById(id);

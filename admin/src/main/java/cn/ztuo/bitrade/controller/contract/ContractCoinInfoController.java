@@ -23,6 +23,6 @@ public class ContractCoinInfoController extends BaseAdminController
     @AccessLog(module = AdminModule.CONTRACT, operation = "合约币种列表")
     public MessageResult normalCoinList() {
         final List<ContractCoinInfo> list = (List<ContractCoinInfo>)this.contractCoinInfoService.getNormalCoin();
-        return this.success((Object)list);
+        return this.success(list);
     }
 }

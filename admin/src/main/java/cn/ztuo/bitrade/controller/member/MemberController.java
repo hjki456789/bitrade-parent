@@ -3,6 +3,7 @@ package cn.ztuo.bitrade.controller.member;
 import cn.ztuo.bitrade.annotation.MultiDataSource;
 import cn.ztuo.bitrade.controller.common.BaseAdminController;
 import cn.ztuo.bitrade.model.screen.MemberScreen;
+import cn.ztuo.bitrade.util.Md5;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import cn.ztuo.bitrade.annotation.AccessLog;
@@ -142,6 +143,9 @@ public class MemberController extends BaseAdminController {
         //修改等级
         if(!StringUtils.isEmpty(member.getMemberGradeId())){
             one.setMemberGradeId(member.getMemberGradeId());
+        }
+        if (member.getIfFixMemberGrade() != null) {
+            one.setIfFixMemberGrade(member.getIfFixMemberGrade());
         }
         Member save = memberService.save(one);
         return success(save);
@@ -440,5 +444,41 @@ public class MemberController extends BaseAdminController {
         member.setWithdrawalStatus(status);
         memberService.save(member);
         return success(messageSource.getMessage("SUCCESS"));
+    }
+    @RequiresPermissions("member:pwd")
+    @PostMapping({ "/reset/pwd" })
+    @AccessLog(module = AdminModule.SYSTEM, operation = "重置用户密码")
+    public MessageResult resetPwd(final Long memberId, final Integer type) {
+        if (memberId == null || type == null) {
+            return MessageResult.error("参数错误!");
+        }
+        final Member member = this.memberService.findOne(memberId);
+        if (member == null) {
+            return MessageResult.error("用户不存在!");
+        }
+        try {
+            if (type == 1) {
+                final String password = Md5.md5Digest("123456" + member.getSalt()).toLowerCase();
+                member.setPassword(password);
+                this.memberService.save(member);
+                return MessageResult.success("重置密码成功，默认密码123456");
+            }
+            if (type == 2) {
+                final String jyPassword = Md5.md5Digest("123456" + member.getSalt()).toLowerCase();
+                member.setJyPassword(jyPassword);
+                this.memberService.save(member);
+                return MessageResult.success("重置交易密码成功，默认密码123456");
+            }
+            if (type == 3) {
+                this.memberService.resetRealNameVerify(member);
+                return MessageResult.success("重置实名认证成功");
+            }
+            if (type == 4) {}
+            return MessageResult.success("重置成功");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return MessageResult.error("重置密码失败，请稍后重试");
+        }
     }
 }

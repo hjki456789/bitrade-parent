@@ -77,7 +77,7 @@ public class DepartmentController extends BaseAdminController {
      */
     @RequiresPermissions("system:department:all")
     @RequestMapping("all")
-   // @AccessLog(module = AdminModule.SYSTEM, operation = "所有部门Department")
+    // @AccessLog(module = AdminModule.SYSTEM, operation = "所有部门Department")
     public MessageResult allDepartment(PageModel pageModel) {
         Page<Department> all = departmentService.findAll(new BooleanBuilder(), pageModel.getPageable());
         return success(all);

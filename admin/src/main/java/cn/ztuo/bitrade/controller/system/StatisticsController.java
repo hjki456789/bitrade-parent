@@ -31,7 +31,7 @@ public class StatisticsController extends BaseAdminController {
     private StatisticsService statisticsService;
 
     @Autowired
-    private OrderDetailAggregationService orderDetailAggregationService ;
+    private OrderDetailAggregationService orderDetailAggregationService;
 
     /**
      * @author MrGao
@@ -58,7 +58,7 @@ public class StatisticsController extends BaseAdminController {
      */
     //@RequiresPermissions("system:statistics:delegation-statistics")
     @PostMapping("delegation-statistics")
-   // @AccessLog(module = AdminModule.SYSTEM, operation = "委托量曲线")
+    // @AccessLog(module = AdminModule.SYSTEM, operation = "委托量曲线")
     public MessageResult delegationStatistics(String startTime, String endTime) {
         if (startTime == null || endTime == null)
             return error("参数不能为null");
@@ -76,7 +76,7 @@ public class StatisticsController extends BaseAdminController {
      */
     //@RequiresPermissions("system:statistics:order-statistics")
     @PostMapping("order-statistics")
-   // @AccessLog(module = AdminModule.SYSTEM, operation = "交易量 订单量")
+    // @AccessLog(module = AdminModule.SYSTEM, operation = "交易量 订单量")
     public MessageResult orderStatistics(String startTime, String endTime) {
         if (startTime == null || endTime == null)
             return error("参数不能为null");

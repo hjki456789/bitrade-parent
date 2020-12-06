@@ -62,4 +62,17 @@ public interface ExchangeOrderRepository extends JpaRepository<ExchangeOrder, St
 
     @Query("select exchange from ExchangeOrder exchange where exchange.symbol=:symbol and (exchange.completedTime is null or (exchange.completedTime>=:startTime and exchange.completedTime<=:endTime))")
     List<ExchangeOrder> findOrdersBySymbol(@Param("symbol") final String symbol, @Param("startTime") final Long startTime, @Param("endTime") final Long endTime);
+
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from  exchange_order where member_id=:memberId and status in (1,2,3)", nativeQuery = true)
+    int deleteHistoryOrdersByMemberId(@Param("memberId") final Long p0);
+
+    @Query("select exchange from ExchangeOrder exchange where exchange.symbol=:symbol and exchange.direction=1 and (exchange.completedTime is null or (exchange.completedTime>=:startTime and exchange.completedTime<=:endTime))")
+    List<ExchangeOrder> findUnblockOrders(@Param("symbol") final String p0, @Param("startTime") final Long p1, @Param("endTime") final Long p2);
+
+    @Query("select exchange from ExchangeOrder exchange where exchange.memberId=:memberId and exchange.symbol=:symbol and (exchange.completedTime is null or (exchange.completedTime>=:startTime and exchange.completedTime<=:endTime))")
+    List<ExchangeOrder> findOrdersByMemberId(@Param("memberId") final long p0, @Param("symbol") final String p1, @Param("startTime") final Long p2, @Param("endTime") final Long p3);
+
 }

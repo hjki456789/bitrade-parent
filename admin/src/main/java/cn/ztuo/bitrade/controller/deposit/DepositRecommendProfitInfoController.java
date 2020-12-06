@@ -46,7 +46,7 @@ public class DepositRecommendProfitInfoController extends BaseAdminController
             pageModel.setDirection((List)directions);
         }
         final Page<DepositRecommendProfitInfo> all = (Page<DepositRecommendProfitInfo>)this.depositRecommendProfitInfoService.findAll(predicate, pageModel.getPageable());
-        return this.success((Object)all);
+        return this.success(all);
     }
 
     private List<BooleanExpression> getBooleanExpressions(final List<Long> memberIds, final Date startTime, final Date endTime) {

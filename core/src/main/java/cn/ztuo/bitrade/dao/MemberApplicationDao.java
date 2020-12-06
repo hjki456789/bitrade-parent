@@ -24,4 +24,8 @@ public interface MemberApplicationDao extends BaseDao<MemberApplication> {
 
     MemberApplication findMemberApplicationByKycStatusInAndMember(List<Integer> kycStatus,Member member);
 
+    @Query(value = "select * from member_application where member_id = :memberId limit 1", nativeQuery = true)
+    MemberApplication findByMemberId(@Param("memberId") final Long p0);
+
+
 }

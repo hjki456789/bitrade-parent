@@ -6,11 +6,13 @@ import cn.ztuo.bitrade.dto.CoinDTO;
 import cn.ztuo.bitrade.entity.Coin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -72,5 +74,20 @@ public interface CoinDao extends JpaRepository<Coin, String>, JpaSpecificationEx
     List<Coin> findAllByStatusAndIsSettlement(CommonStatus status, boolean isSettlement);
 
     List<Coin> findAllByStatusAndIsSettlementNot(CommonStatus status, boolean isSettlement);
+
+    @Modifying
+    @Query("update Coin coin set coin.usdRate=:usdRate where coin.name=:name")
+    Integer updateCoinUsdRate(@Param("name") final String p0, @Param("usdRate") final BigDecimal p1);
+
+    @Transactional
+    @Modifying
+    @Query("update Coin coin set coin.status = :status where coin.name =:name")
+    int updateStatus(@Param("name") final String p0, @Param("status") final CommonStatus p1);
+
+    @Transactional
+    @Modifying
+    @Query("update Coin coin set coin.coldWalletAddress = :coldWalletAddress where coin.name =:coinName")
+    int updateColdWallet(@Param("coinName") final String p0, @Param("coldWalletAddress") final String p1);
+
 
 }

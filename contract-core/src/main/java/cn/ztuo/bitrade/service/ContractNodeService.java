@@ -77,13 +77,13 @@ public class ContractNodeService
     public List<ContractNode> findList(final ContractNode contractNode) {
         final Specification<ContractNode> spec = (Specification<ContractNode>)((root, criteriaQuery, criteriaBuilder) -> {
             if (contractNode.getEnable() != null) {
-                criteriaQuery.where(criteriaBuilder.equal(root.get("enable"), (Object)contractNode.getEnable()));
+                criteriaQuery.where(criteriaBuilder.equal(root.get("enable"), contractNode.getEnable()));
             }
             if (contractNode.getNodeLevel() != null) {
-                criteriaQuery.where(criteriaBuilder.equal(root.get("nodeLevel"), (Object)contractNode.getNodeLevel()));
+                criteriaQuery.where(criteriaBuilder.equal(root.get("nodeLevel"), contractNode.getNodeLevel()));
             }
             if (contractNode.getMemberStatus() != null) {
-                criteriaQuery.where(criteriaBuilder.equal(root.get("memberStatus"), (Object)contractNode.getMemberStatus()));
+                criteriaQuery.where(criteriaBuilder.equal(root.get("memberStatus"), contractNode.getMemberStatus()));
             }
             return null;
         });

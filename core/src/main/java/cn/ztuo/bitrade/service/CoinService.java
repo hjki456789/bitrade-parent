@@ -251,4 +251,23 @@ public class CoinService extends BaseService {
     public CoinChainRelation findRelationByKey(String coinKey) {
         return coinChainRelationDao.findByCoinKey(coinKey);
     }
+
+
+    @Transactional
+    public void updateCoinUsdRate(final String name, final BigDecimal price) {
+        this.coinDao.updateCoinUsdRate(name, price);
+    }
+
+    @Transactional
+    public int updateStatus(final String name, final CommonStatus status) {
+        return this.coinDao.updateStatus(name, status);
+    }
+
+
+    public int updateColdWallet(final String coinName, final String coldWalletAddress) {
+        return this.coinDao.updateColdWallet(coinName, coldWalletAddress);
+    }
+
+
+
 }

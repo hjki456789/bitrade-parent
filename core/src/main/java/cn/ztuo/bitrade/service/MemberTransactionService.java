@@ -1,6 +1,9 @@
 package cn.ztuo.bitrade.service;
 
+import cn.ztuo.bitrade.entity.*;
+import cn.ztuo.bitrade.util.BigDecimalUtils;
 import cn.ztuo.bitrade.util.DateUtil;
+import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
@@ -9,22 +12,16 @@ import com.querydsl.jpa.impl.JPAQuery;
 import cn.ztuo.bitrade.constant.PageModel;
 import cn.ztuo.bitrade.constant.TransactionType;
 import cn.ztuo.bitrade.dao.MemberTransactionDao;
-import cn.ztuo.bitrade.entity.MemberTransaction;
-import cn.ztuo.bitrade.entity.MemberWallet;
-import cn.ztuo.bitrade.entity.QMember;
-import cn.ztuo.bitrade.entity.QMemberTransaction;
 import cn.ztuo.bitrade.pagination.Criteria;
 import cn.ztuo.bitrade.pagination.PageResult;
 import cn.ztuo.bitrade.pagination.Restrictions;
 import cn.ztuo.bitrade.service.Base.BaseService;
 import cn.ztuo.bitrade.vo.MemberTransactionVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +39,9 @@ public class MemberTransactionService extends BaseService {
     private MemberTransactionDao transactionDao;
     @Autowired
     private MemberWalletService walletService;
+
+    @Autowired
+    private MemberPromotionService memberPromotionService;
 
     /**
      * 条件查询对象 pageNo pageSize 同时传时分页
@@ -271,5 +271,88 @@ public class MemberTransactionService extends BaseService {
      */
     public  List<MemberTransaction> findAllByCreateTime(String beginDate,String endDate){
         return transactionDao.findAllByCreateTime(beginDate,endDate);
+    }
+
+    public Page<MemberTransaction> findAll(final Predicate predicate, final Pageable pageable) {
+        final Page<MemberTransaction> page = (Page<MemberTransaction>)this.transactionDao.findAll(predicate, pageable);
+        if (page != null && CollectionUtils.isNotEmpty(page.getContent())) {
+            for (final MemberTransaction memberT : page.getContent()) {
+                this.getParam(memberT);
+            }
+        }
+        return page;
+    }
+
+    private MemberTransaction getParam(final MemberTransaction memberTransaction) {
+        if (memberTransaction.getMember() != null) {
+            memberTransaction.setEmail(memberTransaction.getMember().getEmail());
+            memberTransaction.setMobilePhone(memberTransaction.getMember().getMobilePhone());
+        }
+        final Long memberId = memberTransaction.getMemberId();
+        final MemberPromotion memberPromotion = this.memberPromotionService.findByInviteesId(memberId);
+        if (memberPromotion != null) {
+            memberTransaction.setProxyId(memberPromotion.getInviterId());
+        }
+        memberTransaction.setTypeName(memberTransaction.getType().getCnName());
+        memberTransaction.setAmountStr(memberTransaction.getAmount() + "  " + memberTransaction.getSymbol());
+        return memberTransaction;
+    }
+
+    @Transactional(readOnly = true)
+    public PageResult<MemberTransaction> queryWhereOrPage(final List<BooleanExpression> booleanExpressionList, final Integer pageNo, final Integer pageSize) {
+        final JPAQuery<MemberTransaction> jpaQuery = (JPAQuery<MemberTransaction>)this.queryFactory.selectFrom((EntityPath)QMemberTransaction.memberTransaction);
+        final OrderSpecifier<Long> orderSpecifier = (OrderSpecifier<Long>)QMemberTransaction.memberTransaction.sequence.desc();
+        if (booleanExpressionList != null) {
+            jpaQuery.where((Predicate[])booleanExpressionList.toArray((Predicate[])new BooleanExpression[booleanExpressionList.size()]));
+        }
+        List<MemberTransaction> list;
+        if (pageNo != null && pageSize != null) {
+            list = (List<MemberTransaction>)((JPAQuery)((JPAQuery)((JPAQuery)jpaQuery.orderBy((OrderSpecifier)orderSpecifier)).offset((long)((pageNo - 1) * pageSize))).limit((long)pageSize)).fetch();
+        }
+        else {
+            list = (List<MemberTransaction>)((JPAQuery)jpaQuery.orderBy((OrderSpecifier)orderSpecifier)).fetch();
+        }
+        if (!CollectionUtils.isEmpty(list)) {
+            for (final MemberTransaction m : list) {
+                this.getParam(m);
+            }
+        }
+        return new PageResult<MemberTransaction>(list, jpaQuery.fetchCount());
+    }
+
+    @Transactional(readOnly = true)
+    public List<MemberTransactionExcel> outExcel(final List<BooleanExpression> booleanExpressionList, final Integer pageNo, final Integer pageSize) {
+        final List<MemberTransactionExcel> resultList = new ArrayList<MemberTransactionExcel>();
+        try {
+            final JPAQuery<MemberTransaction> jpaQuery = (JPAQuery<MemberTransaction>)this.queryFactory.selectFrom((EntityPath)QMemberTransaction.memberTransaction);
+            final OrderSpecifier<Long> orderSpecifier = (OrderSpecifier<Long>)QMemberTransaction.memberTransaction.sequence.desc();
+            if (booleanExpressionList != null) {
+                jpaQuery.where((Predicate[])booleanExpressionList.toArray((Predicate[])new BooleanExpression[booleanExpressionList.size()]));
+            }
+            List<MemberTransaction> list;
+            if (pageNo != null && pageSize != null) {
+                list = (List<MemberTransaction>)((JPAQuery)((JPAQuery)((JPAQuery)jpaQuery.orderBy((OrderSpecifier)orderSpecifier)).offset((long)((pageNo - 1) * pageSize))).limit((long)pageSize)).fetch();
+            }
+            else {
+                list = (List<MemberTransaction>)((JPAQuery)jpaQuery.orderBy((OrderSpecifier)orderSpecifier)).fetch();
+            }
+            if (!CollectionUtils.isEmpty(list)) {
+                for (final MemberTransaction m : list) {
+                    final MemberTransactionExcel excelDto = new MemberTransactionExcel();
+                    this.getParam(m);
+                    excelDto.setMemberId(m.getMemberId());
+                    excelDto.setTypeName(m.getTypeName());
+                    excelDto.setAmountStr(m.getAmountStr());
+                    excelDto.setFeeStr(BigDecimalUtils.compareGt(m.getFee(), BigDecimal.ZERO) ? (m.getAmount() + " " + m.getSymbol()) : "0");
+                    excelDto.setFromMemberId(m.getFromMemberId());
+                    excelDto.setCreateTime(DateUtil.getFormatTime(DateUtil.YYYY_MM_DD_MM_HH_SS, m.getCreateTime()));
+                    resultList.add(excelDto);
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultList;
     }
 }

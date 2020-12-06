@@ -42,7 +42,7 @@ public class SettlementCoinController extends BaseAdminController {
     private SettlementCoinService settlementCoinService;
 
     @PostMapping("allSettlement")
-   // @AccessLog(module = AdminModule.COIN, operation = "查询所有结算币种")
+    // @AccessLog(module = AdminModule.COIN, operation = "查询所有结算币种")
     @ApiOperation(value = "查询所有结算币种")
     @MultiDataSource(name = "second")
     public MessageResult findAllSettlement() {
@@ -65,11 +65,11 @@ public class SettlementCoinController extends BaseAdminController {
 
     @RequiresPermissions("system:settlement")
     @PostMapping("page-query")
-   // @AccessLog(module = AdminModule.COIN, operation = "分页查找结算币种")
+    // @AccessLog(module = AdminModule.COIN, operation = "分页查找结算币种")
     @ApiOperation(value = "分页查找结算币种")
     @MultiDataSource(name = "second")
-    public MessageResult settlementPageQuery(PageModel pageModel,String coinName,CommonStatus status) {
-        Page<SettlementCoin> pageResult = settlementCoinService.findAll(pageModel,coinName,status);
+    public MessageResult settlementPageQuery(PageModel pageModel, String coinName, CommonStatus status) {
+        Page<SettlementCoin> pageResult = settlementCoinService.findAll(pageModel, coinName, status);
         return success(pageResult);
     }
 
@@ -99,7 +99,7 @@ public class SettlementCoinController extends BaseAdminController {
         MessageResult result = BindingResultUtil.validate(bindingResult);
         if (result != null)
             return result;
-       // SettlementCoin one = settlementCoinService
+        // SettlementCoin one = settlementCoinService
         settlementCoinService.save(settlementCoin);
         return success(settlementCoin);
     }

@@ -29,14 +29,14 @@ import java.util.List;
 public class TransferAddressController {
 
     @Autowired
-    private CoinService coinService ;
+    private CoinService coinService;
 
     @Autowired
-    private TransferAddressService transferAddressService ;
+    private TransferAddressService transferAddressService;
 
     //@RequiresPermissions("system:transfer-address:merge")
     @PostMapping("merge")
-    public MessageResult merge(@Valid TransferAddress transferAddress , @RequestParam("coinName") String coinName){
+    public MessageResult merge(@Valid TransferAddress transferAddress, @RequestParam("coinName") String coinName) {
         Coin coin = coinService.findOne(coinName);
         transferAddress.setCoin(coin);
         transferAddressService.save(transferAddress);
@@ -45,28 +45,28 @@ public class TransferAddressController {
 
     //@RequiresPermissions("system:transfer-address:page-query")
     @PostMapping("page-query")
-    public MessageResult pageQuery(PageModel pageModel, TransferAddressScreen transferAddressScreen){
+    public MessageResult pageQuery(PageModel pageModel, TransferAddressScreen transferAddressScreen) {
         List<BooleanExpression> booleanExpressions = new ArrayList<>();
-        if(StringUtils.isNotBlank(transferAddressScreen.getAddress()))
+        if (StringUtils.isNotBlank(transferAddressScreen.getAddress()))
             booleanExpressions.add(QTransferAddress.transferAddress.address.eq(transferAddressScreen.getAddress()));
-        if(StringUtils.isNotBlank(transferAddressScreen.getUnit()))
+        if (StringUtils.isNotBlank(transferAddressScreen.getUnit()))
             booleanExpressions.add(QTransferAddress.transferAddress.coin.unit.equalsIgnoreCase(transferAddressScreen.getAddress()));
-        if(transferAddressScreen.getStart()!=null)
+        if (transferAddressScreen.getStart() != null)
             booleanExpressions.add(QTransferAddress.transferAddress.status.eq(transferAddressScreen.getStart()));
-        Page<TransferAddress> page = transferAddressService.findAll(PredicateUtils.getPredicate(booleanExpressions),pageModel);
-        return MessageResult.getSuccessInstance("获取成功",page);
+        Page<TransferAddress> page = transferAddressService.findAll(PredicateUtils.getPredicate(booleanExpressions), pageModel);
+        return MessageResult.getSuccessInstance("获取成功", page);
     }
 
     //@RequiresPermissions("system:transfer-address:detail")
     @PostMapping("detail")
-    public MessageResult detail(Long id){
+    public MessageResult detail(Long id) {
         TransferAddress transferAddress = transferAddressService.findById(id);
-        return MessageResult.getSuccessInstance("获取成功",transferAddress);
+        return MessageResult.getSuccessInstance("获取成功", transferAddress);
     }
 
     //@RequiresPermissions("system:transfer-address:deletes")
     @PostMapping("deletes")
-    public MessageResult deletes(Long[] ids){
+    public MessageResult deletes(Long[] ids) {
         transferAddressService.deletes(ids);
         return MessageResult.success("删除成功");
     }

@@ -74,7 +74,7 @@ public class FeeStasticJob
                         continue;
                     }
                     String unit = null;
-                    if (exchangeOrder.getDirection().equals((Object)ExchangeOrderDirection.BUY)) {
+                    if (exchangeOrder.getDirection().equals(ExchangeOrderDirection.BUY)) {
                         unit = exchangeOrder.getCoinSymbol();
                     }
                     else {

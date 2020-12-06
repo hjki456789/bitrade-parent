@@ -272,4 +272,9 @@ public class MemberApplicationService extends BaseService {
     }
 
 
+    public MemberApplication findByMemberId(final Long memberId) {
+        return this.memberApplicationDao.findByMemberId(memberId);
+    }
+
+
 }

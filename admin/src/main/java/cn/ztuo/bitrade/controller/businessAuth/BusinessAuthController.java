@@ -238,7 +238,7 @@ public class BusinessAuthController extends BaseAdminController {
             lists.add(QBusinessAuthApply.businessAuthApply.certifiedBusinessStatus.eq(status));
         }
         final Page<BusinessAuthApply> page = (Page<BusinessAuthApply>)this.businessAuthApplyService.page(PredicateUtils.getPredicate((List)lists), pageModel.getPageable());
-        return this.success((Object)page);
+        return this.success(page);
     }
 
 

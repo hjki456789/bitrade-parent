@@ -37,7 +37,7 @@ public class ContractRobotPinStrategyController extends BaseAdminController
             pageModel.setDirection((List)directions);
         }
         final Page<ContractRobotPinStrategy> all = (Page<ContractRobotPinStrategy>)this.contractRobotPinStrategyService.findPage(symbol, status, side, pageModel.getPageable());
-        return this.success((Object)all);
+        return this.success(all);
     }
 
     @RequiresPermissions({ "contract:robot-pin-strategy:edit" })

@@ -110,7 +110,7 @@ public class AccessLogController extends BaseAdminController {
             list.add(QAdminAccessLog.adminAccessLog.accessTime.after(startTime));
         }
         if (endTime != null) {
-            list.add(QAdminAccessLog.adminAccessLog.accessTime.before(DateUtils.addDays(endTime,1)));
+            list.add(QAdminAccessLog.adminAccessLog.accessTime.before(DateUtils.addDays(endTime, 1)));
         }
         Page<AdminAccessLog> all = adminAccessLogService.page(list, pageModel);
         return success(all);

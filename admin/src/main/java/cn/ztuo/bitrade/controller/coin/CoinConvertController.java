@@ -46,7 +46,7 @@ public class CoinConvertController extends BaseAdminController
             pageModel.setDirection((List)directions);
         }
         final Page<CoinConvert> all = (Page<CoinConvert>)this.coinConvertService.findAllPage(predicate, pageModel.getPageable());
-        return this.success((Object)all);
+        return this.success(all);
     }
 
     @RequiresPermissions({ "coin:coin-convert:save" })

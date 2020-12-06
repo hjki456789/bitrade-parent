@@ -26,7 +26,7 @@ public class WebsiteInformationController extends BaseAdminController {
 
     @RequiresPermissions("system:website-information:find-one")
     @GetMapping("/find-one")
-   // @AccessLog(module = AdminModule.SYSTEM, operation = "站点信息WebsiteInformation")
+    // @AccessLog(module = AdminModule.SYSTEM, operation = "站点信息WebsiteInformation")
     public MessageResult get() {
         WebsiteInformation one = websiteInformationService.fetchOne();
         if (one == null)

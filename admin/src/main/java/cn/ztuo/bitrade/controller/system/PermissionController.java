@@ -9,21 +9,28 @@ import cn.ztuo.bitrade.entity.QSysPermission;
 import cn.ztuo.bitrade.entity.SysPermission;
 import cn.ztuo.bitrade.service.SysPermissionService;
 import cn.ztuo.bitrade.util.MessageResult;
+import cn.ztuo.bitrade.util.PredicateUtils;
 import com.mysema.commons.lang.Assert;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
@@ -34,7 +41,7 @@ public class PermissionController extends BaseController {
     @Autowired
     private SysPermissionService sysPermissionService;
 
-   // @RequiresPermissions("system:permission:merge")
+    // @RequiresPermissions("system:permission:merge")
     @PostMapping("/merge")
     @AccessLog(module = AdminModule.SYSTEM, operation = "创建/修改权限")
     @ApiOperation(value = "创建/修改权限")
@@ -46,16 +53,16 @@ public class PermissionController extends BaseController {
             @ApiImplicitParam(name = "name", value = "权限代码", required = false, dataType = "String"),
     })
     public MessageResult merge(@Valid SysPermission permission) {
-        if(permission.getId()==null) {
+        if (permission.getId() == null) {
             SysPermission data = sysPermissionService.findByPermissionName(permission.getName());
             if (data != null) {
                 return error("权限名重复");
             }
-        }else {
+        } else {
             SysPermission data = sysPermissionService.findOne(permission.getId());
-            if(!data.getName().equalsIgnoreCase(permission.getName())){
-                SysPermission s =  sysPermissionService.findByPermissionName(permission.getName());
-                if(s!=null){
+            if (!data.getName().equalsIgnoreCase(permission.getName())) {
+                SysPermission s = sysPermissionService.findByPermissionName(permission.getName());
+                if (s != null) {
                     return error("权限名重复");
                 }
             }
@@ -72,20 +79,38 @@ public class PermissionController extends BaseController {
     @AccessLog(module = AdminModule.SYSTEM, operation = "分页查询权限")
     @ApiOperation(value = "分页查询权限")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNo", value = "页码", required = true, dataType = "Integer",defaultValue = "1"),
-            @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true, dataType = "Integer",defaultValue = "10"),
+            @ApiImplicitParam(name = "pageNo", value = "页码", required = true, dataType = "Integer", defaultValue = "1"),
+            @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true, dataType = "Integer", defaultValue = "10"),
             @ApiImplicitParam(name = "parentId", value = "上级id", required = false, dataType = "Long"),
     })
     @MultiDataSource(name = "second")
     public MessageResult pageQuery(PageModel pageModel,
-                                   @RequestParam(value = "parentId", required = false) Long parentId) {
-        BooleanExpression predicate = QSysPermission.sysPermission.id.isNotNull();
+                                   @RequestParam(value = "parentId", required = false) Long parentId,
+                                   @RequestParam(value = "title", required = false) String title,
+                                   @RequestParam(value = "name", required = false) String name) {
+        Predicate predicate = null;
+        List<BooleanExpression> booleanExpressions = this.getBooleanExpressions(parentId, title, name);
+        if (!CollectionUtils.isEmpty(booleanExpressions)) {
+            predicate = PredicateUtils.getPredicate((List) booleanExpressions);
+        }
+        if (parentId != null && (parentId + "").equals("0")) {
+            pageModel.setPageSize(Integer.valueOf(100));
+        }
+        if (pageModel.getProperty() == null) {
+            final List<String> list = new ArrayList<>();
+            list.add("id");
+            final List<Sort.Direction> directions = new ArrayList<>();
+            directions.add(Sort.Direction.DESC);
+            pageModel.setProperty((List) list);
+            pageModel.setDirection((List) directions);
+        }
+        /*BooleanExpression predicate = QSysPermission.sysPermission.id.isNotNull();
         if (parentId != null) {
             predicate = QSysPermission.sysPermission.parentId.eq(parentId);
             if ((parentId+"").equals("0")){
                 pageModel.setPageSize(100);
             }
-        }
+        }*/
         Page<SysPermission> all = sysPermissionService.findAll(predicate, pageModel.getPageable());
         return success(all);
     }
@@ -114,6 +139,20 @@ public class PermissionController extends BaseController {
     public MessageResult deletes(@RequestParam(value = "ids") Long[] ids) {
         sysPermissionService.deletes(ids);
         return MessageResult.success("批量删除权限成功");
+    }
+
+    private List<BooleanExpression> getBooleanExpressions(final Long parentId, final String title, final String name) {
+        final List<BooleanExpression> booleanExpressions = new ArrayList<BooleanExpression>();
+        if (parentId != null) {
+            booleanExpressions.add(QSysPermission.sysPermission.parentId.eq(parentId));
+        }
+        if (!StringUtils.isEmpty((CharSequence) name)) {
+            booleanExpressions.add(QSysPermission.sysPermission.name.eq(name));
+        }
+        if (!StringUtils.isEmpty((CharSequence) title)) {
+            booleanExpressions.add(QSysPermission.sysPermission.title.like("%" + title + "%"));
+        }
+        return booleanExpressions;
     }
 
 }

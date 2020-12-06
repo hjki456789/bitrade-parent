@@ -71,7 +71,7 @@ public class AppRevisionController extends BaseAdminController {
     @GetMapping("{id}")
     @ApiOperation(value = "APP版本详情")
     @RequiresPermissions("cms:app")
-   // @AccessLog(module = AdminModule.APP, operation = "APP版本详情")
+    // @AccessLog(module = AdminModule.APP, operation = "APP版本详情")
     @MultiDataSource(name = "second")
     public MessageResult get(@PathVariable("id") Long id) {
         AppRevision appRevision = service.findById(id);
@@ -83,7 +83,7 @@ public class AppRevisionController extends BaseAdminController {
     @GetMapping("page-query")
     @ApiOperation(value = "分页查询APP版本")
     @RequiresPermissions("cms:app")
-   // @AccessLog(module = AdminModule.APP, operation = "分页查询APP版本")
+    // @AccessLog(module = AdminModule.APP, operation = "分页查询APP版本")
     @MultiDataSource(name = "second")
     public MessageResult get(PageModel pageModel, AppRevisionScreen screen) {
         return success(service.findAllScreen(screen, pageModel));

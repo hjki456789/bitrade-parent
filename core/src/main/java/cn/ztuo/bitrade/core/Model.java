@@ -95,7 +95,7 @@ public class Model {
     }
 
     public Model create(Object bean) throws IllegalArgumentException, IllegalAccessException {
-        this.create((Object)BeanMapUtils.bean2Map(bean));
+        this.create(BeanMapUtils.bean2Map(bean));
         return this;
     }
 

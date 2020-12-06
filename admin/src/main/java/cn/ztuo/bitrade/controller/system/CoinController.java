@@ -267,6 +267,29 @@ public class CoinController extends BaseAdminController {
         return success(pageResult);
     }
 
+    @RequiresPermissions({"system:coin:update-status"})
+    @PostMapping({"update-status"})
+    @AccessLog(module = AdminModule.CONTRACT, operation = "修改禁用状态")
+    public MessageResult updateStatus(@RequestParam("name") final String name, @RequestParam("status") final Integer status) {
+        if (status == null || StringUtils.isEmpty((Object) name)) {
+            return MessageResult.error("参数错误!");
+        }
+        CommonStatus statu = null;
+        if (status == 1) {
+            statu = CommonStatus.ILLEGAL;
+        } else if (status == 0) {
+            statu = CommonStatus.NORMAL;
+        }
+        if (statu == null) {
+            return MessageResult.error("参数错误!");
+        }
+        final int result = this.coinService.updateStatus(name, statu);
+        if (result > 0) {
+            return this.success(this.messageSource.getMessage("SUCCESS"));
+        }
+        return MessageResult.error("FAIL!");
+    }
+
     private BigDecimal getRPCWalletBalance(String unit) {
         try {
             String url = "http://SERVICE-RPC-" + unit + "/rpc/balance";
@@ -280,7 +303,7 @@ public class CoinController extends BaseAdminController {
                 if (mr.getCode() == 0) {
                     String balance = mr.getData().toString();
                     BigDecimal bigDecimal = new BigDecimal(balance);
-                    log.info(unit + messageSource.getMessage("HOT_WALLET_BALANCE")+ bigDecimal);
+                    log.info(unit + messageSource.getMessage("HOT_WALLET_BALANCE") + bigDecimal);
                     return bigDecimal;
                 }
             }
@@ -382,7 +405,7 @@ public class CoinController extends BaseAdminController {
         map.put("address", address);
         map.put("amount", amount.toString());
         map.put("fee", coin.getMinerFee().toPlainString());
-        if(!StringUtils.isEmpty(remark)){
+        if (!StringUtils.isEmpty(remark)) {
             map.put("remark", remark);
         }
         String param = coinService.sign(map);
@@ -402,7 +425,7 @@ public class CoinController extends BaseAdminController {
             hotTransferRecord.setTransactionNumber(result.getData().toString());
             hotTransferRecordService.save(hotTransferRecord);
             return success(messageSource.getMessage("SUCCESS"), hotTransferRecord);
-        }else if(!StringUtils.isEmpty(result.getMessage())){
+        } else if (!StringUtils.isEmpty(result.getMessage())) {
             return error(result.getMessage());
         }
         return error(messageSource.getMessage("REQUEST_FAILED"));
@@ -422,6 +445,19 @@ public class CoinController extends BaseAdminController {
         return success(messageSource.getMessage("SUCCESS"), page);
     }
 
+
+    @RequestMapping({"create-cold-wallet"})
+    public MessageResult createColdWallet(@RequestParam("coinName") final String coinName, @RequestParam("coldWalletAddress") final String coldWalletAddress) {
+        final Coin coin = this.coinService.findOne(coinName);
+        if (coin == null) {
+            return MessageResult.error("币种配置不存在");
+        }
+        if (!StringUtils.isEmpty((Object) coin.getColdWalletAddress())) {
+            return MessageResult.error("该币种配置冷钱包地址已存在");
+        }
+        this.coinService.updateColdWallet(coinName, coldWalletAddress);
+        return MessageResult.success(this.messageSource.getMessage("SUCCESS"));
+    }
 
     /**
      * 添加新币种

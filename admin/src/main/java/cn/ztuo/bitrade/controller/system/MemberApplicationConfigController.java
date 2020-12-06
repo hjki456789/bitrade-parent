@@ -24,18 +24,18 @@ import javax.validation.Valid;
 public class MemberApplicationConfigController {
 
     @Autowired
-    private MemberApplicationConfigService memberApplicationConfigService ;
+    private MemberApplicationConfigService memberApplicationConfigService;
 
     @RequiresPermissions("system:member-application-config:merge")
     @PostMapping("merge")
     @AccessLog(module = AdminModule.MEMBER, operation = "实名认证配置修改")
     @ApiOperation(value = "实名认证配置修改")
-    public MessageResult merge(@Valid MemberApplicationConfig memberApplicationConfig, BindingResult bindingResult){
+    public MessageResult merge(@Valid MemberApplicationConfig memberApplicationConfig, BindingResult bindingResult) {
         MessageResult result = BindingResultUtil.validate(bindingResult);
-        if(result!=null)
-            return result ;
+        if (result != null)
+            return result;
         memberApplicationConfigService.save(memberApplicationConfig);
-        return MessageResult.getSuccessInstance("保存成功",memberApplicationConfig);
+        return MessageResult.getSuccessInstance("保存成功", memberApplicationConfig);
     }
 
     @RequiresPermissions("system:member-application-config:detail")
@@ -43,7 +43,7 @@ public class MemberApplicationConfigController {
     //@AccessLog(module = AdminModule.MEMBER, operation = "实名认证配置详情")
     @ApiOperation(value = "获取所有用户")
     @MultiDataSource(name = "second")
-    public MessageResult query(){
-        return MessageResult.getSuccessInstance("获取成功",memberApplicationConfigService.get());
+    public MessageResult query() {
+        return MessageResult.getSuccessInstance("获取成功", memberApplicationConfigService.get());
     }
 }

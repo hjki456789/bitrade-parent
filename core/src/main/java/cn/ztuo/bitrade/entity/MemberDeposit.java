@@ -28,6 +28,8 @@ public class MemberDeposit {
     private String txid;
     private String address;
 
+    private int collectType;
+
     @Transient
     private String username ;
 

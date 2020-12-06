@@ -213,7 +213,7 @@ public class EmployeeController extends BaseAdminController {
 //            }
             String ADMIN_LOGIN = "ADMIN_LOGIN";
             if (!CaptchaUtil.validate(request.getSession(), ADMIN_LOGIN, captcha)) {
-              return error("验证码不正确");
+                return error("验证码不正确");
             }
         }
         try {

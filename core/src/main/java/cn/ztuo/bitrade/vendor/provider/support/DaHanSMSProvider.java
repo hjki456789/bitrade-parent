@@ -56,7 +56,7 @@ public class DaHanSMSProvider implements SMSProvider
             paramMap.put("sign", "【mustwin】");
             paramMap.put("subcode", "");
             paramMap.put("sendtime", "");
-            final String re = HttpClientUtil.httpPostWithJSON(this.gateway, JSON.toJSONString((Object)paramMap));
+            final String re = HttpClientUtil.httpPostWithJSON(this.gateway, JSON.toJSONString(paramMap));
             for (int i = 0; i < 100; ++i) {
                 System.err.println(re);
                 System.err.println(paramMap);
@@ -95,7 +95,7 @@ public class DaHanSMSProvider implements SMSProvider
     @Override
     public MessageResult sendTemplateMessage(final String mobile, final String templateId) throws Exception {
         DaHanSMSProvider.log.info("sms templateId={}", templateId);
-        final HttpResponse<String> response = Unirest.post(this.gateway).field("accesskey", (Object)this.username).field("secret", this.password).field("mobile", mobile).field("content", "").field("sign", this.sign).field("templateId", templateId).asString();
+        final HttpResponse<String> response = Unirest.post(this.gateway).field("accesskey", this.username).field("secret", this.password).field("mobile", mobile).field("content", "").field("sign", this.sign).field("templateId", templateId).asString();
         DaHanSMSProvider.log.info(" mobile : " + mobile + "templateId : " + templateId);
         DaHanSMSProvider.log.info("result = {}", response.getBody());
         return this.parseResult((String)response.getBody());
@@ -119,7 +119,7 @@ public class DaHanSMSProvider implements SMSProvider
             paramMap.put("sign", "\u3010mustwin\u3011");
             paramMap.put("subcode", "");
             paramMap.put("sendtime", "");
-            final String re = HttpClientUtil.httpPostWithJSON(this.gateway, JSON.toJSONString((Object)paramMap));
+            final String re = HttpClientUtil.httpPostWithJSON(this.gateway, JSON.toJSONString(paramMap));
             return this.parseResult(re);
         }
         catch (Exception e) {

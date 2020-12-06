@@ -1,12 +1,18 @@
 package cn.ztuo.bitrade.service;
 
+import cn.ztuo.bitrade.constant.AccountTypeEnum;
+import cn.ztuo.bitrade.constant.BalanceTypeEnum;
 import cn.ztuo.bitrade.constant.PageModel;
 import cn.ztuo.bitrade.constant.TransactionType;
 import cn.ztuo.bitrade.dao.CoinDao;
 import cn.ztuo.bitrade.dao.OtcWalletDao;
 import cn.ztuo.bitrade.dto.OtcWalletDTO;
 import cn.ztuo.bitrade.entity.*;
+import cn.ztuo.bitrade.enums.OtcWalletBalanceType;
+import cn.ztuo.bitrade.enums.OtcWalletOperationType;
 import cn.ztuo.bitrade.exception.InformationExpiredException;
+import cn.ztuo.bitrade.pagination.Criteria;
+import cn.ztuo.bitrade.pagination.Restrictions;
 import cn.ztuo.bitrade.service.Base.BaseService;
 import cn.ztuo.bitrade.util.BigDecimalUtils;
 import cn.ztuo.bitrade.util.MessageResult;
@@ -14,9 +20,12 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,9 +55,81 @@ public class OtcWalletService extends BaseService {
     @Autowired
     private CoinDao coinDao;
 
+    @Autowired
+    private OtcCoinService otcCoinService;
+    @Autowired
+    private CoinService coinService;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private OtcWalletFlowRecordService otcWalletFlowRecordService;
+    @Autowired
+    private MemberAccountOperateRecordService memberAccountOperateRecordService;
+
+    public Page<OtcWallet> findPage(final Long memberId, final String username, final String mobilePhone, final String email, final String coinId, final Integer isLock, final Pageable pageable) {
+        final Criteria<OtcWallet> specification = new Criteria<OtcWallet>();
+        final List<Long> memberIds = this.memberService.getPredicateMemberIds(memberId, username, null, mobilePhone, email);
+        if (!CollectionUtils.isEmpty(memberIds)) {
+            specification.add(Restrictions.in("memberId", memberIds, true));
+        }
+        if (StringUtils.isNotEmpty((CharSequence)coinId)) {
+            specification.add(Restrictions.eq("coin.name", coinId, true));
+        }
+        if (null != isLock) {
+            specification.add(Restrictions.eq("isLock", isLock, true));
+        }
+        final Page<OtcWallet> page = (Page<OtcWallet>)this.otcWalletDao.findAll(specification, pageable);
+        for (final OtcWallet otcWallet : page.getContent()) {
+            final Member member = this.memberService.findOne(otcWallet.getMemberId());
+            otcWallet.setMember(member);
+        }
+        return page;
+    }
 
     public List<OtcWallet> findByMemberId(Long memberId) {
-        return otcWalletDao.findOtcWalletByMemberId(memberId);
+        List<OtcWallet> result = this.otcWalletDao.findOtcWalletByMemberId(memberId);
+        List<OtcCoin> otcCoinList = this.otcCoinService.findAll();
+        if (null != otcCoinList && otcCoinList.size() > 0) {
+            if (null == result || result.size() <= 0) {
+                for (final OtcCoin coin : otcCoinList) {
+                    Coin memberCoin = this.coinService.findByUnit(coin.getUnit());
+                    OtcWallet otcWalletNew = new OtcWallet();
+                    otcWalletNew.setCoin(memberCoin);
+                    otcWalletNew.setIsLock(0);
+                    otcWalletNew.setMemberId(memberId);
+                    otcWalletNew.setBalance(BigDecimal.ZERO);
+                    otcWalletNew.setFrozenBalance(BigDecimal.ZERO);
+                    otcWalletNew.setReleaseBalance(BigDecimal.ZERO);
+                    otcWalletNew.setVersion(0);
+                    this.save(otcWalletNew);
+                }
+            }
+            else if (null != result && result.size() < otcCoinList.size()) {
+                for (final OtcCoin coin : otcCoinList) {
+                    boolean ifFind = false;
+                    for (final OtcWallet wallet : result) {
+                        if (coin.getName().equals(wallet.getCoin().getName())) {
+                            ifFind = true;
+                            break;
+                        }
+                    }
+                    if (!ifFind) {
+                        final Coin memberCoin2 = this.coinService.findByUnit(coin.getUnit());
+                        final OtcWallet otcWalletNew2 = new OtcWallet();
+                        otcWalletNew2.setCoin(memberCoin2);
+                        otcWalletNew2.setIsLock(0);
+                        otcWalletNew2.setMemberId(memberId);
+                        otcWalletNew2.setBalance(BigDecimal.ZERO);
+                        otcWalletNew2.setFrozenBalance(BigDecimal.ZERO);
+                        otcWalletNew2.setReleaseBalance(BigDecimal.ZERO);
+                        otcWalletNew2.setVersion(0);
+                        this.save(otcWalletNew2);
+                    }
+                }
+            }
+            return this.otcWalletDao.findOtcWalletByMemberId(memberId);
+        }
+        return result;
     }
 
 
@@ -322,6 +403,53 @@ public class OtcWalletService extends BaseService {
         List<OtcWalletDTO> content = query.offset((pageModel.getPageNo()-1)*pageModel.getPageSize()).limit(pageModel.getPageSize()).fetch();
         long total = query.fetchCount();
         return new PageImpl<>(content, pageModel.getPageable(), total);
+    }
+
+    public OtcWallet findOne(final Long id) {
+        return this.otcWalletDao.getOne(id);
+    }
+
+    public int updateOtcWalletBalance(final OtcWallet otcWallet) {
+        return this.otcWalletDao.updateOtcWalletBalance(otcWallet.getId(), otcWallet.getBalance(), otcWallet.getFrozenBalance(), otcWallet.getReleaseBalance(), otcWallet.getVersion());
+    }
+
+    public int updateIsLock(final Long id, final Integer isLock) {
+        return this.otcWalletDao.updateIsLock(id, isLock);
+    }
+
+    @Transactional(rollbackFor = { Exception.class })
+    public int changeBalance(final OtcWallet otcWallet, final BigDecimal changeBalance, final OtcWalletOperationType operationType, final String remark, final String adminId) {
+        otcWallet.setBalance(otcWallet.getBalance().add(changeBalance));
+        final Long memberId = otcWallet.getMemberId();
+        final String coinId = otcWallet.getCoin().getName();
+        final int result = this.updateOtcWalletBalance(otcWallet);
+        if (result > 0) {
+            final OtcWalletFlowRecord otcWalletFlowRecord = new OtcWalletFlowRecord();
+            otcWalletFlowRecord.setMember(new Member(memberId));
+            otcWalletFlowRecord.setCoin(new Coin(coinId));
+            otcWalletFlowRecord.setBalanceType(OtcWalletBalanceType.AVAILABLE_BALANCE);
+            otcWalletFlowRecord.setAmount(changeBalance);
+            otcWalletFlowRecord.setAfterBalance(otcWallet.getBalance());
+            otcWalletFlowRecord.setOperationType(operationType);
+            otcWalletFlowRecord.setRemark(remark);
+            otcWalletFlowRecord.setCreateTime(new Date());
+            otcWalletFlowRecord.setSequence(System.currentTimeMillis());
+            final MessageResult result2 = this.otcWalletFlowRecordService.saveRecord(otcWalletFlowRecord);
+            if (result2.getCode() == 0) {
+                final MemberAccountOperateRecord record = new MemberAccountOperateRecord();
+                record.setMemberId(memberId);
+                record.setChangeAmount(changeBalance);
+                record.setCoin(coinId);
+                record.setBalanceType(BalanceTypeEnum.BALANCE);
+                record.setAccountType(AccountTypeEnum.OTC);
+                record.setAdminUserId(adminId);
+                record.setSequence(System.currentTimeMillis());
+                record.setCreateTime(new Date());
+                this.memberAccountOperateRecordService.save(record);
+                return 1;
+            }
+        }
+        return 0;
     }
 
 }

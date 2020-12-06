@@ -58,6 +58,13 @@ public class ExchangeCoinController extends BaseAdminController {
     private KafkaTemplate<String, String> kafkaTemplate;
 
 
+    @PostMapping({ "enable-list" })
+    @AccessLog(module = AdminModule.EXCHANGE, operation = "启用的exchangeCoin列表")
+    public MessageResult enableExchangeCoinList() {
+        final List<ExchangeCoin> list = (List<ExchangeCoin>)this.exchangeCoinService.findAllEnabled();
+        return this.success(list);
+    }
+
 
     @RequiresPermissions("exchange:exchange-coin")
     @PostMapping("merge")

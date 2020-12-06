@@ -19,7 +19,7 @@ public class ContractCoinService
 
     public List<ContractCoin> findAllEnabled() {
             Specification<ContractCoin> spec = (Specification<ContractCoin>)((root, criteriaQuery, criteriaBuilder) -> {
-                criteriaQuery.where(criteriaBuilder.equal(root.get("enable"), (Object)1));
+                criteriaQuery.where(criteriaBuilder.equal(root.get("enable"), 1));
                 return null;
         });
         final Sort.Order order = new Sort.Order(Sort.Direction.ASC, "sort");

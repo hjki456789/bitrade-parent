@@ -42,7 +42,7 @@ public class ContractCommissionController extends BaseAdminController
         if (!CollectionUtils.isEmpty((Collection)memberIdList)) {
             if (memberId != null) {
                 if (!memberIdList.contains(memberId)) {
-                    return this.success((Object)new PageImpl((List)new ArrayList()));
+                    return this.success(new PageImpl((List)new ArrayList()));
                 }
                 memberIdList = new ArrayList<Long>();
                 memberIdList.add(memberId);
@@ -65,7 +65,7 @@ public class ContractCommissionController extends BaseAdminController
             pageModel.setDirection((List)directions);
         }
         final Page<ContractCommissionInfo> all = (Page<ContractCommissionInfo>)this.contractCommissionService.findAll(predicate, pageModel.getPageable());
-        return this.success((Object)all);
+        return this.success(all);
     }
 
     @GetMapping({ "out-excel" })
@@ -82,7 +82,7 @@ public class ContractCommissionController extends BaseAdminController
         if (!CollectionUtils.isEmpty((Collection)memberIdList)) {
             if (memberId != null) {
                 if (!memberIdList.contains(memberId)) {
-                    return this.success((Object)new PageImpl((List)new ArrayList()));
+                    return this.success(new PageImpl((List)new ArrayList()));
                 }
                 memberIdList = new ArrayList<Long>();
                 memberIdList.add(memberId);
