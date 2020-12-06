@@ -22,7 +22,7 @@ public interface MemberApplicationDao extends BaseDao<MemberApplication> {
     @Query("select a from MemberApplication a where a.idCard=:idCard and (a.auditStatus=:sta1 or a.auditStatus=:sta2) ")
     List<MemberApplication> findSuccessMemberApplicationsByIdCard(@Param("idCard") String idCard, @Param("sta1") AuditStatus sta1, @Param("sta2") AuditStatus sta2);
 
-    MemberApplication findMemberApplicationByKycStatusInAndMember(List<Integer> kycStatus,Member member);
+    MemberApplication findMemberApplicationByKycStatusInAndMember(List<Integer> kycStatus, Member member);
 
     @Query(value = "select * from member_application where member_id = :memberId limit 1", nativeQuery = true)
     MemberApplication findByMemberId(@Param("memberId") final Long p0);

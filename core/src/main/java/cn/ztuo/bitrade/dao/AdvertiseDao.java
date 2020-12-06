@@ -73,7 +73,7 @@ public interface AdvertiseDao extends BaseDao<Advertise> {
 
     @Modifying
     @Query("update Advertise a set a.status = :status,a.updateTime=:updateTime where a.id in :ids")
-    int alterStatusBatch(@Param("status") AdvertiseControlStatus status, @Param("updateTime") Date updateTime, @Param("ids") Long[] ids) ;
+    int alterStatusBatch(@Param("status") AdvertiseControlStatus status, @Param("updateTime") Date updateTime, @Param("ids") Long[] ids);
 
 
     @Query("select count(a.id) from Advertise a where a.member = :member")
@@ -87,5 +87,5 @@ public interface AdvertiseDao extends BaseDao<Advertise> {
 
     @Modifying
     @Query("update Advertise a set a.top = :top,a.updateTime=:updateTime where a.id = :id")
-    int alterTopBatch(@Param("top") Integer top, @Param("updateTime") Date updateTime, @Param("id") Long id) ;
+    int alterTopBatch(@Param("top") Integer top, @Param("updateTime") Date updateTime, @Param("id") Long id);
 }

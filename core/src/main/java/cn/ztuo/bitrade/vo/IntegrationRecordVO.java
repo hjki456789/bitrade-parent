@@ -16,9 +16,9 @@ public class IntegrationRecordVO extends BaseQueryVO {
 
     private IntegrationRecordType type;
 
-    private String createStartTime ;
+    private String createStartTime;
 
-    private String createEndTime ;
+    private String createEndTime;
 
 
 }

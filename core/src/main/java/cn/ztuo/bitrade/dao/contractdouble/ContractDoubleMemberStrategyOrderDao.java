@@ -4,13 +4,15 @@ import cn.ztuo.bitrade.dao.base.BaseDao;
 import cn.ztuo.bitrade.entity.contractdouble.*;
 import org.springframework.data.querydsl.*;
 import org.springframework.data.repository.query.*;
+
 import java.util.*;
 import javax.transaction.*;
+
 import org.springframework.data.jpa.repository.*;
+
 import java.math.*;
 
-public interface ContractDoubleMemberStrategyOrderDao extends BaseDao<ContractDoubleMemberStrategyOrder>
-{
+public interface ContractDoubleMemberStrategyOrderDao extends BaseDao<ContractDoubleMemberStrategyOrder> {
     @Query(value = "select a.* from contract_double_member_strategy_order a  WHERE a.status=0  and a.match_status not in (5,6,7)  LIMIT 1000", nativeQuery = true)
     List<ContractDoubleMemberStrategyOrder> findAllNeedCheckOrders();
 

@@ -4,12 +4,13 @@ import cn.ztuo.bitrade.dao.base.BaseDao;
 import cn.ztuo.bitrade.entity.unblock.*;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.*;
+
 import java.util.*;
 import javax.transaction.*;
+
 import org.springframework.data.jpa.repository.*;
 
-public interface UnblockRobotTicketRepository extends JpaRepository<UnblockRobotTicket, String>, JpaSpecificationExecutor<UnblockRobotTicket>, QuerydslPredicateExecutor<UnblockRobotTicket>
-{
+public interface UnblockRobotTicketRepository extends JpaRepository<UnblockRobotTicket, String>, JpaSpecificationExecutor<UnblockRobotTicket>, QuerydslPredicateExecutor<UnblockRobotTicket> {
     @Transactional
     @Modifying
     @Query(value = "insert into unblock_robot_ticket(id,status,effective_day,create_time)  values(:id,:status,:effectiveDay,:createTime)", nativeQuery = true)

@@ -19,11 +19,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
-@ConditionalOnProperty(prefix ="swagger2",value = {"enable"},havingValue = "true")
+@ConditionalOnProperty(prefix = "swagger2", value = {"enable"}, havingValue = "true")
 public class Swagger2Config {
     @Bean
     @ConditionalOnMissingBean(Docket.class)
-    public Docket createRestApi(){
+    public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
@@ -36,7 +36,7 @@ public class Swagger2Config {
         return new ApiInfoBuilder()
                 .title("APP")
                 .description("第一版")
-                .contact(new Contact("App","http://www.baidu.com","123@qq.com"))
+                .contact(new Contact("App", "http://www.baidu.com", "123@qq.com"))
                 .version("1.0")
                 .build();
     }

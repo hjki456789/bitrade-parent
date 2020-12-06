@@ -67,11 +67,11 @@ public class RewardPromotionSetting {
     @Max(value = 100)
     @Min(value = 0)
     @Transient
-    private BigDecimal one ;
+    private BigDecimal one;
 
     @Max(value = 100)
     @Min(value = 0)
     @Transient
-    private BigDecimal two ;
+    private BigDecimal two;
 
 }

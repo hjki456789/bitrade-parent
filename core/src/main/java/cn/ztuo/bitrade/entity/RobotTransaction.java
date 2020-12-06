@@ -55,7 +55,7 @@ public class RobotTransaction {
      * 交易手续费
      * 提现和转账才有手续费，充值没有;如果是法币交易，只收发布广告的那一方的手续费
      */
-    @Column(precision = 19,scale = 8)
-    private BigDecimal fee = BigDecimal.ZERO ;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal fee = BigDecimal.ZERO;
 
 }

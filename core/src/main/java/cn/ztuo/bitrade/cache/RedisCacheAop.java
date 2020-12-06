@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * <p>Redis方法缓存 aop</p>
  *
  * @author Zane
- * @version  2019-12-03 16:22
+ * @version 2019-12-03 16:22
  */
 @Aspect
 @Component
@@ -41,26 +41,26 @@ public class RedisCacheAop {
             argNames = "joinPoint, redisCache")
     public Object authLogic(ProceedingJoinPoint joinPoint, RedisCache redisCache) throws Throwable {
         try {
-            if(StringUtils.isEmpty(redisCache.value())){
+            if (StringUtils.isEmpty(redisCache.value())) {
                 log.error("错误: Redis方法缓存必须指定key!");
                 return joinPoint.proceed();
             }
             String paramKey = "default";
-            if(!redisCache.ignoreParam()){
+            if (!redisCache.ignoreParam()) {
                 MethodParamSerializer paramSerializer = redisCache.paramSerializer().newInstance();
                 paramKey = paramSerializer.serialize(joinPoint.getArgs());
             }
             RMapCache<String, Object> mapCache = RedissonUtil.getMapCache(redisCache.value());
             Object cache = mapCache.get(paramKey);
-            if(cache == null){
+            if (cache == null) {
                 Object returnVal = joinPoint.proceed();
-                if(returnVal != null) {
+                if (returnVal != null) {
                     mapCache.fastPut(paramKey, returnVal, redisCache.ttl(), TimeUnit.SECONDS);
                 }
                 return returnVal;
             }
             return cache;
-        } catch (Throwable ignored){
+        } catch (Throwable ignored) {
             return joinPoint.proceed();
         }
     }

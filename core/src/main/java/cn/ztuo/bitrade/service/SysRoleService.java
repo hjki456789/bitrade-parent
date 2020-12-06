@@ -95,7 +95,7 @@ public class SysRoleService extends TopBaseService<SysRole, SysRoleDao> {
     }
 
     public SysRole save(SysRole sysRole) {
-        if(sysRole.getId() == null){
+        if (sysRole.getId() == null) {
             SysRole sysRole1 = new SysRole();
             sysRole1.setRole(sysRole.getRole());
             sysRole1.setDescription(sysRole.getDescription());

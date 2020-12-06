@@ -9,22 +9,22 @@ import org.springframework.data.domain.*;
 import cn.ztuo.bitrade.entity.insurance.*;
 import org.apache.commons.lang3.*;
 import org.apache.commons.collections.*;
+
 import java.math.*;
 import java.util.*;
 
 @Service
 @Slf4j
-public class WholeNetInsuranceFundWalletRecordService
-{
+public class WholeNetInsuranceFundWalletRecordService {
     @Autowired
     private WholeNetInsuranceFundWalletRecordRepository wholeNetInsuranceFundWalletRecordRepository;
 
     public Page<WholeNetInsuranceFundWalletRecord> findAll(final Predicate predicate, final Pageable pageable) {
-        return (Page<WholeNetInsuranceFundWalletRecord>)this.wholeNetInsuranceFundWalletRecordRepository.findAll(predicate, pageable);
+        return (Page<WholeNetInsuranceFundWalletRecord>) this.wholeNetInsuranceFundWalletRecordRepository.findAll(predicate, pageable);
     }
 
     public WholeNetInsuranceFundWalletRecord findById(final Long id) {
-        return (WholeNetInsuranceFundWalletRecord)this.wholeNetInsuranceFundWalletRecordRepository.getOne(id);
+        return (WholeNetInsuranceFundWalletRecord) this.wholeNetInsuranceFundWalletRecordRepository.getOne(id);
     }
 
     public WholeNetInsuranceFundWalletRecord save(final WholeNetInsuranceFundWalletRecord record) {
@@ -33,19 +33,18 @@ public class WholeNetInsuranceFundWalletRecordService
 
     public List<WholeNetInsuranceFundWalletRecord> sumAmount(final String coin, final long startSeq, final long endSeq) {
         List<Object[]> list;
-        if (StringUtils.isEmpty((CharSequence)coin)) {
+        if (StringUtils.isEmpty((CharSequence) coin)) {
             list = this.wholeNetInsuranceFundWalletRecordRepository.sumAmountBySeq(startSeq, endSeq);
-        }
-        else {
+        } else {
             list = this.wholeNetInsuranceFundWalletRecordRepository.sumAmountByCoinAndSeq(coin, startSeq, endSeq);
         }
-        if (CollectionUtils.isEmpty((Collection)list)) {
+        if (CollectionUtils.isEmpty((Collection) list)) {
             return null;
         }
         final List<WholeNetInsuranceFundWalletRecord> resultList = new ArrayList<WholeNetInsuranceFundWalletRecord>();
         for (final Object[] objects : list) {
             final WholeNetInsuranceFundWalletRecord record = new WholeNetInsuranceFundWalletRecord();
-            record.setAmount((BigDecimal)objects[0]);
+            record.setAmount((BigDecimal) objects[0]);
             record.setCoin(objects[1].toString());
             resultList.add(record);
         }

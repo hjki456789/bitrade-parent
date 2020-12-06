@@ -47,7 +47,7 @@ public class AppealService extends BaseService {
     }
 
     public Appeal findByOrder(Order order) {
-        Appeal appeal = appealDao.findByOrderAndStatus(order,AppealStatus.NOT_PROCESSED);
+        Appeal appeal = appealDao.findByOrderAndStatus(order, AppealStatus.NOT_PROCESSED);
         return appeal;
     }
 
@@ -59,31 +59,31 @@ public class AppealService extends BaseService {
      */
     @Transactional(readOnly = true)
     public PageResult<AppealVO> joinFind(List<BooleanExpression> booleanExpressionList, PageModel pageModel) {
-        QAppeal qAppeal = QAppeal.appeal ;
+        QAppeal qAppeal = QAppeal.appeal;
         QBean qBean = Projections.fields(AppealVO.class
-                ,qAppeal.id.as("appealId")
-                ,qAppeal.order.memberName.as("advertiseCreaterUserName")
-                ,qAppeal.order.memberRealName.as("advertiseCreaterName")
-                ,qAppeal.order.customerName.as("customerUserName")
-                ,qAppeal.order.customerRealName.as("customerName")
-                ,qAppeal.initiatorId==qAppeal.order.memberId?qAppeal.order.memberName.as("initiatorUsername"):qAppeal.order.customerName.as("initiatorUsername")
-                ,qAppeal.initiatorId==qAppeal.order.memberId?qAppeal.order.memberRealName.as("initiatorName"):qAppeal.order.customerRealName.as("initiatorName")
-                ,qAppeal.initiatorId==qAppeal.order.memberId?qAppeal.order.customerName.as("associateUsername"):qAppeal.order.memberName.as("associateUsername")
-                ,qAppeal.initiatorId==qAppeal.order.memberId?qAppeal.order.customerRealName.as("associateName"):qAppeal.order.memberRealName.as("associateName")
-                ,qAppeal.order.commission.as("fee")
-                ,qAppeal.order.number
-                ,qAppeal.order.money
-                ,qAppeal.order.orderSn.as("orderSn")
-                ,qAppeal.order.createTime.as("transactionTime")
-                ,qAppeal.createTime.as("createTime")
-                ,qAppeal.dealWithTime.as("dealTime")
-                ,qAppeal.order.payMode.as("payMode")
-                ,qAppeal.order.coin.name.as("coinName")
-                ,qAppeal.order.status.as("orderStatus")
-                ,qAppeal.isSuccess.as("isSuccess")
-                ,qAppeal.order.advertiseType.as("advertiseType")
-                ,qAppeal.status
-                ,qAppeal.remark
+                , qAppeal.id.as("appealId")
+                , qAppeal.order.memberName.as("advertiseCreaterUserName")
+                , qAppeal.order.memberRealName.as("advertiseCreaterName")
+                , qAppeal.order.customerName.as("customerUserName")
+                , qAppeal.order.customerRealName.as("customerName")
+                , qAppeal.initiatorId == qAppeal.order.memberId ? qAppeal.order.memberName.as("initiatorUsername") : qAppeal.order.customerName.as("initiatorUsername")
+                , qAppeal.initiatorId == qAppeal.order.memberId ? qAppeal.order.memberRealName.as("initiatorName") : qAppeal.order.customerRealName.as("initiatorName")
+                , qAppeal.initiatorId == qAppeal.order.memberId ? qAppeal.order.customerName.as("associateUsername") : qAppeal.order.memberName.as("associateUsername")
+                , qAppeal.initiatorId == qAppeal.order.memberId ? qAppeal.order.customerRealName.as("associateName") : qAppeal.order.memberRealName.as("associateName")
+                , qAppeal.order.commission.as("fee")
+                , qAppeal.order.number
+                , qAppeal.order.money
+                , qAppeal.order.orderSn.as("orderSn")
+                , qAppeal.order.createTime.as("transactionTime")
+                , qAppeal.createTime.as("createTime")
+                , qAppeal.dealWithTime.as("dealTime")
+                , qAppeal.order.payMode.as("payMode")
+                , qAppeal.order.coin.name.as("coinName")
+                , qAppeal.order.status.as("orderStatus")
+                , qAppeal.isSuccess.as("isSuccess")
+                , qAppeal.order.advertiseType.as("advertiseType")
+                , qAppeal.status
+                , qAppeal.remark
         );
         List<OrderSpecifier> orderSpecifiers = pageModel.getOrderSpecifiers();
         JPAQuery<AppealVO> jpaQuery = queryFactory.select(qBean);
@@ -101,10 +101,11 @@ public class AppealService extends BaseService {
 
     /**
      * 申诉详情
+     *
      * @param appeal
      * @return
      */
-    private AppealVO generateAppealVO(Appeal appeal){
+    private AppealVO generateAppealVO(Appeal appeal) {
         Member initialMember = memberDao.findById(appeal.getInitiatorId()).orElse(null);
         Member associateMember = memberDao.findById(appeal.getAssociateId()).orElse(null);
         AppealVO vo = new AppealVO();
@@ -113,7 +114,7 @@ public class AppealService extends BaseService {
         vo.setAssociateUsername(associateMember.getUsername());
         vo.setInitiatorName(initialMember.getRealName());
         vo.setInitiatorUsername(initialMember.getUsername());
-        Order order = appeal.getOrder() ;
+        Order order = appeal.getOrder();
         vo.setCoinName(order.getCoin().getName());
         vo.setFee(order.getCommission());
         vo.setMoney(order.getMoney());
@@ -132,14 +133,14 @@ public class AppealService extends BaseService {
         vo.setCreateTime(appeal.getCreateTime());
         vo.setDealTime(appeal.getDealWithTime());
         vo.setRemark(appeal.getRemark());
-        return vo ;
+        return vo;
     }
 
     public Page<Appeal> findAll(Predicate predicate, Pageable pageable) {
         return appealDao.findAll(predicate, pageable);
     }
 
-    public long countAuditing(){
+    public long countAuditing() {
         return appealDao.countAllByStatus(AppealStatus.NOT_PROCESSED);
     }
 }

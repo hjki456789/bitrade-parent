@@ -93,6 +93,6 @@ public class LegalWalletWithdraw {
     /**
      * 支付宝/微信/银行卡 账号
      */
-    private String account ;
+    private String account;
 
 }

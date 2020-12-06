@@ -82,11 +82,11 @@ public class MemberService extends BaseService {
         return memberDao.saveAndFlush(member);
     }
 
-    public List<Member> findAll(Predicate predicate){
+    public List<Member> findAll(Predicate predicate) {
         //return Collections.;
         Iterable<Member> iterable = memberDao.findAll(predicate);
         List<Member> list = IteratorUtils.toList(iterable.iterator());
-        return list ;
+        return list;
     }
 
     public Member saveAndFlush(Member member) {
@@ -94,14 +94,14 @@ public class MemberService extends BaseService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Member loginWithToken(String token,String host) {
+    public Member loginWithToken(String token, String host) {
         if (StringUtils.isBlank(token)) {
             return null;
         }
-        if(host.equals("WEB")){
-            return memberDao.findMemberByTokenWebAndTokenWebExpireTimeAfterAndStatus(token,new Date(), CommonStatus.NORMAL);
+        if (host.equals("WEB")) {
+            return memberDao.findMemberByTokenWebAndTokenWebExpireTimeAfterAndStatus(token, new Date(), CommonStatus.NORMAL);
         }
-        Member mr = memberDao.findMemberByTokenAndTokenExpireTimeAfterAndStatus(token,new Date(), CommonStatus.NORMAL);
+        Member mr = memberDao.findMemberByTokenAndTokenExpireTimeAfterAndStatus(token, new Date(), CommonStatus.NORMAL);
         return mr;
     }
 
@@ -109,7 +109,7 @@ public class MemberService extends BaseService {
         Member member = memberDao.findMemberByMobilePhoneOrEmail(username, username);
         if (member == null) {
             throw new AuthenticationException(msService.getMessage("ACCOUNT_OR_PWD_ERROR"));
-        } else if (member.getLoginLock()!=null&&member.getLoginLock().equals(BooleanEnum.IS_TRUE)){
+        } else if (member.getLoginLock() != null && member.getLoginLock().equals(BooleanEnum.IS_TRUE)) {
             throw new AuthenticationException(msService.getMessage("PWD_REPEAT_ERROR"));
         } else if (!Md5.md5Digest(password + member.getSalt()).toLowerCase().equals(member.getPassword())) {
             log.info("账号或密码错误");
@@ -140,17 +140,17 @@ public class MemberService extends BaseService {
     }
 
 
-
     /**
      * 查询会员总数
+     *
      * @return
      */
-    public long count(){
+    public long count() {
         return memberDao.count();
     }
 
-    public Page<Member> findAll(Predicate predicate, PageModel pageModel){
-        return memberDao.findAll(predicate,pageModel.getPageable());
+    public Page<Member> findAll(Predicate predicate, PageModel pageModel) {
+        return memberDao.findAll(predicate, pageModel.getPageable());
     }
 
     public List<Member> findPromotionMember(Long id) {
@@ -183,17 +183,17 @@ public class MemberService extends BaseService {
 
     public boolean emailIsExist(String email) {
         List<Member> list = memberDao.getAllByEmailEquals(email);
-        return (list !=null && list.size() > 0) ? true : false;
+        return (list != null && list.size() > 0) ? true : false;
     }
 
     public boolean usernameIsExist(String username) {
         List<Member> list = memberDao.getAllByUsernameEquals(username);
-        return (list !=null && list.size() > 0) ? true : false;
+        return (list != null && list.size() > 0) ? true : false;
     }
 
     public boolean phoneIsExist(String phone) {
         List<Member> list = memberDao.getAllByMobilePhoneEquals(phone);
-        return (list !=null && list.size() > 0) ? true : false;
+        return (list != null && list.size() > 0) ? true : false;
     }
 
     public Member findByUsername(String username) {
@@ -208,8 +208,8 @@ public class MemberService extends BaseService {
         return memberDao.findMemberByMobilePhone(phone);
     }
 
-    public Member findByPhoneOrEmail(String str){
-        return memberDao.findMemberByMobilePhoneOrEmail(str,str);
+    public Member findByPhoneOrEmail(String str) {
+        return memberDao.findMemberByMobilePhoneOrEmail(str, str);
 
     }
 
@@ -247,35 +247,35 @@ public class MemberService extends BaseService {
         memberDao.updateCertifiedBusinessStatusByIdList(idList, CertifiedBusinessStatus.DEPOSIT_LESS);
     }
 
-    public List<ChannelVO> getChannelCount(List<Long> memberIds){
-        List<Object[]> list=memberDao.getChannelCount(memberIds);
-        List<ChannelVO> channelVOList=new ArrayList<>();
-        if(list!=null&&list.size()>0){
-            for(Object[] objs:list){
-                Number memberId=(Number)objs[0];
-                Number channelCount=(Number)objs[1];
-                Number channelReward=(Number)objs[2];
-                ChannelVO channelVO=new ChannelVO(memberId.longValue(),channelCount.intValue(),new BigDecimal(channelReward.doubleValue()));
+    public List<ChannelVO> getChannelCount(List<Long> memberIds) {
+        List<Object[]> list = memberDao.getChannelCount(memberIds);
+        List<ChannelVO> channelVOList = new ArrayList<>();
+        if (list != null && list.size() > 0) {
+            for (Object[] objs : list) {
+                Number memberId = (Number) objs[0];
+                Number channelCount = (Number) objs[1];
+                Number channelReward = (Number) objs[2];
+                ChannelVO channelVO = new ChannelVO(memberId.longValue(), channelCount.intValue(), new BigDecimal(channelReward.doubleValue()));
                 channelVOList.add(channelVO);
             }
         }
         return channelVOList;
     }
 
-    public void lock(String username){
-        memberDao.updateLoginLock(username,BooleanEnum.IS_TRUE);
+    public void lock(String username) {
+        memberDao.updateLoginLock(username, BooleanEnum.IS_TRUE);
     }
 
-    public void unLock(String username){
-        memberDao.updateLoginLock(username,BooleanEnum.IS_FALSE);
+    public void unLock(String username) {
+        memberDao.updateLoginLock(username, BooleanEnum.IS_FALSE);
     }
 
-    public Integer saveWallet(String coinId,Long memberId,BigDecimal balance){
-        return memberDao.saveWallet(coinId,memberId,balance);
+    public Integer saveWallet(String coinId, Long memberId, BigDecimal balance) {
+        return memberDao.saveWallet(coinId, memberId, balance);
     }
 
     @Transactional(readOnly = true)
-    public Long  findCount(Predicate predicate) {
+    public Long findCount(Predicate predicate) {
         return memberDao.count(predicate);
     }
 
@@ -312,8 +312,8 @@ public class MemberService extends BaseService {
                 booleanExpressionList.add(QMember.member.email.like("%" + member.getEmail() + "%"));
             }
         }
-        final JPAQuery<Member> jpaQuery = (JPAQuery<Member>)this.queryFactory.selectFrom((EntityPath)QMember.member).where((Predicate[])booleanExpressionList.toArray((Predicate[])new BooleanExpression[booleanExpressionList.size()]));
-        final List<Member> list = (List<Member>)jpaQuery.fetch();
+        final JPAQuery<Member> jpaQuery = (JPAQuery<Member>) this.queryFactory.selectFrom((EntityPath) QMember.member).where((Predicate[]) booleanExpressionList.toArray((Predicate[]) new BooleanExpression[booleanExpressionList.size()]));
+        final List<Member> list = (List<Member>) jpaQuery.fetch();
         if (!CollectionUtils.isEmpty(list)) {
             final List<Long> members = new ArrayList<Long>();
             for (final Member m : list) {
@@ -349,9 +349,9 @@ public class MemberService extends BaseService {
         if (org.springframework.util.CollectionUtils.isEmpty(booleanExpressions)) {
             return memberIds;
         }
-        final JPAQuery<Member> jpaQuery = (JPAQuery<Member>)this.queryFactory.selectFrom((EntityPath)QMember.member).where((Predicate[])booleanExpressions.toArray((Predicate[])new BooleanExpression[booleanExpressions.size()]));
+        final JPAQuery<Member> jpaQuery = (JPAQuery<Member>) this.queryFactory.selectFrom((EntityPath) QMember.member).where((Predicate[]) booleanExpressions.toArray((Predicate[]) new BooleanExpression[booleanExpressions.size()]));
         jpaQuery.orderBy(QMember.member.id.desc());
-        final List<Member> list = (List<Member>)jpaQuery.fetch();
+        final List<Member> list = (List<Member>) jpaQuery.fetch();
         if (org.springframework.util.CollectionUtils.isEmpty(list)) {
             memberIds.add(-1L);
         }
@@ -361,14 +361,15 @@ public class MemberService extends BaseService {
         return memberIds;
     }
 
-  /**
-   * 功能描述: 重置实名认证
-   * @auther:
-   * @Description
-   * @param: [member]
-   * @return: void
-   * @date: 2020/12/6 18:06
-   */
+    /**
+     * 功能描述: 重置实名认证
+     *
+     * @auther:
+     * @Description
+     * @param: [member]
+     * @return: void
+     * @date: 2020/12/6 18:06
+     */
     @Transactional
     public void resetRealNameVerify(final Member member) {
         member.setIdNumber(null);

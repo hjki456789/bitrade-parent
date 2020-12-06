@@ -35,6 +35,7 @@ public enum Configuration implements BaseEnum {
 
     @Setter
     private String cnName;
+
     @Override
     @JsonValue
     public int getOrdinal() {

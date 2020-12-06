@@ -28,58 +28,59 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class BusinessAuthApplyService extends BaseService{
+public class BusinessAuthApplyService extends BaseService {
     @Autowired
     private BusinessAuthApplyDao businessAuthApplyDao;
 
-    public Page<BusinessAuthApply> page(Predicate predicate, PageModel pageModel){
-        return businessAuthApplyDao.findAll(predicate,pageModel.getPageable());
+    public Page<BusinessAuthApply> page(Predicate predicate, PageModel pageModel) {
+        return businessAuthApplyDao.findAll(predicate, pageModel.getPageable());
     }
 
-    public List<BusinessAuthApply> findByMember(Member member){
+    public List<BusinessAuthApply> findByMember(Member member) {
         return businessAuthApplyDao.findByMemberOrderByIdDesc(member);
     }
-    public BusinessAuthApply findOne(Long id){
+
+    public BusinessAuthApply findOne(Long id) {
         return businessAuthApplyDao.findById(id).orElse(null);
     }
 
-    public void create(BusinessAuthApply businessAuthApply){
+    public void create(BusinessAuthApply businessAuthApply) {
         businessAuthApplyDao.save(businessAuthApply);
     }
 
-    public void update(BusinessAuthApply businessAuthApply){
+    public void update(BusinessAuthApply businessAuthApply) {
         businessAuthApplyDao.save(businessAuthApply);
     }
 
-    public List<BusinessAuthApply> findByMemberAndCertifiedBusinessStatus(Member member, CertifiedBusinessStatus certifiedBusinessStatus){
-        return businessAuthApplyDao.findByMemberAndCertifiedBusinessStatusOrderByIdDesc(member,certifiedBusinessStatus);
+    public List<BusinessAuthApply> findByMemberAndCertifiedBusinessStatus(Member member, CertifiedBusinessStatus certifiedBusinessStatus) {
+        return businessAuthApplyDao.findByMemberAndCertifiedBusinessStatusOrderByIdDesc(member, certifiedBusinessStatus);
     }
 
-    public BusinessAuthApply save(BusinessAuthApply businessAuthApply){
+    public BusinessAuthApply save(BusinessAuthApply businessAuthApply) {
         return businessAuthApplyDao.save(businessAuthApply);
     }
 
-    public  Page<BusinessAuthApply> page(Predicate predicate, Pageable pageable){
-        return businessAuthApplyDao.findAll(predicate,pageable);
+    public Page<BusinessAuthApply> page(Predicate predicate, Pageable pageable) {
+        return businessAuthApplyDao.findAll(predicate, pageable);
     }
 
-    public MessageResult detail(Long id){
-        QBusinessAuthApply qBusinessAuthApply = QBusinessAuthApply.businessAuthApply ;
+    public MessageResult detail(Long id) {
+        QBusinessAuthApply qBusinessAuthApply = QBusinessAuthApply.businessAuthApply;
         JPAQuery<BusinessAuthApplyDetailVO> query = queryFactory.select(
-                Projections.fields(BusinessAuthApplyDetailVO.class,qBusinessAuthApply.id.as("id")
-                        ,qBusinessAuthApply.certifiedBusinessStatus.as("status")
-                        ,qBusinessAuthApply.amount.as("amount")
-                        ,qBusinessAuthApply.authInfo.as("authInfo")
-                        ,qBusinessAuthApply.member.realName.as("realName")
-                        ,qBusinessAuthApply.detail.as("detail")
-                        ,qBusinessAuthApply.auditingTime.as("checkTime"))).from(qBusinessAuthApply);
+                Projections.fields(BusinessAuthApplyDetailVO.class, qBusinessAuthApply.id.as("id")
+                        , qBusinessAuthApply.certifiedBusinessStatus.as("status")
+                        , qBusinessAuthApply.amount.as("amount")
+                        , qBusinessAuthApply.authInfo.as("authInfo")
+                        , qBusinessAuthApply.member.realName.as("realName")
+                        , qBusinessAuthApply.detail.as("detail")
+                        , qBusinessAuthApply.auditingTime.as("checkTime"))).from(qBusinessAuthApply);
 
-        query.where(qBusinessAuthApply.id.eq(id)) ;
+        query.where(qBusinessAuthApply.id.eq(id));
 
-        BusinessAuthApplyDetailVO vo = query.fetchOne() ;
+        BusinessAuthApplyDetailVO vo = query.fetchOne();
 
         MessageResult result;
-        String jsonStr = vo.getAuthInfo() ;
+        String jsonStr = vo.getAuthInfo();
         log.info("认证信息 jsonStr = {}", jsonStr);
         if (StringUtils.isEmpty(jsonStr)) {
             result = MessageResult.error(msService.getMessage("AUTH_INFO_NOT_EXIST"));
@@ -99,8 +100,8 @@ public class BusinessAuthApplyService extends BaseService{
         }
     }
 
-    public long countAuditing(){
-        return businessAuthApplyDao.countAllByCertifiedBusinessStatus(CertifiedBusinessStatus.AUDITING) ;
+    public long countAuditing() {
+        return businessAuthApplyDao.countAllByCertifiedBusinessStatus(CertifiedBusinessStatus.AUDITING);
     }
 
 }

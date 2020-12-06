@@ -31,6 +31,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -50,7 +51,7 @@ public class MemberWalletService extends BaseService {
     @Autowired
     private LocaleMessageSourceService messageSource;
 
-    public static final Integer limit=1000;
+    public static final Integer limit = 1000;
 
     public MemberWallet save(MemberWallet wallet) {
         return memberWalletDao.saveAndFlush(wallet);
@@ -110,7 +111,7 @@ public class MemberWalletService extends BaseService {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public MessageResult recharge(Coin coin, Long memberId, String address, BigDecimal amount, String txid,BooleanEnum isQuick) {
+    public MessageResult recharge(Coin coin, Long memberId, String address, BigDecimal amount, String txid, BooleanEnum isQuick) {
         MemberWallet wallet = findByCoinAndMemberId(coin, memberId);
         if (wallet == null) {
             return new MessageResult(500, "wallet cannot be null");
@@ -137,7 +138,7 @@ public class MemberWalletService extends BaseService {
         transaction.setTxid(txid);
         transaction.setIsQuick(isQuick);
         transactionService.save(transaction);
-        MessageResult messageResult = new MessageResult(0,messageSource.getMessage("SUCCESS"));
+        MessageResult messageResult = new MessageResult(0, messageSource.getMessage("SUCCESS"));
         messageResult.setData(wallet.getMemberId());
         return messageResult;
 
@@ -189,9 +190,10 @@ public class MemberWalletService extends BaseService {
         return memberWalletDao.findAllByMemberId(memberId);
     }
 
-    public List<MemberWallet> findAllByMemberIdAndCoin(String name,Long memberId) {
-        return memberWalletDao.findAllByMemberIdAndCoin(name,memberId);
+    public List<MemberWallet> findAllByMemberIdAndCoin(String name, Long memberId) {
+        return memberWalletDao.findAllByMemberIdAndCoin(name, memberId);
     }
+
     /**
      * 冻结钱包
      *
@@ -235,7 +237,7 @@ public class MemberWalletService extends BaseService {
         if (ret == 1) {
             MemberWallet customerWallet = findByOtcCoinAndMemberId(order.getCoin(), order.getCustomerId());
             //卖方付出手续费
-            int is = memberWalletDao.decreaseFrozen(customerWallet.getId(), BigDecimalUtils.add(order.getNumber(),order.getCommission()));
+            int is = memberWalletDao.decreaseFrozen(customerWallet.getId(), BigDecimalUtils.add(order.getNumber(), order.getCommission()));
             if (is > 0) {
                 MemberWallet memberWallet = findByOtcCoinAndMemberId(order.getCoin(), order.getMemberId());
                 //买房得到完整的币
@@ -323,18 +325,18 @@ public class MemberWalletService extends BaseService {
         return memberWalletDao.findAllByCoin(coin);
     }
 
-    public long pageCount(Coin coin){
+    public long pageCount(Coin coin) {
         Criteria<MemberWallet> specification = new Criteria<MemberWallet>();
         specification.add(Restrictions.eq("coin", coin, true));
         return memberWalletDao.count(specification);
     }
 
-    public Page<MemberWallet> pageByCoin(Coin coin,int pageNo,int pageSize){
+    public Page<MemberWallet> pageByCoin(Coin coin, int pageNo, int pageSize) {
         Sort orders = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
         PageRequest pageRequest = PageRequest.of(pageNo, pageSize, orders);
         Criteria<MemberWallet> specification = new Criteria<MemberWallet>();
         specification.add(Restrictions.eq("coin", coin, true));
-        return memberWalletDao.findAll(specification,pageRequest);
+        return memberWalletDao.findAll(specification, pageRequest);
     }
 
     /**
@@ -379,28 +381,28 @@ public class MemberWalletService extends BaseService {
         return memberWalletDao.findOne(and).orElse(null);
     }
 
-    public Page<MemberWalletDTO> joinFind(List<Predicate> predicates, QMember qMember , QMemberWallet qMemberWallet, PageModel pageModel) {
+    public Page<MemberWalletDTO> joinFind(List<Predicate> predicates, QMember qMember, QMemberWallet qMemberWallet, PageModel pageModel) {
         List<OrderSpecifier> orderSpecifiers = pageModel.getOrderSpecifiers();
         predicates.add(qMember.id.eq(qMemberWallet.memberId));
         JPAQuery<MemberWalletDTO> query = queryFactory.select(
-                        Projections.fields(MemberWalletDTO.class, qMemberWallet.id.as("id"),qMemberWallet.memberId.as("memberId") ,qMember.username,qMember.realName.as("realName"),
-                        qMember.email,qMember.mobilePhone.as("mobilePhone"),qMemberWallet.balance,qMemberWallet.address,qMemberWallet.coin.unit
-                        ,qMemberWallet.frozenBalance.as("frozenBalance"),qMemberWallet.balance.add(qMemberWallet.frozenBalance).as("allBalance"))).from(QMember.member,QMemberWallet.memberWallet).where(predicates.toArray(new Predicate[predicates.size()]))
-                        .orderBy(orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]));
-        List<MemberWalletDTO> content = query.offset((pageModel.getPageNo()-1)*pageModel.getPageSize()).limit(pageModel.getPageSize()).fetch();
+                Projections.fields(MemberWalletDTO.class, qMemberWallet.id.as("id"), qMemberWallet.memberId.as("memberId"), qMember.username, qMember.realName.as("realName"),
+                        qMember.email, qMember.mobilePhone.as("mobilePhone"), qMemberWallet.balance, qMemberWallet.address, qMemberWallet.coin.unit
+                        , qMemberWallet.frozenBalance.as("frozenBalance"), qMemberWallet.balance.add(qMemberWallet.frozenBalance).as("allBalance"))).from(QMember.member, QMemberWallet.memberWallet).where(predicates.toArray(new Predicate[predicates.size()]))
+                .orderBy(orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]));
+        List<MemberWalletDTO> content = query.offset((pageModel.getPageNo() - 1) * pageModel.getPageSize()).limit(pageModel.getPageSize()).fetch();
         long total = query.fetchCount();
         return new PageImpl<>(content, pageModel.getPageable(), total);
     }
 
-    public BigDecimal getAllBalance(String coinName){
+    public BigDecimal getAllBalance(String coinName) {
         return memberWalletDao.getWalletAllBalance(coinName);
     }
 
-    public MemberDeposit findDeposit(String address,String txid){
-        return depositDao.findByAddressAndTxid(address,txid);
+    public MemberDeposit findDeposit(String address, String txid) {
+        return depositDao.findByAddressAndTxid(address, txid);
     }
 
-    public MessageResult decreaseFrozen(Long walletId,BigDecimal amount){
+    public MessageResult decreaseFrozen(Long walletId, BigDecimal amount) {
         int ret = memberWalletDao.decreaseFrozen(walletId, amount);
         if (ret > 0) {
             return MessageResult.success();
@@ -409,55 +411,58 @@ public class MemberWalletService extends BaseService {
         }
     }
 
-    public void decreaseBalance(Long walletId,BigDecimal amount){
-        memberWalletDao.decreaseBalance(walletId,amount);
+    public void decreaseBalance(Long walletId, BigDecimal amount) {
+        memberWalletDao.decreaseBalance(walletId, amount);
     }
 
-    public void increaseBalance(Long walletId,BigDecimal amount){
-        memberWalletDao.increaseBalance(walletId,amount);
+    public void increaseBalance(Long walletId, BigDecimal amount) {
+        memberWalletDao.increaseBalance(walletId, amount);
     }
 
 
     /**
      * 创建快照表
+     *
      * @param times
      * @param coinId
      * @return
      */
-    public Integer createGiftTable(Long times,String coinId){
-        return memberWalletDao.createGiftTable(times,coinId);
+    public Integer createGiftTable(Long times, String coinId) {
+        return memberWalletDao.createGiftTable(times, coinId);
     }
 
 
-    public List<MemberWallet> findGiftTable(Long times){
+    public List<MemberWallet> findGiftTable(Long times) {
         return memberWalletDao.findGiftTable(times);
     }
 
-    public BigDecimal sumGiftTable(Long times){
+    public BigDecimal sumGiftTable(Long times) {
         return memberWalletDao.sumGiftTable(times);
 
     }
+
     /**
      * 手动上传文件空投
+     *
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public MessageResult handleAirdrop(List<ImportXmlVO> xmlVOS,Long airdrop){
-        List<MemberTransaction> memberTransactionList=new ArrayList<>();
-        List<Long> memberIdList=new ArrayList<>();
-        for(ImportXmlVO xmlVO:xmlVOS){
+    public MessageResult handleAirdrop(List<ImportXmlVO> xmlVOS, Long airdrop) {
+        List<MemberTransaction> memberTransactionList = new ArrayList<>();
+        List<Long> memberIdList = new ArrayList<>();
+        for (ImportXmlVO xmlVO : xmlVOS) {
             memberIdList.add(xmlVO.getMemberId());
         }
         //根据币种和memberId查询钱包，要求一个上传文件里都是空投同一个币种
-        Coin coin=coinDao.findByUnit(xmlVOS.get(0).getCoinUnit());
-        List<MemberWallet> memberWalletList=memberWalletDao.findALLByCoinIdAndMemberIdList(coin,memberIdList);
-        if(memberWalletList==null||memberWalletList.size()==0||memberWalletList.size()!=xmlVOS.size()){
+        Coin coin = coinDao.findByUnit(xmlVOS.get(0).getCoinUnit());
+        List<MemberWallet> memberWalletList = memberWalletDao.findALLByCoinIdAndMemberIdList(coin, memberIdList);
+        if (memberWalletList == null || memberWalletList.size() == 0 || memberWalletList.size() != xmlVOS.size()) {
             return MessageResult.error("钱包不存在或钱包数量不足");
         }
         //录入memberTransaction表，新增一个手动空投类型
-        for(ImportXmlVO xmlVO:xmlVOS){
-            for(MemberWallet memberWallet:memberWalletList){
-                if(xmlVO.getMemberId().equals(memberWallet.getMemberId())){
+        for (ImportXmlVO xmlVO : xmlVOS) {
+            for (MemberWallet memberWallet : memberWalletList) {
+                if (xmlVO.getMemberId().equals(memberWallet.getMemberId())) {
                     memberWalletDao.increaseBalance(memberWallet.getId(), new BigDecimal(xmlVO.getAmount()));
                 }
             }
@@ -489,12 +494,12 @@ public class MemberWalletService extends BaseService {
     }
 
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public int updateBalanceAndBlockBalance(final Long id, final BigDecimal balance, final BigDecimal blockBalance, final int version) {
         return this.memberWalletDao.updateBalanceAndBlockBalance(id, balance, blockBalance, version);
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public int Balance2BlockBalance(final MemberWallet memberWallet, final BigDecimal amount) throws Exception {
         final BigDecimal afterBalance = memberWallet.getBalance().subtract(amount);
         final BigDecimal afterBlockBalance = memberWallet.getBlockBalance().add(amount);
@@ -521,19 +526,18 @@ public class MemberWalletService extends BaseService {
         return this.memberWalletDao.updateFrozenBalance(id, frozenBalance);
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public void increaseMemberBalance(final Long walletId, final BigDecimal amount) {
         log.info("-----------\u589e\u52a0\u4f59\u989d---------" + walletId + "---------------" + amount + "--------------");
         final int num = this.memberWalletDao.increaseMemberBalance(walletId, amount);
         if (num > 0) {
             log.info("-----------\u589e\u52a0\u4f59\u989d\u6210\u529f---------" + walletId + "---------------" + amount + "--------------");
-        }
-        else {
+        } else {
             log.info("-----------\u589e\u52a0\u4f59\u989d\u5931\u8d25---------" + walletId + "---------------" + amount + "--------------");
         }
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public MessageResult freezeOneButtonSellBalance(final MemberWallet wallet, final BigDecimal amount) {
         final BigDecimal balance = wallet.getBalance().subtract(amount);
         final BigDecimal frozenBalance = wallet.getFrozenBalance().add(amount);
@@ -548,23 +552,23 @@ public class MemberWalletService extends BaseService {
         return this.memberWalletDao.updateBalanceAndFrozenBalance(id, balance, frozenBalance);
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public void increaseBalance(final Long walletId, final BigDecimal amount, final int version) {
         log.info("-----------\u589e\u52a0\u4f59\u989d---------" + walletId + "---------------" + amount + "--------------" + version);
         final int num = this.memberWalletDao.increaseBalance(walletId, amount, version);
         if (num > 0) {
             log.info("-----------\u589e\u52a0\u4f59\u989d\u6210\u529f---------" + walletId + "---------------" + amount + "--------------" + version);
-        }
-        else {
+        } else {
             log.info("-----------\u589e\u52a0\u4f59\u989d\u5931\u8d25---------" + walletId + "---------------" + amount + "--------------" + version);
         }
     }
-    @Transactional(rollbackFor = { Exception.class })
+
+    @Transactional(rollbackFor = {Exception.class})
     public void decreaseBalance(final Long walletId, final BigDecimal amount, final int version) {
         this.memberWalletDao.decreaseBalance(walletId, amount, version);
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public void increaseBalanceWithoutVersion(final Long walletId, final BigDecimal amount) {
         this.memberWalletDao.increaseBalanceWithoutVersion(walletId, amount);
     }

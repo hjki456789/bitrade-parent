@@ -12,7 +12,7 @@ import java.util.List;
  * @author Seven
  * @date 2019年02月10日
  */
-public interface CountryDao extends JpaRepository<Country,String>,JpaSpecificationExecutor<Country>,QuerydslPredicateExecutor<Country> {
+public interface CountryDao extends JpaRepository<Country, String>, JpaSpecificationExecutor<Country>, QuerydslPredicateExecutor<Country> {
     @Query("select a from Country a order by a.sort")
     List<Country> findAllOrderBySort();
 

@@ -21,17 +21,18 @@ public class ESUtils {
 
     /**
      * 添加数据到Elasticsearch
-     * @param param  一个对象json
+     *
+     * @param param 一个对象json
      * @return
      */
-    public  boolean save(JSONObject param) {
+    public boolean save(JSONObject param) {
 
 
-        String endPoint = esConfig.getEsMineIndex()+"/"+esConfig.getEsMineType();
-        log.info("====endPoint====="+endPoint);
-        JSONObject jsonObject =esClient.getClient("POST",endPoint,param);
-        log.info("=======ES存储结果:"+jsonObject);
-        if (jsonObject != null){
+        String endPoint = esConfig.getEsMineIndex() + "/" + esConfig.getEsMineType();
+        log.info("====endPoint=====" + endPoint);
+        JSONObject jsonObject = esClient.getClient("POST", endPoint, param);
+        log.info("=======ES存储结果:" + jsonObject);
+        if (jsonObject != null) {
             return true;
         }
         return false;
@@ -39,15 +40,16 @@ public class ESUtils {
 
     /**
      * 从Elasticsearch查询数据
+     *
      * @param param
      * @return
      */
-    public JSONObject query (JSONObject param){
+    public JSONObject query(JSONObject param) {
 
-        String endPoint = esConfig.getEsMineIndex()+"/"+esConfig.getEsMineType()+"/"+"_search";
-        JSONObject jsonObject = esClient.getClient("POST",endPoint,param);
-        log.info("=======ES查询结果:"+jsonObject);
-        if (jsonObject != null){
+        String endPoint = esConfig.getEsMineIndex() + "/" + esConfig.getEsMineType() + "/" + "_search";
+        JSONObject jsonObject = esClient.getClient("POST", endPoint, param);
+        log.info("=======ES查询结果:" + jsonObject);
+        if (jsonObject != null) {
             return jsonObject;
         }
         return null;
@@ -55,17 +57,18 @@ public class ESUtils {
 
     /**
      * 存储任意 es
-     * @param param 参数
+     *
+     * @param param   参数
      * @param esIndex 库名
-     * @param esType 表名
+     * @param esType  表名
      * @return
      */
-    public  boolean saveForAnyOne(JSONObject param ,String esIndex,String esType){
-        String endPoint = esIndex+"/"+esType;
-        log.info(">>>>>>endPoint>>>>>"+endPoint);
-        JSONObject jsonObject =esClient.getClient("POST",endPoint,param);
-        log.info("=======ES存储结果:"+jsonObject);
-        if (jsonObject != null){
+    public boolean saveForAnyOne(JSONObject param, String esIndex, String esType) {
+        String endPoint = esIndex + "/" + esType;
+        log.info(">>>>>>endPoint>>>>>" + endPoint);
+        JSONObject jsonObject = esClient.getClient("POST", endPoint, param);
+        log.info("=======ES存储结果:" + jsonObject);
+        if (jsonObject != null) {
             return true;
         }
         return false;
@@ -74,34 +77,35 @@ public class ESUtils {
 
     /**
      * 查询任意es
-     * @param param 入参
+     *
+     * @param param   入参
      * @param esIndex es库名
-     * @param esType es表名
+     * @param esType  es表名
      * @return
      */
-    public JSONObject queryForAnyOne(JSONObject param,String esIndex,String esType){
-        String endPoint = esIndex+"/"+esType+"/_search";
-        JSONObject jsonObject = esClient.getClient("POST",endPoint,param);
-        if (jsonObject != null){
+    public JSONObject queryForAnyOne(JSONObject param, String esIndex, String esType) {
+        String endPoint = esIndex + "/" + esType + "/_search";
+        JSONObject jsonObject = esClient.getClient("POST", endPoint, param);
+        if (jsonObject != null) {
             return jsonObject;
         }
         return null;
     }
 
-    public boolean saveMemberTransaction(MemberTransaction memberTransaction,String esIndex,String esType){
+    public boolean saveMemberTransaction(MemberTransaction memberTransaction, String esIndex, String esType) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id",memberTransaction.getId());
-        jsonObject.put("address",memberTransaction.getAddress());
-        jsonObject.put("amount",memberTransaction.getAmount());
-        jsonObject.put("create_time",DateUtil.dateToString(memberTransaction.getCreateTime()));
-        jsonObject.put("fee",memberTransaction.getFee());
-        jsonObject.put("flag",memberTransaction.getFlag());
-        jsonObject.put("member_id",memberTransaction.getMemberId());
-        jsonObject.put("symbol",memberTransaction.getSymbol());
-        jsonObject.put("type",TransactionType.parseOrdinal(memberTransaction.getType()));
-        log.info("===存入ES 数据==="+jsonObject);
-        boolean result = saveForAnyOne(jsonObject,esIndex,esType);
-        if (result == true){
+        jsonObject.put("id", memberTransaction.getId());
+        jsonObject.put("address", memberTransaction.getAddress());
+        jsonObject.put("amount", memberTransaction.getAmount());
+        jsonObject.put("create_time", DateUtil.dateToString(memberTransaction.getCreateTime()));
+        jsonObject.put("fee", memberTransaction.getFee());
+        jsonObject.put("flag", memberTransaction.getFlag());
+        jsonObject.put("member_id", memberTransaction.getMemberId());
+        jsonObject.put("symbol", memberTransaction.getSymbol());
+        jsonObject.put("type", TransactionType.parseOrdinal(memberTransaction.getType()));
+        log.info("===存入ES 数据===" + jsonObject);
+        boolean result = saveForAnyOne(jsonObject, esIndex, esType);
+        if (result == true) {
             return true;
         }
         return false;

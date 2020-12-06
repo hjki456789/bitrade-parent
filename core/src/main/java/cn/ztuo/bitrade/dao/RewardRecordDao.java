@@ -16,6 +16,6 @@ import java.util.List;
 public interface RewardRecordDao extends BaseDao<RewardRecord> {
     List<RewardRecord> findAllByMemberAndType(Member member, RewardRecordType type);
 
-    @Query(value = "select coin_id , sum(amount) from reward_record where member_id = :memberId and type = :type group by coin_id",nativeQuery = true)
+    @Query(value = "select coin_id , sum(amount) from reward_record where member_id = :memberId and type = :type group by coin_id", nativeQuery = true)
     List<Object[]> getAllPromotionReward(@Param("memberId") long memberId, @Param("type") int type);
 }

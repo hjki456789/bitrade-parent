@@ -12,12 +12,12 @@ import java.util.Date;
 @Data
 public class RegisterPromotionVO {
 
-   /**
+    /**
      * 被推荐者
      */
-    private BigInteger id ;
+    private BigInteger id;
 
-    private String presentee ;
+    private String presentee;
 
     private String presenteeRealName;
 
@@ -25,22 +25,22 @@ public class RegisterPromotionVO {
 
     private String presenteePhone;
 
-    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date promotionTime;
 
-   /**
-    * 一级
-    *
-   ONE("一级"),
-   *
-    * 二级
-    *
-   TWO("二级")
-   *
-    * 三级
-    *
-   THREE("三级");
-    */
+    /**
+     * 一级
+     * <p>
+     * ONE("一级"),
+     * <p>
+     * 二级
+     * <p>
+     * TWO("二级")
+     * <p>
+     * 三级
+     * <p>
+     * THREE("三级");
+     */
     private int promotionLevel;
 
 

@@ -125,49 +125,49 @@ public class SysConstant {
     /**
      * 60亿BHB累计(过期时间为15分钟)
      */
-    public static final String BHB_AMOUNT="BHB_AMOUNT";
-    public static final int BHB_AMOUNT_EXPIRE_TIME=900;
+    public static final String BHB_AMOUNT = "BHB_AMOUNT";
+    public static final int BHB_AMOUNT_EXPIRE_TIME = 900;
 
 
     /**
      * 公告页缓存
      */
     public static final String NOTICE_DETAIL = "notice_detail_";
-    public static final int NOTICE_DETAIL_EXPIRE_TIME=300;
+    public static final int NOTICE_DETAIL_EXPIRE_TIME = 300;
 
     /**
      * 帮助页缓存(首页)
      */
     public static final String SYS_HELP = "SYS_HELP";
-    public static final int SYS_HELP_EXPIRE_TIME=300;
+    public static final int SYS_HELP_EXPIRE_TIME = 300;
 
 
     /**
      * 帮助页缓存(类别页)
      */
     public static final String SYS_HELP_CATE = "SYS_HELP_CATE_";
-    public static final int SYS_HELP_CATE_EXPIRE_TIME=300;
+    public static final int SYS_HELP_CATE_EXPIRE_TIME = 300;
 
     /**
      * 帮助页缓存(详情页)
      */
     public static final String SYS_HELP_DETAIL = "SYS_HELP_DETAIL_";
-    public static final int SYS_HELP_DETAIL_EXPIRE_TIME=300;
+    public static final int SYS_HELP_DETAIL_EXPIRE_TIME = 300;
 
     /**
      * 帮助页缓存(该分类置顶文章)
      */
     public static final String SYS_HELP_TOP = "SYS_HELP_TOP_";
-    public static final int SYS_HELP_TOP_EXPIRE_TIME=300;
+    public static final int SYS_HELP_TOP_EXPIRE_TIME = 300;
 
 
     //字典表数据缓存
-    public static final String DATA_DICTIONARY_BOUND_KEY= "data_dictionary_bound_key_";
-    public static final int DATA_DICTIONARY_BOUND_EXPIRE_TIME= 604800;
+    public static final String DATA_DICTIONARY_BOUND_KEY = "data_dictionary_bound_key_";
+    public static final int DATA_DICTIONARY_BOUND_EXPIRE_TIME = 604800;
 
     //盘口数据
-    public static final String EXCHANGE_INIT_PLATE_SYMBOL_KEY="EXCHANGE_INIT_PLATE_SYMBOL_KEY_";
-    public static final int EXCHANGE_INIT_PLATE_SYMBOL_EXPIRE_TIME= 18000;
+    public static final String EXCHANGE_INIT_PLATE_SYMBOL_KEY = "EXCHANGE_INIT_PLATE_SYMBOL_KEY_";
+    public static final int EXCHANGE_INIT_PLATE_SYMBOL_EXPIRE_TIME = 18000;
 
     /**
      * 盘口数据所有交易对
@@ -175,21 +175,20 @@ public class SysConstant {
     public static final String EXCHANGE_INIT_PLATE_ALL_SYMBOLS = "EXCHANGE_INIT_PLATE_ALL_SYMBOLS";
 
 
-
     /**
      * 用户币币交易订单时间限制
      */
-    public static final String USER_ADD_EXCHANGE_ORDER_TIME_LIMIT= "USER_ADD_EXCHANGE_ORDER_TIME_LIMIT_";
-    public static final int USER_ADD_EXCHANGE_ORDER_TIME_LIMIT_EXPIRE_TIME= 100;
+    public static final String USER_ADD_EXCHANGE_ORDER_TIME_LIMIT = "USER_ADD_EXCHANGE_ORDER_TIME_LIMIT_";
+    public static final int USER_ADD_EXCHANGE_ORDER_TIME_LIMIT_EXPIRE_TIME = 100;
 
     /**
      * 空投锁
      */
-    public static final String HANDLE_AIRDROP_LOCK="HANDLE_AIRDROP_LOCK_";
+    public static final String HANDLE_AIRDROP_LOCK = "HANDLE_AIRDROP_LOCK_";
     /**
      * 登录锁，连续账号密码错误时启用
      */
-    public static final String LOGIN_LOCK="LOGIN_LOCK_";
+    public static final String LOGIN_LOCK = "LOGIN_LOCK_";
     /**
      * 实名用户一级推荐实名用户赠送积分
      */
@@ -233,11 +232,11 @@ public class SysConstant {
     /**
      * 用户每日提币数量折合USDT
      */
-    public static final String CUSTOMER_DAY_WITHDRAW_COVER_USD_AMOUNT ="CUSTOMER_DAY_WITHDRAW_COVER_USD_AMOUNT_";
+    public static final String CUSTOMER_DAY_WITHDRAW_COVER_USD_AMOUNT = "CUSTOMER_DAY_WITHDRAW_COVER_USD_AMOUNT_";
     /**
      * 等级缓存
      */
-    public static final String CUSTOMER_INTEGRATION_GRADE="CUSTOMER_INTEGRATION_GRADE_";
+    public static final String CUSTOMER_INTEGRATION_GRADE = "CUSTOMER_INTEGRATION_GRADE_";
 
     /**
      * 默认交易对儿缓存
@@ -253,22 +252,22 @@ public class SysConstant {
      * 固定地址外链缓存
      */
     public static final String EXTERNAL_LINKS = "EXTERNAL_LINKS_";
-    public static final int EXTERNAL_LINKS_EXPIRE_TIME=300;
+    public static final int EXTERNAL_LINKS_EXPIRE_TIME = 300;
 
     /**
      * 非固定地址外链缓存
      */
     public static final String NAVIGATION = "NAVIGATION_";
-    public static final int NAVIGATION_EXPIRE_TIME=300;
+    public static final int NAVIGATION_EXPIRE_TIME = 300;
 
     /**
      * 1、修改/重置登录密码
      * 2、关闭安全验证
-     *
+     * <p>
      * 24H不允许提币、不允许币币划转到法币账户
      */
     public static final String WITHDRAW_LOCK = "WITHDRAW_LOCK_";
-    public static final int WITHDRAW_LOCK_EXPIRE_TIME=24;
+    public static final int WITHDRAW_LOCK_EXPIRE_TIME = 24;
 
 
     /**

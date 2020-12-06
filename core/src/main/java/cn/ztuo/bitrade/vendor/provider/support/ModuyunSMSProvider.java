@@ -3,15 +3,18 @@ package cn.ztuo.bitrade.vendor.provider.support;
 import cn.ztuo.bitrade.vendor.provider.*;
 import cn.ztuo.bitrade.util.*;
 import org.apache.commons.lang.*;
+
 import java.util.*;
 import java.io.*;
+
 import org.json.*;
+
 import java.security.*;
 import java.net.*;
+
 import org.slf4j.*;
 
-public class ModuyunSMSProvider implements SMSProvider
-{
+public class ModuyunSMSProvider implements SMSProvider {
     private static final Logger log;
     private String gateway;
     private String accesskey;
@@ -40,12 +43,10 @@ public class ModuyunSMSProvider implements SMSProvider
             final String content = "123456";
             try {
                 provider.sendSingleMessage(mobile, content);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        catch (Exception e2) {
+        } catch (Exception e2) {
             e2.printStackTrace();
         }
     }
@@ -134,8 +135,7 @@ public class ModuyunSMSProvider implements SMSProvider
             br.close();
             ModuyunSMSProvider.log.info("result---------" + sb.toString());
             json = new JSONObject(sb.toString());
-        }
-        else {
+        } else {
             json.put("result", httpRspCode);
             json.put("errmsg", ("http error " + httpRspCode + " " + conn.getResponseMessage()));
         }
@@ -185,8 +185,7 @@ public class ModuyunSMSProvider implements SMSProvider
             br.close();
             ModuyunSMSProvider.log.info("result---------" + sb.toString());
             json = new JSONObject(sb.toString());
-        }
-        else {
+        } else {
             json.put("result", httpRspCode);
             json.put("errmsg", ("http error " + httpRspCode + " " + conn.getResponseMessage()));
         }
@@ -200,8 +199,7 @@ public class ModuyunSMSProvider implements SMSProvider
             final String msg = json.getString("errmsg");
             mr.setCode(code);
             mr.setMessage(msg);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return mr;
@@ -224,7 +222,7 @@ public class ModuyunSMSProvider implements SMSProvider
     }
 
     public String byteArrayToHex(final byte[] byteArray) {
-        final char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+        final char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
         final char[] resultCharArray = new char[byteArray.length * 2];
         int index = 0;
         for (final byte b : byteArray) {
@@ -236,7 +234,7 @@ public class ModuyunSMSProvider implements SMSProvider
 
     public HttpURLConnection getPostHttpConn(final String url) throws Exception {
         final URL object = new URL(url);
-        final HttpURLConnection conn = (HttpURLConnection)object.openConnection();
+        final HttpURLConnection conn = (HttpURLConnection) object.openConnection();
         conn.setDoOutput(true);
         conn.setDoInput(true);
         conn.setRequestProperty("Content-Type", "application/json");
@@ -246,6 +244,6 @@ public class ModuyunSMSProvider implements SMSProvider
     }
 
     static {
-        log = LoggerFactory.getLogger((Class)ModuyunSMSProvider.class);
+        log = LoggerFactory.getLogger((Class) ModuyunSMSProvider.class);
     }
 }

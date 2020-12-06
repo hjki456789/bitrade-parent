@@ -22,17 +22,17 @@ public enum CredentialsType implements BaseEnum {
 
     @Override
     @JsonValue
-    public int getOrdinal(){
+    public int getOrdinal() {
         return this.ordinal();
     }
 
-    public CredentialsType[] getAll(){
+    public CredentialsType[] getAll() {
         return CredentialsType.values();
     }
 
-    public static CredentialsType getByValue(int value){
-        for(CredentialsType credentialsType:CredentialsType.values()){
-            if(credentialsType.getOrdinal()==value){
+    public static CredentialsType getByValue(int value) {
+        for (CredentialsType credentialsType : CredentialsType.values()) {
+            if (credentialsType.getOrdinal() == value) {
                 return credentialsType;
             }
         }

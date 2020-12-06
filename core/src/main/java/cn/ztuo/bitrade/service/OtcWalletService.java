@@ -72,13 +72,13 @@ public class OtcWalletService extends BaseService {
         if (!CollectionUtils.isEmpty(memberIds)) {
             specification.add(Restrictions.in("memberId", memberIds, true));
         }
-        if (StringUtils.isNotEmpty((CharSequence)coinId)) {
+        if (StringUtils.isNotEmpty((CharSequence) coinId)) {
             specification.add(Restrictions.eq("coin.name", coinId, true));
         }
         if (null != isLock) {
             specification.add(Restrictions.eq("isLock", isLock, true));
         }
-        final Page<OtcWallet> page = (Page<OtcWallet>)this.otcWalletDao.findAll(specification, pageable);
+        final Page<OtcWallet> page = (Page<OtcWallet>) this.otcWalletDao.findAll(specification, pageable);
         for (final OtcWallet otcWallet : page.getContent()) {
             final Member member = this.memberService.findOne(otcWallet.getMemberId());
             otcWallet.setMember(member);
@@ -103,8 +103,7 @@ public class OtcWalletService extends BaseService {
                     otcWalletNew.setVersion(0);
                     this.save(otcWalletNew);
                 }
-            }
-            else if (null != result && result.size() < otcCoinList.size()) {
+            } else if (null != result && result.size() < otcCoinList.size()) {
                 for (final OtcCoin coin : otcCoinList) {
                     boolean ifFind = false;
                     for (final OtcWallet wallet : result) {
@@ -140,42 +139,44 @@ public class OtcWalletService extends BaseService {
      * @param memberId
      * @return
      */
-    public OtcWallet findByOtcCoinAndMemberId(Long memberId,OtcCoin coin) {
+    public OtcWallet findByOtcCoinAndMemberId(Long memberId, OtcCoin coin) {
         Coin coin1 = coinDao.findByUnit(coin.getUnit());
-        return otcWalletDao.findByMemberIdAndCoin(memberId,coin1);
+        return otcWalletDao.findByMemberIdAndCoin(memberId, coin1);
     }
 
-    public OtcWallet findByCoinAndMember(Long memberId,Coin coin) {
-        return otcWalletDao.findByMemberIdAndCoin(memberId,coin);
+    public OtcWallet findByCoinAndMember(Long memberId, Coin coin) {
+        return otcWalletDao.findByMemberIdAndCoin(memberId, coin);
     }
 
-    public OtcWallet findByCoinUnitAndMemberId(Long memberId,String coinUnit) {
+    public OtcWallet findByCoinUnitAndMemberId(Long memberId, String coinUnit) {
         Coin coin = coinDao.findByUnit(coinUnit);
-        return otcWalletDao.findByMemberIdAndCoin(memberId,coin);
+        return otcWalletDao.findByMemberIdAndCoin(memberId, coin);
     }
 
-    public OtcWallet save(OtcWallet otcWallet){
+    public OtcWallet save(OtcWallet otcWallet) {
         return otcWalletDao.save(otcWallet);
     }
 
-    public Integer addWallet(Long id,BigDecimal amount){
-        return otcWalletDao.addWallet(id,amount);
+    public Integer addWallet(Long id, BigDecimal amount) {
+        return otcWalletDao.addWallet(id, amount);
     }
+
     /**
      * 币币转法币
+     *
      * @param memberWallet
      * @param otcWallet
      * @param amount
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public Integer coin2Otc(MemberWallet memberWallet, OtcWallet otcWallet, BigDecimal amount){
+    public Integer coin2Otc(MemberWallet memberWallet, OtcWallet otcWallet, BigDecimal amount) {
         //扣减币币账户
-        memberWalletService.decreaseBalance(memberWallet.getId(),amount);
+        memberWalletService.decreaseBalance(memberWallet.getId(), amount);
 
         //增加法币账户
-        Integer addResult = otcWalletDao.addWallet(otcWallet.getId(),amount);
-        if (addResult == 0){
+        Integer addResult = otcWalletDao.addWallet(otcWallet.getId(), amount);
+        if (addResult == 0) {
             return 0;
         }
         //增加划转记录
@@ -193,20 +194,21 @@ public class OtcWalletService extends BaseService {
 
     /**
      * 法币转币币
+     *
      * @param memberWallet
      * @param otcWallet
      * @param amount
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public Integer otc2Coin(MemberWallet memberWallet, OtcWallet otcWallet, BigDecimal amount){
+    public Integer otc2Coin(MemberWallet memberWallet, OtcWallet otcWallet, BigDecimal amount) {
         //扣减法币账户
-        Integer subResult = otcWalletDao.subWallet(otcWallet.getId(),amount);
-        if (subResult == 0){
+        Integer subResult = otcWalletDao.subWallet(otcWallet.getId(), amount);
+        if (subResult == 0) {
             return 0;
         }
         //增加币币账户
-        memberWalletService.increaseBalance(memberWallet.getId(),amount);
+        memberWalletService.increaseBalance(memberWallet.getId(), amount);
 
         //增加划转记录
         MemberTransaction transaction = new MemberTransaction();
@@ -240,11 +242,12 @@ public class OtcWalletService extends BaseService {
 
     /**
      * 冻结减少
+     *
      * @param walletId
      * @param amount
      */
-    public void decreaseFrozen(Long walletId,BigDecimal amount){
-        otcWalletDao.decreaseFrozen(walletId,amount);
+    public void decreaseFrozen(Long walletId, BigDecimal amount) {
+        otcWalletDao.decreaseFrozen(walletId, amount);
     }
 
 
@@ -257,11 +260,11 @@ public class OtcWalletService extends BaseService {
      */
     public void transfer(Order order, int ret) throws InformationExpiredException {
         if (ret == 1) {
-            OtcWallet customerWallet = findByOtcCoinAndMemberId( order.getCustomerId(),order.getCoin());
+            OtcWallet customerWallet = findByOtcCoinAndMemberId(order.getCustomerId(), order.getCoin());
             //卖方解除订单金额的冻结
             int is = otcWalletDao.decreaseFrozen(customerWallet.getId(), order.getNumber());
             if (is > 0) {
-                OtcWallet memberWallet = findByOtcCoinAndMemberId(order.getMemberId(),order.getCoin());
+                OtcWallet memberWallet = findByOtcCoinAndMemberId(order.getMemberId(), order.getCoin());
                 //买方得到的币扣除手续费
                 int a = otcWalletDao.increaseBalance(memberWallet.getId(), sub(order.getNumber(), order.getCommission()));
                 if (a <= 0) {
@@ -271,12 +274,12 @@ public class OtcWalletService extends BaseService {
                 throw new InformationExpiredException(msService.getMessage("INFORMATION_EXPIRED"));
             }
         } else {
-            OtcWallet customerWallet = findByOtcCoinAndMemberId( order.getMemberId(),order.getCoin());
+            OtcWallet customerWallet = findByOtcCoinAndMemberId(order.getMemberId(), order.getCoin());
             //卖方付出手续费
             int is = otcWalletDao.decreaseFrozen(customerWallet.getId(), BigDecimalUtils.add(order.getNumber(), order.getCommission()));
             if (is > 0) {
                 //买方得到完整数量
-                OtcWallet memberWallet = findByOtcCoinAndMemberId( order.getCustomerId(),order.getCoin());
+                OtcWallet memberWallet = findByOtcCoinAndMemberId(order.getCustomerId(), order.getCoin());
                 int a = otcWalletDao.increaseBalance(memberWallet.getId(), order.getNumber());
                 if (a <= 0) {
                     throw new InformationExpiredException(msService.getMessage("INFORMATION_EXPIRED"));
@@ -304,8 +307,8 @@ public class OtcWalletService extends BaseService {
         }
     }
 
-    public void increaseBalance(Long walletId,BigDecimal amount){
-        otcWalletDao.increaseBalance(walletId,amount);
+    public void increaseBalance(Long walletId, BigDecimal amount) {
+        otcWalletDao.increaseBalance(walletId, amount);
     }
 
 
@@ -328,7 +331,7 @@ public class OtcWalletService extends BaseService {
 
 
     private void trancerDetail(Order order, long sellerId, long buyerId) throws InformationExpiredException {
-        OtcWallet customerWallet = findByOtcCoinAndMemberId(sellerId,order.getCoin());
+        OtcWallet customerWallet = findByOtcCoinAndMemberId(sellerId, order.getCoin());
         //卖币者，买币者要处理的金额
         BigDecimal sellerAmount, buyerAmount;
         if (order.getMemberId() == sellerId) {
@@ -342,7 +345,7 @@ public class OtcWalletService extends BaseService {
         }
         int is = otcWalletDao.decreaseFrozen(customerWallet.getId(), sellerAmount);
         if (is > 0) {
-            OtcWallet memberWallet = findByOtcCoinAndMemberId(buyerId,order.getCoin());
+            OtcWallet memberWallet = findByOtcCoinAndMemberId(buyerId, order.getCoin());
             int a = otcWalletDao.increaseBalance(memberWallet.getId(), buyerAmount);
             if (a <= 0) {
                 throw new InformationExpiredException(msService.getMessage("INFORMATION_EXPIRED"));
@@ -361,7 +364,7 @@ public class OtcWalletService extends BaseService {
      */
     @Transactional
     public boolean lockWallet(Long uid, String unit) {
-        OtcWallet wallet = findByCoinUnitAndMemberId(uid,unit);
+        OtcWallet wallet = findByCoinUnitAndMemberId(uid, unit);
         if (wallet != null && wallet.getIsLock() == 0) {
             wallet.setIsLock(1);
             return true;
@@ -379,7 +382,7 @@ public class OtcWalletService extends BaseService {
      */
     @Transactional
     public boolean unlockWallet(Long uid, String unit) {
-        OtcWallet wallet = findByCoinUnitAndMemberId(uid,unit);
+        OtcWallet wallet = findByCoinUnitAndMemberId(uid, unit);
         if (wallet != null && wallet.getIsLock() == 1) {
             wallet.setIsLock(0);
             return true;
@@ -389,18 +392,18 @@ public class OtcWalletService extends BaseService {
     }
 
 
-    public Page<OtcWalletDTO> joinFind(List<Predicate> predicates, QMember qMember , QOtcWallet qMemberWallet, PageModel
+    public Page<OtcWalletDTO> joinFind(List<Predicate> predicates, QMember qMember, QOtcWallet qMemberWallet, PageModel
             pageModel) {
         List<OrderSpecifier> orderSpecifiers = pageModel.getOrderSpecifiers();
         predicates.add(qMember.id.eq(qMemberWallet.memberId));
         JPAQuery<OtcWalletDTO> query = queryFactory.select(
-                Projections.fields(OtcWalletDTO.class, qMemberWallet.id.as("id"),qMemberWallet.memberId.as("memberId") ,qMember.username,qMember.realName.as("realName"),
-                        qMember.email,qMember.mobilePhone.as("mobilePhone"),qMemberWallet.balance,qMemberWallet.coin.unit
-                        ,qMemberWallet.frozenBalance.as("frozenBalance"),qMemberWallet.balance.add(qMemberWallet
-                                .frozenBalance).as("allBalance"))).from(QMember.member,QOtcWallet.otcWallet).where
+                Projections.fields(OtcWalletDTO.class, qMemberWallet.id.as("id"), qMemberWallet.memberId.as("memberId"), qMember.username, qMember.realName.as("realName"),
+                        qMember.email, qMember.mobilePhone.as("mobilePhone"), qMemberWallet.balance, qMemberWallet.coin.unit
+                        , qMemberWallet.frozenBalance.as("frozenBalance"), qMemberWallet.balance.add(qMemberWallet
+                                .frozenBalance).as("allBalance"))).from(QMember.member, QOtcWallet.otcWallet).where
                 (predicates.toArray(new Predicate[predicates.size()]))
                 .orderBy(orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]));
-        List<OtcWalletDTO> content = query.offset((pageModel.getPageNo()-1)*pageModel.getPageSize()).limit(pageModel.getPageSize()).fetch();
+        List<OtcWalletDTO> content = query.offset((pageModel.getPageNo() - 1) * pageModel.getPageSize()).limit(pageModel.getPageSize()).fetch();
         long total = query.fetchCount();
         return new PageImpl<>(content, pageModel.getPageable(), total);
     }
@@ -417,7 +420,7 @@ public class OtcWalletService extends BaseService {
         return this.otcWalletDao.updateIsLock(id, isLock);
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public int changeBalance(final OtcWallet otcWallet, final BigDecimal changeBalance, final OtcWalletOperationType operationType, final String remark, final String adminId) {
         otcWallet.setBalance(otcWallet.getBalance().add(changeBalance));
         final Long memberId = otcWallet.getMemberId();

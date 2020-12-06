@@ -6,28 +6,29 @@ import org.springframework.beans.factory.annotation.*;
 import com.querydsl.core.types.*;
 import org.springframework.data.domain.*;
 import cn.ztuo.bitrade.entity.unblock.*;
+
 import java.util.*;
 import java.io.*;
 import java.math.*;
+
 import org.slf4j.*;
 
 @Service
-public class UnBlockLotteryConfigService
-{
+public class UnBlockLotteryConfigService {
     private static final Logger log;
     @Autowired
     UnBlockLotteryConfigRepository unBlockLotteryConfigRepository;
 
     public Page<UnblockLotteryConfig> findAll(final Predicate predicate, final Pageable pageable) {
-        return (Page<UnblockLotteryConfig>)this.unBlockLotteryConfigRepository.findAll(predicate, pageable);
+        return (Page<UnblockLotteryConfig>) this.unBlockLotteryConfigRepository.findAll(predicate, pageable);
     }
 
     public List<UnblockLotteryConfig> getAllLotteryConfig() {
-        return (List<UnblockLotteryConfig>)this.unBlockLotteryConfigRepository.findAll();
+        return (List<UnblockLotteryConfig>) this.unBlockLotteryConfigRepository.findAll();
     }
 
     public UnblockLotteryConfig save(final UnblockLotteryConfig config) {
-        return (UnblockLotteryConfig)this.unBlockLotteryConfigRepository.saveAndFlush(config);
+        return (UnblockLotteryConfig) this.unBlockLotteryConfigRepository.saveAndFlush(config);
     }
 
     public void delete(final Long id) {
@@ -39,7 +40,7 @@ public class UnBlockLotteryConfigService
     }
 
     public UnblockLotteryConfig findById(final Long id) {
-        return (UnblockLotteryConfig)this.unBlockLotteryConfigRepository.getOne(id);
+        return (UnblockLotteryConfig) this.unBlockLotteryConfigRepository.getOne(id);
     }
 
     public UnblockLotteryConfig getOne() {
@@ -55,6 +56,6 @@ public class UnBlockLotteryConfigService
     }
 
     static {
-        log = LoggerFactory.getLogger((Class)UnBlockLotteryConfigService.class);
+        log = LoggerFactory.getLogger((Class) UnBlockLotteryConfigService.class);
     }
 }

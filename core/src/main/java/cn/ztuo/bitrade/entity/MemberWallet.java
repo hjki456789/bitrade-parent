@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @Data
-@Table(uniqueConstraints ={@UniqueConstraint(columnNames={"memberId", "coin_id"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"memberId", "coin_id"})})
 public class MemberWallet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

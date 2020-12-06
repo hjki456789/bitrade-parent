@@ -25,19 +25,19 @@ public class BusinessAuthDepositService extends BaseService {
         return businessAuthDepositDao.findAll(predicate, pageModel.getPageable());
     }
 
-    public List<BusinessAuthDeposit> findAllByStatus(CommonStatus status){
+    public List<BusinessAuthDeposit> findAllByStatus(CommonStatus status) {
         return businessAuthDepositDao.findAllByStatus(status);
     }
 
-    public BusinessAuthDeposit findById(Long id){
+    public BusinessAuthDeposit findById(Long id) {
         return businessAuthDepositDao.findById(id).orElse(null);
     }
 
-    public void save(BusinessAuthDeposit businessAuthDeposit){
+    public void save(BusinessAuthDeposit businessAuthDeposit) {
         businessAuthDepositDao.save(businessAuthDeposit);
     }
 
-    public void update(BusinessAuthDeposit businessAuthDeposit){
+    public void update(BusinessAuthDeposit businessAuthDeposit) {
         businessAuthDepositDao.save(businessAuthDeposit);
     }
 }

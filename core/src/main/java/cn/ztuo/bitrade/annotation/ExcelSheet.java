@@ -9,6 +9,6 @@ public @interface ExcelSheet {
 
     String name() default "sheet";
 
-    int size() default 65535 ;
+    int size() default 65535;
 
 }

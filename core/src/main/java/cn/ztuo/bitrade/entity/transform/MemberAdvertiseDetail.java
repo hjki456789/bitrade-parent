@@ -19,7 +19,7 @@ import java.math.BigDecimal;
  */
 @Builder
 @Data
-public class MemberAdvertiseDetail implements Serializable{
+public class MemberAdvertiseDetail implements Serializable {
 
     private Long id;
 
@@ -82,7 +82,7 @@ public class MemberAdvertiseDetail implements Serializable{
     /**
      * 广告状态
      */
-    private AdvertiseControlStatus status ;
+    private AdvertiseControlStatus status;
 
     private BigDecimal number;
 
@@ -95,7 +95,7 @@ public class MemberAdvertiseDetail implements Serializable{
 
     private String autoword;
 
-    public static MemberAdvertiseDetail toMemberAdvertiseDetail(Advertise advertise){
+    public static MemberAdvertiseDetail toMemberAdvertiseDetail(Advertise advertise) {
         return MemberAdvertiseDetail.builder()
                 .id(advertise.getId())
                 .advertiseType(advertise.getAdvertiseType())

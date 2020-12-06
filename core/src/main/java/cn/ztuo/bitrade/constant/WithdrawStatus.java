@@ -19,6 +19,7 @@ public enum WithdrawStatus implements BaseEnum {
     TRANSFER("正在转账"),//异步打钱才有的状态
     WAITINGTRANSFER("等待转账");//请求钱包转账钱状态
     private String cnName;
+
     @Override
     @JsonValue
     public int getOrdinal() {

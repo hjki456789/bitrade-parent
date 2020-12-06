@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- *锁仓记录表
+ * 锁仓记录表
  */
 @Entity
 @Data
@@ -30,7 +30,7 @@ public class LockPositionRecord {
     /**
      * 锁仓时间
      */
-    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
     /**
      * 锁仓状态，0锁定，1解锁
@@ -40,7 +40,7 @@ public class LockPositionRecord {
     /**
      * 解锁时间
      */
-    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date unlockTime;
 
     /**

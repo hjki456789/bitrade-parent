@@ -60,6 +60,7 @@ public class OtcCoinService extends BaseService {
     public OtcCoin save(OtcCoin otcCoin) {
         return otcCoinDao.save(otcCoin);
     }
+
     @Override
     public List<OtcCoin> findAll() {
         return otcCoinDao.findAll();
@@ -113,18 +114,18 @@ public class OtcCoinService extends BaseService {
         return otcCoinDao.findAll(predicate, pageable);
     }
 
-    public List<String> findAllUnits(){
+    public List<String> findAllUnits() {
         List<String> list = otcCoinDao.findAllUnits();
-        return  list ;
+        return list;
     }
 
-    public OtcCoin findOtcCoinByUnitAndStatus(String coinUnit,CommonStatus commonStatus) {
-        return otcCoinDao.findOtcCoinByUnitAndStatus(coinUnit,commonStatus);
+    public OtcCoin findOtcCoinByUnitAndStatus(String coinUnit, CommonStatus commonStatus) {
+        return otcCoinDao.findOtcCoinByUnitAndStatus(coinUnit, commonStatus);
     }
 
-    public List<String> findAllUnitsByStatus(){
+    public List<String> findAllUnitsByStatus() {
         List<String> list = otcCoinDao.findAllUnitsByStatus();
-        return  list ;
+        return list;
     }
 
 }

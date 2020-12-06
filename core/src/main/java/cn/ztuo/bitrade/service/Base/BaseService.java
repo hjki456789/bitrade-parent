@@ -82,17 +82,17 @@ public class BaseService<T> extends TopBaseService {
 
     /**
      * RSA私钥签名
-     * @Title: sign
-     * @return 设定文件
+     *
      * @return byte[]    返回类型
+     * @Title: sign
      * @lastModify 2019年4月22日
      */
     public String sign(TreeMap<String, String> map) {
         map.put("nonce", UUID.randomUUID().toString());
         String timeStamp = String.valueOf(System.currentTimeMillis());
-        map.put("timestamp",timeStamp);
-        map.put("sysId","app");
-        String data= JSON.toJSONString(map);
+        map.put("timestamp", timeStamp);
+        map.put("sysId", "app");
+        String data = JSON.toJSONString(map);
         byte[] privateKey = RsaKeyUtil.decryptBASE64(walletPrivateKey);
         PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey);
 
@@ -106,7 +106,7 @@ public class BaseService<T> extends TopBaseService {
             String signatureStr = URLEncoder.encode(RsaKeyUtil.encryptBASE64(signature.sign()));
             StringBuilder sb = new StringBuilder();
             sb.append("?sign=").append(signatureStr);
-            map.forEach((k,v) ->{
+            map.forEach((k, v) -> {
                 sb.append("&").append(k).append("=").append(v);
             });
             log.info(data + "访问参数：" + sb);

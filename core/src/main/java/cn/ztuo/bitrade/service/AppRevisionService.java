@@ -23,8 +23,8 @@ public class AppRevisionService extends TopBaseService<AppRevision, AppRevisionD
         super.setDao(dao);
     }
 
-    public AppRevision findRecentVersion(Platform p){
-        List<AppRevision> appRevisions =  dao.findAppRevisionByPlatformOrderByIdDesc(p);
-        return appRevisions.size()>0?appRevisions.get(0):null;
+    public AppRevision findRecentVersion(Platform p) {
+        List<AppRevision> appRevisions = dao.findAppRevisionByPlatformOrderByIdDesc(p);
+        return appRevisions.size() > 0 ? appRevisions.get(0) : null;
     }
 }

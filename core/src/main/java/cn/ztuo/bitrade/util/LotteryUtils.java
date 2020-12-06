@@ -1,16 +1,17 @@
 package cn.ztuo.bitrade.util;
 
 import java.util.*;
+
 import cn.ztuo.bitrade.entity.unblock.*;
+
 import java.math.*;
 
-public class LotteryUtils
-{
+public class LotteryUtils {
     public static void main(final String[] args) {
-        final int max = (int)(Math.ceil(0.0) / 0.0);
+        final int max = (int) (Math.ceil(0.0) / 0.0);
         System.out.println(max);
     }
-    
+
     public static UnblockLotteryConfig generateAward(final List<UnblockLotteryConfig> initDrawList, final int max) {
         final long result = randomNum(1, max);
         int line = 0;
@@ -29,7 +30,7 @@ public class LotteryUtils
         }
         return returnobj;
     }
-    
+
     private static long randomNum(final int smin, final int smax) {
         final int range = smax - smin;
         final double rand = Math.random();

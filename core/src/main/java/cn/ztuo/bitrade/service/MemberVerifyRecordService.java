@@ -37,7 +37,7 @@ public class MemberVerifyRecordService extends BaseService {
     }
 
     @Transactional(readOnly = true)
-    public PageResult<MemberVerifyRecord> query(Long memberId,Integer pageNo, Integer pageSize) {
+    public PageResult<MemberVerifyRecord> query(Long memberId, Integer pageNo, Integer pageSize) {
         List<MemberVerifyRecord> list;
         JPAQuery<MemberVerifyRecord> jpaQuery = queryFactory.selectFrom(QMemberVerifyRecord.memberVerifyRecord);
         List<BooleanExpression> booleanExpressionList = new ArrayList();

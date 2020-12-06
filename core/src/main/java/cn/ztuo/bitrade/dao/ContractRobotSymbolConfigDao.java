@@ -5,14 +5,15 @@ import cn.ztuo.bitrade.entity.*;
 import org.springframework.data.querydsl.*;
 import org.springframework.stereotype.*;
 import org.springframework.data.repository.query.*;
+
 import java.util.*;
 import java.math.*;
 import javax.transaction.*;
+
 import org.springframework.data.jpa.repository.*;
 
 @Repository
-public interface ContractRobotSymbolConfigDao extends JpaRepository<ContractRobotSymbolConfig, String>, JpaSpecificationExecutor<ContractRobotSymbolConfig>, QuerydslPredicateExecutor<ContractRobotSymbolConfig>
-{
+public interface ContractRobotSymbolConfigDao extends JpaRepository<ContractRobotSymbolConfig, String>, JpaSpecificationExecutor<ContractRobotSymbolConfig>, QuerydslPredicateExecutor<ContractRobotSymbolConfig> {
     @Transactional
     @Modifying
     @Query(value = "insert into contract_robot_symbol_config(symbol,from_exchange_id,from_exchange_symbol,status,create_time,sequence,version,amount_multiple) values(:symbol,:fromExchangeId,:fromExchangeSymbol,:status,:createTime,:sequence,:version,:amountMultiple)", nativeQuery = true)

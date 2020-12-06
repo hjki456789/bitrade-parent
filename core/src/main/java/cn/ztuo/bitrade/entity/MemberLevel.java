@@ -1,6 +1,7 @@
 package cn.ztuo.bitrade.entity;
 
 import lombok.Data;
+
 import javax.validation.constraints.NotBlank;
 
 import javax.persistence.*;

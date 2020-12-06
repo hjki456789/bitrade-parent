@@ -4,13 +4,15 @@ import cn.ztuo.bitrade.dao.base.BaseDao;
 import cn.ztuo.bitrade.entity.unblock.*;
 import org.springframework.data.querydsl.*;
 import org.springframework.data.repository.query.*;
+
 import java.math.*;
 import javax.transaction.*;
+
 import org.springframework.data.jpa.repository.*;
+
 import java.util.*;
 
-public interface UnBlockLotteryConfigRepository extends BaseDao<UnblockLotteryConfig>
-{
+public interface UnBlockLotteryConfigRepository extends BaseDao<UnblockLotteryConfig> {
     @Transactional
     @Modifying
     @Query("update UnblockLotteryConfig set lotteryLevel = :lotteryLevel, lotteryRate=:lotteryRate,  lotteryInstruction=:lotteryInstruction, coin=:coin,  amount=:amount, insuranceRate=:insuranceRate,  dayWinnerNumLimit=:dayWinnerNumLimit where id =:id")

@@ -50,10 +50,11 @@ public class EmaySMSProvider implements SMSProvider {
         String content = formatVerifyCode(verifyCode);
         return sendSingleMessage(mobile, content);
     }
+
     @Override
-    public MessageResult sendLoginMessage(String ip,String phone) throws Exception {
-        String content=sendLoginMessage(ip);
-        return sendSingleMessage(content,phone);
+    public MessageResult sendLoginMessage(String ip, String phone) throws Exception {
+        String content = sendLoginMessage(ip);
+        return sendSingleMessage(content, phone);
     }
 
     private MessageResult parseXml(String xml) {
@@ -66,6 +67,7 @@ public class EmaySMSProvider implements SMSProvider {
         }
         return result;
     }
+
     @Override
     public MessageResult sendTemplateMessage(final String mobilePhone, final String templateId) throws Exception {
         return null;

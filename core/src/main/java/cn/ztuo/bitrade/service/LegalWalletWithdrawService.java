@@ -51,7 +51,7 @@ public class LegalWalletWithdrawService extends TopBaseService<LegalWalletWithdr
     @Transactional(rollbackFor = Exception.class)
     public void withdraw(MemberWallet wallet, LegalWalletWithdraw legalWalletWithdraw) {
         int count = memberWalletDao.freezeBalance(wallet.getId(), legalWalletWithdraw.getAmount());
-        if(count == 0) {
+        if (count == 0) {
             throw new RuntimeException(msService.getMessage("INFORMATION_EXPIRED"));
         }
         legalWalletWithdrawDao.save(legalWalletWithdraw);
@@ -61,7 +61,7 @@ public class LegalWalletWithdrawService extends TopBaseService<LegalWalletWithdr
     @Transactional(rollbackFor = Exception.class)
     public void noPass(MemberWallet wallet, LegalWalletWithdraw withdraw) {
         int count = memberWalletDao.thawBalance(wallet.getId(), withdraw.getAmount());
-        if(count == 0) {
+        if (count == 0) {
             throw new RuntimeException(msService.getMessage("INFORMATION_EXPIRED"));
         }
         withdraw.setStatus(WithdrawStatus.FAIL);//标记失败

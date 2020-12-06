@@ -117,7 +117,7 @@ public class RedisConfig {
      */
     @Bean
     JedisConnectionFactory jedisConnectionFactory(JedisPoolConfig jedisPoolConfig) {
-        JedisClientConfiguration.DefaultJedisClientConfigurationBuilder jedisClientConfiguration = (JedisClientConfiguration.DefaultJedisClientConfigurationBuilder)JedisClientConfiguration.builder();
+        JedisClientConfiguration.DefaultJedisClientConfigurationBuilder jedisClientConfiguration = (JedisClientConfiguration.DefaultJedisClientConfigurationBuilder) JedisClientConfiguration.builder();
         jedisClientConfiguration.poolConfig(jedisPoolConfig);
         jedisClientConfiguration.connectTimeout(Duration.ofMillis(redisTimeout));
         if (hostName.split(",").length == 1) {
@@ -125,10 +125,9 @@ public class RedisConfig {
             redisStandaloneConfiguration.setHostName(hostName.split(":")[0]);
             redisStandaloneConfiguration.setPort(Integer.valueOf(hostName.split(":")[1]));
             redisStandaloneConfiguration.setDatabase(database);
-            if(StringUtils.isNotEmpty(redisPassword)) {
+            if (StringUtils.isNotEmpty(redisPassword)) {
                 redisStandaloneConfiguration.setPassword(RedisPassword.of(redisPassword));
-            }
-            else {
+            } else {
                 redisStandaloneConfiguration.setPassword(RedisPassword.of((String) null));
             }
             return new JedisConnectionFactory(redisStandaloneConfiguration,
@@ -138,10 +137,9 @@ public class RedisConfig {
             source.put("spring.redis.sentinel.master", master);
             source.put("spring.redis.sentinel.nodes", hostName);
             RedisSentinelConfiguration redisSentinelConfiguration = new RedisSentinelConfiguration(new MapPropertySource("RedisClusterConfiguration", source));
-            if(StringUtils.isNotEmpty(redisPassword)) {
+            if (StringUtils.isNotEmpty(redisPassword)) {
                 redisSentinelConfiguration.setPassword(RedisPassword.of(redisPassword));
-            }
-            else {
+            } else {
                 redisSentinelConfiguration.setPassword(RedisPassword.of((String) null));
             }
             redisSentinelConfiguration.setDatabase(database);
@@ -179,19 +177,17 @@ public class RedisConfig {
         String prefix = "redis://";
         if (hostName.split(",").length == 1) {
             config = new Config();
-            if(StringUtils.isNotEmpty(redisPassword)) {
+            if (StringUtils.isNotEmpty(redisPassword)) {
                 config.useSingleServer().setAddress(prefix + hostName).setConnectTimeout(redisTimeout).setDatabase(database).setPassword(redisPassword);
-            }
-            else {
+            } else {
                 config.useSingleServer().setAddress(prefix + hostName).setConnectTimeout(redisTimeout).setDatabase(database).setPassword(null);
             }
         } else {
             config = new Config();
             String[] addresses = Stream.of(hostName.split(",")).map(item -> prefix + item).toArray(String[]::new);
-            if(StringUtils.isNotEmpty(redisPassword)) {
+            if (StringUtils.isNotEmpty(redisPassword)) {
                 config.useSentinelServers().setMasterName(master).addSentinelAddress(addresses).setDatabase(database).setConnectTimeout(redisTimeout).setPassword(redisPassword);
-            }
-            else {
+            } else {
                 config.useSentinelServers().setMasterName(master).addSentinelAddress(addresses).setDatabase(database).setConnectTimeout(redisTimeout).setPassword(null);
             }
         }

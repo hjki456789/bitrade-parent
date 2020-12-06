@@ -24,6 +24,7 @@ public class MultiDataSource {
     public MultiDataSource() {
         log.info("加载多数据源配置信息  -->  {}", "gt.maxzhao.boot.datasource");
     }
+
     /**
      * 多个数据源
      */

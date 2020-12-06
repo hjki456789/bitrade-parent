@@ -46,10 +46,10 @@ public class MemberApplicationService extends BaseService {
     private IntegrationRecordService integrationRecordService;
 
     @Autowired
-    private MemberGradeService gradeService ;
+    private MemberGradeService gradeService;
 
     @Autowired
-    private  DataDictionaryService dictionaryService;
+    private DataDictionaryService dictionaryService;
 
     @Override
     public List<MemberApplication> findAll() {
@@ -72,13 +72,13 @@ public class MemberApplicationService extends BaseService {
         return memberApplicationDao.findMemberApplicationByMemberAndAuditStatusOrderByIdDesc(member, AuditStatus.AUDIT_DEFEATED);
     }
 
-    public int findSuccessRealAuthByIdCard(String idCard){
-        List<MemberApplication> list=memberApplicationDao.findSuccessMemberApplicationsByIdCard(idCard, AuditStatus.AUDIT_ING, AuditStatus.AUDIT_SUCCESS);
+    public int findSuccessRealAuthByIdCard(String idCard) {
+        List<MemberApplication> list = memberApplicationDao.findSuccessMemberApplicationsByIdCard(idCard, AuditStatus.AUDIT_ING, AuditStatus.AUDIT_SUCCESS);
         return list.size();
     }
 
-    public MemberApplication findSuccessRecord(String idCard){
-        List<MemberApplication> list=memberApplicationDao.findSuccessMemberApplicationsByIdCard(idCard, AuditStatus.AUDIT_ING, AuditStatus.AUDIT_SUCCESS);
+    public MemberApplication findSuccessRecord(String idCard) {
+        List<MemberApplication> list = memberApplicationDao.findSuccessMemberApplicationsByIdCard(idCard, AuditStatus.AUDIT_ING, AuditStatus.AUDIT_SUCCESS);
         return list.get(0);
     }
 
@@ -116,7 +116,7 @@ public class MemberApplicationService extends BaseService {
     public void auditPass(MemberApplication application) {
         int kycStatus = application.getKycStatus();
         Member member = application.getMember();
-        if (kycStatus == 5){
+        if (kycStatus == 5) {
             //实名会员
             member.setMemberLevel(MemberLevelEnum.REALNAME);
             //会员身份证号码
@@ -146,7 +146,7 @@ public class MemberApplicationService extends BaseService {
     public void auditPass1(MemberApplication application) {
         int kycStatus = application.getKycStatus();
         Member member = application.getMember();
-        if (kycStatus == 5){
+        if (kycStatus == 5) {
             //实名会员
             member.setMemberLevel(MemberLevelEnum.REALNAME);
             //会员身份证号码
@@ -161,19 +161,19 @@ public class MemberApplicationService extends BaseService {
             application.setKycStatus(1);
         }
         //kyc 二级审核通过赠送积分
-        if (kycStatus == 6){
+        if (kycStatus == 6) {
             member.setKycStatus(4);
             application.setKycStatus(4);
             //实名后赠送积分 需要两者都实名 才赠送积分
             try {
-                if(member.getInviterId()!=null) {
+                if (member.getInviterId() != null) {
                     Member inviteMember = memberDao.findById(member.getInviterId()).orElse(null);
-                    if(inviteMember.getRealNameStatus()==RealNameStatus.VERIFIED && inviteMember.getKycStatus() == 4) {
+                    if (inviteMember.getRealNameStatus() == RealNameStatus.VERIFIED && inviteMember.getKycStatus() == 4) {
                         promotion(inviteMember);
                     }
                 }
             } catch (Exception e) {
-                log.info("实名注册积分则送失败={}",e);
+                log.info("实名注册积分则送失败={}", e);
             }
         }
         memberDao.save(member);
@@ -184,21 +184,20 @@ public class MemberApplicationService extends BaseService {
     }
 
 
-
     private synchronized void promotion(Member inviteMember) {
         DataDictionary dataDictionary = dictionaryService.findByBond(SysConstant.INTEGRATION_GIVING_ONE_INVITE);
         //增加积分并生成记录
         increaseIntegration(inviteMember, dataDictionary);
         if (inviteMember.getInviterId() != null) {
             Member inviteMember2 = memberDao.findById(inviteMember.getInviterId()).orElse(null);
-            if(inviteMember2.getRealNameStatus()==RealNameStatus.VERIFIED) {
+            if (inviteMember2.getRealNameStatus() == RealNameStatus.VERIFIED) {
                 promotionLevelTwo(inviteMember2);
             }
 
         }
     }
 
-    private void promotionLevelTwo( Member inviteMember2) {
+    private void promotionLevelTwo(Member inviteMember2) {
         DataDictionary dataDictionary = dictionaryService.findByBond(SysConstant.INTEGRATION_GIVING_TWO_INVITE);
         //增加积分并生成记录
         increaseIntegration(inviteMember2, dataDictionary);
@@ -206,16 +205,16 @@ public class MemberApplicationService extends BaseService {
 
     private void increaseIntegration(Member member, DataDictionary dataDictionary) {
         if (dataDictionary != null) {
-            if(StringUtils.isNumeric(dataDictionary.getValue())) {
+            if (StringUtils.isNumeric(dataDictionary.getValue())) {
                 Long integrationAmount = Long.parseLong(dataDictionary.getValue());
-                member.setIntegration(member.getIntegration()+integrationAmount);
+                member.setIntegration(member.getIntegration() + integrationAmount);
 
                 // 统计推广用户实名认证的总积分
-                member.setGeneralizeTotal(member.getGeneralizeTotal()+integrationAmount);
+                member.setGeneralizeTotal(member.getGeneralizeTotal() + integrationAmount);
 
                 //判断当前积分符合哪个会员等级
                 MemberGrade grade = gradeService.findOne(member.getMemberGradeId());
-                if(grade.getId()!=5L && grade.getId()!=6L) {
+                if (grade.getId() != 5L && grade.getId() != 6L) {
                     Long integration = member.getIntegration();
                     if (grade.getGradeBound() < integration) {
                         member.setMemberGradeId(member.getMemberGradeId() + 1);
@@ -233,11 +232,9 @@ public class MemberApplicationService extends BaseService {
     }
 
 
-    public long countAuditing(){
+    public long countAuditing() {
         return memberApplicationDao.countAllByAuditStatus(AuditStatus.AUDIT_ING);
     }
-
-
 
 
     /**
@@ -250,7 +247,7 @@ public class MemberApplicationService extends BaseService {
         Member member = application.getMember();
         int kycStatus = application.getKycStatus();
 
-        if (kycStatus == 5){
+        if (kycStatus == 5) {
             application.setKycStatus(2);
             member.setKycStatus(2);
             //会员实名状态未认证
@@ -258,7 +255,7 @@ public class MemberApplicationService extends BaseService {
             //审核失败
             application.setAuditStatus(AUDIT_DEFEATED);
         }
-        if (kycStatus == 6){
+        if (kycStatus == 6) {
             application.setKycStatus(3);
             member.setKycStatus(3);
         }
@@ -267,8 +264,8 @@ public class MemberApplicationService extends BaseService {
     }
 
 
-    public MemberApplication findMemberApplicationByKycStatusIn(List<Integer> kycStatus,Member member){
-        return memberApplicationDao.findMemberApplicationByKycStatusInAndMember(kycStatus,member);
+    public MemberApplication findMemberApplicationByKycStatusIn(List<Integer> kycStatus, Member member) {
+        return memberApplicationDao.findMemberApplicationByKycStatusInAndMember(kycStatus, member);
     }
 
 

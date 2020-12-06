@@ -166,7 +166,7 @@ public class WithdrawRecordService extends BaseService {
     }
 
     @Transactional
-    public void withdrawTransfering(Long withdrawId){
+    public void withdrawTransfering(Long withdrawId) {
         WithdrawRecord record = findOne(withdrawId);
         if (record != null) {
             record.setStatus(WithdrawStatus.TRANSFER);
@@ -249,19 +249,19 @@ public class WithdrawRecordService extends BaseService {
 
     }
 
-    public long countAuditing(){
+    public long countAuditing() {
         return withdrawApplyDao.countAllByStatus(WithdrawStatus.PROCESSING);
     }
 
-    public List<WithdrawRecord> findByIds(Long[] ids){
+    public List<WithdrawRecord> findByIds(Long[] ids) {
         return withdrawApplyDao.findByIds(ids);
     }
 
-    public Double countWithdrawAmountByTimeAndMemberIdAndCoin(Date startTime,Date endTime,Coin coin){
-        return withdrawApplyDao.countWithdrawAmountByTimeAndMemberIdAndCoin(startTime,endTime,coin);
+    public Double countWithdrawAmountByTimeAndMemberIdAndCoin(Date startTime, Date endTime, Coin coin) {
+        return withdrawApplyDao.countWithdrawAmountByTimeAndMemberIdAndCoin(startTime, endTime, coin);
     }
 
-    public Page<WithdrawRecord> findAll(Predicate predicate,PageModel pageModel){
+    public Page<WithdrawRecord> findAll(Predicate predicate, PageModel pageModel) {
         return withdrawApplyDao.findAll(predicate, pageModel.getPageable());
     }
 }

@@ -14,7 +14,7 @@ public interface SysPermissionDao extends BaseDao<SysPermission> {
 
     @Transactional
     @Modifying
-    @Query(value="delete from admin_role_permission where rule_id = ?1",nativeQuery = true)
+    @Query(value = "delete from admin_role_permission where rule_id = ?1", nativeQuery = true)
     int deletePermission(long permissionId);
 
     SysPermission findSysPermissionByName(String name);

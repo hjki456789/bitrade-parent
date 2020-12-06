@@ -62,7 +62,7 @@ public class NavigationService extends BaseService {
         return page;
     }
 
-    public List<Navigation> findAllByStatusNotAndTypeAndLocale(String type,String locale) {
-        return navigationDao.findAllByStatusNotAndTypeAndLocale(type,locale);
+    public List<Navigation> findAllByStatusNotAndTypeAndLocale(String type, String locale) {
+        return navigationDao.findAllByStatusNotAndTypeAndLocale(type, locale);
     }
 }

@@ -7,5 +7,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IgnoreExcel {
 
-    boolean value() default true ;
+    boolean value() default true;
 }

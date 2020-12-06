@@ -9,9 +9,11 @@ public interface MemberWalletRelationDao extends BaseDao<MemberWalletRelation> {
 
     /**
      * 查找用户全部跨链钱包地址
+     *
      * @return 用户多链钱包地址
      */
     List<MemberWalletRelation> findAllByMemberIdAndCoinId(Long memberId, String coinId);
+
     List<MemberWalletRelation> findAllByMemberId(Long memberId);
 
     /**

@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class RobotTransactionService extends BaseService<RobotTransaction> {
     @Autowired
-    private RobotTransactionDao dao ;
+    private RobotTransactionDao dao;
 
 
-    public RobotTransaction save(RobotTransaction transaction){
+    public RobotTransaction save(RobotTransaction transaction) {
         return dao.save(transaction);
     }
 

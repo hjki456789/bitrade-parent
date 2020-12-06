@@ -4,21 +4,24 @@ import cn.ztuo.bitrade.service.Base.*;
 import org.springframework.stereotype.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.dao.*;
+
 import java.math.*;
+
 import org.springframework.data.domain.*;
 import org.apache.commons.collections.*;
 import cn.ztuo.bitrade.pagination.*;
 import org.apache.commons.lang3.*;
 import org.springframework.data.jpa.domain.*;
+
 import java.util.*;
+
 import org.springframework.transaction.annotation.*;
 import cn.ztuo.bitrade.entity.*;
 import cn.ztuo.bitrade.constant.*;
 import org.slf4j.*;
 
 @Service
-public class ContractDoubleDirectionWalletService extends BaseService
-{
+public class ContractDoubleDirectionWalletService extends BaseService {
     private static final Logger log;
     @Autowired
     private ContractDoubleDirectionWalletDao contractDoubleDirectionWalletDao;
@@ -36,7 +39,7 @@ public class ContractDoubleDirectionWalletService extends BaseService
     private static Logger logger;
 
     public ContractDoubleDirectionWallet save(final ContractDoubleDirectionWallet wallet) {
-        return (ContractDoubleDirectionWallet)this.contractDoubleDirectionWalletDao.saveAndFlush(wallet);
+        return (ContractDoubleDirectionWallet) this.contractDoubleDirectionWalletDao.saveAndFlush(wallet);
     }
 
     public ContractDoubleDirectionWallet getContractDoubleDirectionWalletByMemberIdAndCoin(final Long memberId, final String coinName) {
@@ -57,16 +60,16 @@ public class ContractDoubleDirectionWalletService extends BaseService
 
     public Page<ContractDoubleDirectionWallet> findPage(final List<Long> memberIds, final String coinId, final Integer isLock, final Pageable pageable) {
         final Criteria<ContractDoubleDirectionWallet> specification = new Criteria<ContractDoubleDirectionWallet>();
-        if (!CollectionUtils.isEmpty((Collection)memberIds)) {
+        if (!CollectionUtils.isEmpty((Collection) memberIds)) {
             specification.add(Restrictions.in("memberId", memberIds, true));
         }
-        if (StringUtils.isNotEmpty((CharSequence)coinId)) {
+        if (StringUtils.isNotEmpty((CharSequence) coinId)) {
             specification.add(Restrictions.eq("coin.name", coinId, true));
         }
         if (null != isLock) {
             specification.add(Restrictions.eq("isLock", isLock, true));
         }
-        final Page<ContractDoubleDirectionWallet> page = (Page<ContractDoubleDirectionWallet>)this.contractDoubleDirectionWalletDao.findAll((Specification)specification, pageable);
+        final Page<ContractDoubleDirectionWallet> page = (Page<ContractDoubleDirectionWallet>) this.contractDoubleDirectionWalletDao.findAll((Specification) specification, pageable);
         for (final ContractDoubleDirectionWallet wallet : page.getContent()) {
             final Member member = this.memberService.findOne(wallet.getMemberId());
             wallet.setUsername(member.getUsername());
@@ -77,7 +80,7 @@ public class ContractDoubleDirectionWalletService extends BaseService
         return page;
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public int changeBalance(final ContractDoubleDirectionWallet contractDoubleDirectionWallet, final BigDecimal changeBalance, final String adminId) {
         contractDoubleDirectionWallet.setBalance(contractDoubleDirectionWallet.getBalance().add(changeBalance));
         final Long memberId = contractDoubleDirectionWallet.getMemberId();
@@ -104,7 +107,7 @@ public class ContractDoubleDirectionWalletService extends BaseService
         return this.contractDoubleDirectionWalletDao.updateIsLock(id, isLock);
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public Integer coin2DoubleDirection(final MemberWallet memberWallet, final ContractDoubleDirectionWallet contractDoubleDirectionWallet, final BigDecimal amount) {
         this.memberWalletService.decreaseBalance(memberWallet.getId(), amount, memberWallet.getVersion());
         contractDoubleDirectionWallet.setBalance(contractDoubleDirectionWallet.getBalance().add(amount));
@@ -126,7 +129,7 @@ public class ContractDoubleDirectionWalletService extends BaseService
         return 1;
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public Integer doubleDirection2Coin(final MemberWallet memberWallet, final ContractDoubleDirectionWallet contractDoubleDirectionWallet, final BigDecimal amount) {
         this.memberWalletService.increaseBalance(memberWallet.getId(), amount, memberWallet.getVersion());
         contractDoubleDirectionWallet.setBalance(contractDoubleDirectionWallet.getBalance().subtract(amount));
@@ -149,8 +152,8 @@ public class ContractDoubleDirectionWalletService extends BaseService
     }
 
     static {
-        log = LoggerFactory.getLogger((Class)ContractDoubleDirectionWalletService.class);
+        log = LoggerFactory.getLogger((Class) ContractDoubleDirectionWalletService.class);
         limit = 1000;
-        ContractDoubleDirectionWalletService.logger = LoggerFactory.getLogger((Class)ContractDoubleDirectionWalletService.class);
+        ContractDoubleDirectionWalletService.logger = LoggerFactory.getLogger((Class) ContractDoubleDirectionWalletService.class);
     }
 }

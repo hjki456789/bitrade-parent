@@ -37,21 +37,21 @@ public class MemberPromotionService extends BaseService {
     @Autowired
     private MemberDao memberDao;
 
-    public MemberPromotion save(MemberPromotion memberPromotion){
+    public MemberPromotion save(MemberPromotion memberPromotion) {
         return memberPromotionDao.save(memberPromotion);
     }
 
-    public Page<RegisterPromotionVO> getPromotionDetails(long memberId, PageModel pageModel){
+    public Page<RegisterPromotionVO> getPromotionDetails(long memberId, PageModel pageModel) {
 
         StringBuilder headSql = new StringBuilder("select a.id id ,a.username presentee,a.email presenteeEmail, ")
                 .append("a.mobile_phone presenteePhone,a.real_name presenteeRealName,a.registration_time promotionTime, ")
-                .append("b.level promotionLevel ") ;
+                .append("b.level promotionLevel ");
 
-        StringBuilder endSql = new StringBuilder(" from member a join member_promotion b on a.id = b.invitees_id and b.inviter_id = "+memberId);
+        StringBuilder endSql = new StringBuilder(" from member a join member_promotion b on a.id = b.invitees_id and b.inviter_id = " + memberId);
 
-        StringBuilder countHead = new StringBuilder("select count(*) ") ;
-        Page<RegisterPromotionVO> page = createNativePageQuery(countHead.append(endSql),headSql.append(endSql),pageModel,Transformers.aliasToBean(RegisterPromotionVO.class)) ;
-        return page ;
+        StringBuilder countHead = new StringBuilder("select count(*) ");
+        Page<RegisterPromotionVO> page = createNativePageQuery(countHead.append(endSql), headSql.append(endSql), pageModel, Transformers.aliasToBean(RegisterPromotionVO.class));
+        return page;
     }
 
     public void updateSuperiorMember(final Long memberId, final Long superiorMemberId) {
@@ -62,15 +62,14 @@ public class MemberPromotionService extends BaseService {
             memberPromotion.setInviterId(superiorMemberId);
             memberPromotion.setLevel(PromotionLevel.ONE);
             this.memberPromotionDao.save(memberPromotion);
-        }
-        else {
+        } else {
             this.memberPromotionDao.updateInviterIdByInviteesId(memberId, superiorMemberId);
         }
         this.memberDao.updateInviterId(memberId, superiorMemberId);
     }
 
     public Page<MemberPromotion> findAll(final Predicate predicate, final Pageable pageable) {
-        return (Page<MemberPromotion>)this.memberPromotionDao.findAll(predicate, pageable);
+        return (Page<MemberPromotion>) this.memberPromotionDao.findAll(predicate, pageable);
     }
 
     public MemberPromotion findByInviteesId(final Long inviteesId) {
@@ -100,8 +99,7 @@ public class MemberPromotionService extends BaseService {
             if (isIncludeSelf) {
                 list.add(memberId);
             }
-        }
-        else {
+        } else {
             list.add(memberId);
         }
         final Member member = this.memberService.findOne(memberId);
@@ -128,8 +126,7 @@ public class MemberPromotionService extends BaseService {
             if (isIncludeSelf) {
                 list.add(memberId);
             }
-        }
-        else {
+        } else {
             list.add(memberId);
         }
         final List<MemberPromotion> memberPromotionList = this.findByInviterId(memberId);

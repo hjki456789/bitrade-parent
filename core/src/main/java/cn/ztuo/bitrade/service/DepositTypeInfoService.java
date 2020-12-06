@@ -5,19 +5,21 @@ import org.springframework.stereotype.*;
 import cn.ztuo.bitrade.dao.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.*;
+
 import java.util.*;
+
 import com.querydsl.core.types.*;
 import org.springframework.data.domain.*;
+
 import java.io.*;
 
 @Service
-public class DepositTypeInfoService extends BaseService
-{
+public class DepositTypeInfoService extends BaseService {
     @Autowired
     private DepositTypeInfoDao depositTypeInfoDao;
 
     public DepositTypeInfo save(final DepositTypeInfo depositTypeInfo) {
-        return (DepositTypeInfo)this.depositTypeInfoDao.save(depositTypeInfo);
+        return (DepositTypeInfo) this.depositTypeInfoDao.save(depositTypeInfo);
     }
 
     public List<DepositTypeInfo> findAllByEnableList() {
@@ -26,15 +28,15 @@ public class DepositTypeInfoService extends BaseService
 
     @Override
     public List<DepositTypeInfo> findAll() {
-        return (List<DepositTypeInfo>)this.depositTypeInfoDao.findAll();
+        return (List<DepositTypeInfo>) this.depositTypeInfoDao.findAll();
     }
 
     public Page<DepositTypeInfo> findAllPage(final Predicate predicate, final Pageable pageable) {
-        return (Page<DepositTypeInfo>)this.depositTypeInfoDao.findAll(predicate, pageable);
+        return (Page<DepositTypeInfo>) this.depositTypeInfoDao.findAll(predicate, pageable);
     }
 
     public DepositTypeInfo findById(final Long id) {
-        return (DepositTypeInfo)this.depositTypeInfoDao.getOne(id);
+        return (DepositTypeInfo) this.depositTypeInfoDao.getOne(id);
     }
 
     public int updateStatus(final Long id, final Integer status) {

@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 /**
  * 返佣榜单ID
+ *
  * @author Seven
  * @date 2019年03月08日
  */

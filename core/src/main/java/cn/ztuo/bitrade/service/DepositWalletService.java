@@ -9,16 +9,19 @@ import org.apache.commons.collections.*;
 import cn.ztuo.bitrade.pagination.*;
 import org.apache.commons.lang3.*;
 import org.springframework.data.jpa.domain.*;
+
 import java.math.*;
+
 import cn.ztuo.bitrade.entity.*;
 import cn.ztuo.bitrade.constant.*;
+
 import java.util.*;
+
 import org.springframework.transaction.annotation.*;
 import org.slf4j.*;
 
 @Service
-public class DepositWalletService extends BaseService
-{
+public class DepositWalletService extends BaseService {
     @Autowired
     private DepositWalletDao depositWalletDao;
     @Autowired
@@ -33,7 +36,7 @@ public class DepositWalletService extends BaseService
     private static Logger logger;
 
     public DepositWallet save(final DepositWallet wallet) {
-        return (DepositWallet)this.depositWalletDao.saveAndFlush(wallet);
+        return (DepositWallet) this.depositWalletDao.saveAndFlush(wallet);
     }
 
     public DepositWallet getDepositWalletByMemberIdAndCoin(final Long memberId, final String coinName) {
@@ -46,10 +49,10 @@ public class DepositWalletService extends BaseService
                 coin = new Coin();
                 coin.setName(coinName);
                 coin.setUnit(coinName);
-                coin = (Coin)this.coinDao.saveAndFlush(coin);
+                coin = (Coin) this.coinDao.saveAndFlush(coin);
             }
             depositWallet.setCoin(coin);
-            depositWallet = (DepositWallet)this.depositWalletDao.saveAndFlush(depositWallet);
+            depositWallet = (DepositWallet) this.depositWalletDao.saveAndFlush(depositWallet);
         }
         return depositWallet;
     }
@@ -64,16 +67,16 @@ public class DepositWalletService extends BaseService
 
     public Page<DepositWallet> findPage(final List<Long> memberIds, final String coinId, final Integer isLock, final Pageable pageable) {
         final Criteria<DepositWallet> specification = new Criteria<DepositWallet>();
-        if (!CollectionUtils.isEmpty((Collection)memberIds)) {
+        if (!CollectionUtils.isEmpty((Collection) memberIds)) {
             specification.add(Restrictions.in("memberId", memberIds, true));
         }
-        if (StringUtils.isNotEmpty((CharSequence)coinId)) {
+        if (StringUtils.isNotEmpty((CharSequence) coinId)) {
             specification.add(Restrictions.eq("coin.name", coinId, true));
         }
         if (null != isLock) {
             specification.add(Restrictions.eq("isLock", isLock, true));
         }
-        final Page<DepositWallet> page = (Page<DepositWallet>)this.depositWalletDao.findAll((Specification)specification, pageable);
+        final Page<DepositWallet> page = (Page<DepositWallet>) this.depositWalletDao.findAll((Specification) specification, pageable);
         for (final DepositWallet wallet : page.getContent()) {
             final Member member = this.memberService.findOne(wallet.getMemberId());
             wallet.setUsername(member.getUsername());
@@ -84,7 +87,7 @@ public class DepositWalletService extends BaseService
         return page;
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public int changeBalance(final DepositWallet depositWallet, final BigDecimal changeBalance, final String adminId) {
         depositWallet.setBalance(depositWallet.getBalance().add(changeBalance));
         final Long memberId = depositWallet.getMemberId();
@@ -117,6 +120,6 @@ public class DepositWalletService extends BaseService
 
     static {
         limit = 1000;
-        DepositWalletService.logger = LoggerFactory.getLogger((Class)DepositWalletService.class);
+        DepositWalletService.logger = LoggerFactory.getLogger((Class) DepositWalletService.class);
     }
 }

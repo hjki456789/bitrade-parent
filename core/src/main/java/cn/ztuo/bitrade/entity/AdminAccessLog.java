@@ -25,7 +25,7 @@ public class AdminAccessLog {
     private Long adminId;
 
     @Transient
-    private String adminName ;
+    private String adminName;
 
     private String uri;
 

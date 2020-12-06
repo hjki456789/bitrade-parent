@@ -7,6 +7,7 @@ import cn.ztuo.bitrade.constant.*;
 import cn.ztuo.bitrade.vo.ChannelVO;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+
 import javax.validation.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -23,7 +24,7 @@ import java.util.Date;
 @Data
 public class Member {
 
-    @Excel(name ="id")
+    @Excel(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -202,7 +203,6 @@ public class Member {
     private Date certifiedBusinessCheckTime;
 
 
-
     /**
      * 头像
      */
@@ -251,17 +251,17 @@ public class Member {
     /**
      * 登录锁，3分钟内连续十次输错账号密码时锁定
      */
-    private BooleanEnum loginLock=BooleanEnum.IS_FALSE;
+    private BooleanEnum loginLock = BooleanEnum.IS_FALSE;
 
     /**
      * 会员积分
      */
-    private Long integration =0L;
+    private Long integration = 0L;
     /**
      * 会员等级外键 6个等级 V1-V5 根据积分设置 V6手动设置 不收取手续费
      * 默认等级是 V1=1 V2=2 V3=3 V4=4 V5=5 V6=6
      */
-    private Long memberGradeId=1L;
+    private Long memberGradeId = 1L;
 
 
     /**
@@ -272,7 +272,7 @@ public class Member {
     /**
      * 推广会员实名认证积分总和
      */
-    private Long generalizeTotal =0L;
+    private Long generalizeTotal = 0L;
 
     /**
      * 邀请者父级id
@@ -307,7 +307,6 @@ public class Member {
      */
     @Temporal(TemporalType.TIMESTAMP)
     private Date tokenWebExpireTime;
-
 
 
     private IfNodeType ifNode;
@@ -358,7 +357,6 @@ public class Member {
     private BigDecimal teamThisWeekFee;
     @Transient
     private BigDecimal teamTotalFee;
-
 
 
     public Member() {

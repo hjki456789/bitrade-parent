@@ -16,12 +16,12 @@ public class FileUtil<E> {
     @Autowired
     private LocaleMessageSourceService msService;
 
-    public MessageResult exportExcel(HttpServletRequest request, HttpServletResponse response, List<E> list, String name) throws Exception{
-        if(list.isEmpty()){
-            return  MessageResult.error(-1, msService.getMessage("DATA_NULL"));
+    public MessageResult exportExcel(HttpServletRequest request, HttpServletResponse response, List<E> list, String name) throws Exception {
+        if (list.isEmpty()) {
+            return MessageResult.error(-1, msService.getMessage("DATA_NULL"));
         }
-        String physicalPath = request.getSession().getServletContext().getRealPath("/")+"excel/";
-        String fileName = physicalPath+name+".xlsx";
+        String physicalPath = request.getSession().getServletContext().getRealPath("/") + "excel/";
+        String fileName = physicalPath + name + ".xlsx";
         File savefile = new File(physicalPath);
         if (!savefile.exists()) {
             savefile.mkdirs();
@@ -31,19 +31,19 @@ public class FileUtil<E> {
         workbook.write(fos);
         fos.close();
         response.setContentType("multipart/form-data");
-        response.setHeader("Content-Disposition", "attachment;filename="+name+".xlsx");
+        response.setHeader("Content-Disposition", "attachment;filename=" + name + ".xlsx");
         response.setContentType("application/vnd.ms-excel;charset=utf-8");
         OutputStream out = response.getOutputStream();
         File file = new File(fileName);
         InputStream in = new FileInputStream(file);
-        int data=in.read();
-        while(data!=-1){
+        int data = in.read();
+        while (data != -1) {
             out.write(data);
-            data=in.read();
+            data = in.read();
         }
         in.close();
         out.close();
         file.delete();
-        return  MessageResult.success();
+        return MessageResult.success();
     }
 }

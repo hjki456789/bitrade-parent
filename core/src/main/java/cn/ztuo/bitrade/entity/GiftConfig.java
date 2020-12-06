@@ -8,9 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-import java.math.BigDecimal;  
-import java.util.Date;  
-
+import java.math.BigDecimal;
+import java.util.Date;
 
 
 /**
@@ -18,9 +17,9 @@ import java.util.Date;
  */
 @Entity
 @Data
-public class GiftConfig implements Serializable{
+public class GiftConfig implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 主键ID自增
@@ -30,53 +29,53 @@ public class GiftConfig implements Serializable{
      */
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-	private Long id;
-	
+    private Long id;
+
     /**
      * 活动名称
      * This field corresponds to the database column gift_config.gift_name
      *
      * @date 2019-04-29 09:43:49
-     */  
-	private String giftName;
-	
+     */
+    private String giftName;
+
     /**
      * 赠送币种
      * This field corresponds to the database column gift_config.gift_coin
      *
      * @date 2019-04-29 09:43:49
-     */  
-	private String giftCoin;
-	
+     */
+    private String giftCoin;
+
     /**
      * 总量
      * This field corresponds to the database column gift_config.amount
      *
      * @date 2019-04-29 09:43:49
-     */  
-	private BigDecimal amount;
-	
+     */
+    private BigDecimal amount;
+
     /**
      * 持有币种
      * This field corresponds to the database column gift_config.have_coin
      *
      * @date 2019-04-29 09:43:49
-     */  
-	private String haveCoin;
-	
+     */
+    private String haveCoin;
+
     /**
      * 持有数量
      * This field corresponds to the database column gift_config.have_amount
      *
      * @date 2019-04-29 09:43:49
-     */  
-	private BigDecimal haveAmount;
-	
+     */
+    private BigDecimal haveAmount;
+
     /**
      * This field corresponds to the database column gift_config.create_time
      *
      * @date 2019-04-29 09:43:49
-     */  
-	private Date createTime;
+     */
+    private Date createTime;
 
 }

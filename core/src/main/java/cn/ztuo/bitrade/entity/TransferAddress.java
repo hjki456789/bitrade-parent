@@ -21,9 +21,9 @@ public class TransferAddress {
     private Coin coin;
     private String address;
     @Column(columnDefinition = "decimal(18,6) comment '转账手续费率'")
-    private BigDecimal transferFee=BigDecimal.ZERO;
+    private BigDecimal transferFee = BigDecimal.ZERO;
     @Column(columnDefinition = "decimal(20,8) comment '最低转账数目'")
-    private BigDecimal minAmount=BigDecimal.ZERO;
+    private BigDecimal minAmount = BigDecimal.ZERO;
     @Enumerated(EnumType.ORDINAL)
-    private CommonStatus status=CommonStatus.NORMAL;
+    private CommonStatus status = CommonStatus.NORMAL;
 }

@@ -12,14 +12,15 @@ import java.io.IOException;
 
 public class CommonEnumSerializer extends JsonSerializer<Enum> {
     private LocalizationExtendService service;
+
     @Override
     public void serialize(Enum anEnum, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         String locale = LocaleContextHolder.getLocale().toLanguageTag();
-        if(service == null) {
+        if (service == null) {
             service = SpringContextUtil.getBean(LocalizationExtendService.class);
         }
         String text = service.getLocaleInfo("ENUM", locale,
-                anEnum.getDeclaringClass().getName().replace("cn.ztuo.bitrade.",""), anEnum.name());
+                anEnum.getDeclaringClass().getName().replace("cn.ztuo.bitrade.", ""), anEnum.name());
         jsonGenerator.writeStartObject();
         jsonGenerator.writeFieldName("id");
         jsonGenerator.writeNumber(anEnum.ordinal());

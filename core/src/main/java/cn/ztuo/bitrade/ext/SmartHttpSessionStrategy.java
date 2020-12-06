@@ -3,11 +3,11 @@ package cn.ztuo.bitrade.ext;
 import org.springframework.session.web.http.*;
 import org.apache.commons.lang.*;
 import org.springframework.session.*;
+
 import javax.servlet.http.*;
 import java.util.List;
 
-public class SmartHttpSessionStrategy implements HttpSessionIdResolver
-{
+public class SmartHttpSessionStrategy implements HttpSessionIdResolver {
     private CookieHttpSessionIdResolver browser;
     private HeaderHttpSessionIdResolver api;
     private String tokenName;
@@ -17,6 +17,7 @@ public class SmartHttpSessionStrategy implements HttpSessionIdResolver
         this.browser = browser;
         this.api = api;
     }
+
     private HttpSessionIdResolver getStrategy(HttpServletRequest request) {
         final String authType = request.getHeader("x-auth-token");
         if (authType == null) {

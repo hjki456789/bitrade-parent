@@ -45,25 +45,24 @@ public interface SMSProvider {
      * @param phone
      * @return
      */
-     MessageResult sendInternationalMessage(String code, String phone,String... templateIds) throws Exception;
+    MessageResult sendInternationalMessage(String code, String phone, String... templateIds) throws Exception;
 
 
     /**
      * 发送模板短信
      *
      * @param templateId 模板ID
-     * @param phone 手机号
+     * @param phone      手机号
      * @return
      */
     MessageResult sendTemplateMessage(String phone, String templateId) throws Exception;
 
-    MessageResult sendNationalMessage(String content, String nationCode,String phone) throws Exception;
+    MessageResult sendNationalMessage(String content, String nationCode, String phone) throws Exception;
 
 
-    default String sendLoginMessage(String ip){
-        return String.format("您已经登录，登录IP：%s",ip);
+    default String sendLoginMessage(String ip) {
+        return String.format("您已经登录，登录IP：%s", ip);
     }
-
 
 
     public MessageResult sendLoginMessage(String ip, String phone) throws Exception;

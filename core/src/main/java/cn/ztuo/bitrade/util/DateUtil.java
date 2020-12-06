@@ -83,7 +83,7 @@ public class DateUtil {
         return YYYY_MM_DD_MM_HH_SS.format(new Date());
     }
 
-    public static Date stringToDate(String dateString) throws Exception{
+    public static Date stringToDate(String dateString) throws Exception {
         return YYYY_MM_DD_MM_HH_SS.parse(dateString);
 
     }
@@ -441,11 +441,9 @@ public class DateUtil {
         calendar.setTime(date);
         if (type == 1) {
             calendar.add(5, num);
-        }
-        else if (type == 2) {
+        } else if (type == 2) {
             calendar.add(2, num);
-        }
-        else {
+        } else {
             if (type != 3) {
                 return 0L;
             }
@@ -464,8 +462,7 @@ public class DateUtil {
             final DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
             minSequence = dateFormat.parse(dateMin).getTime();
             maxSequence = dateFormat.parse(dateMax).getTime();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return (maxSequence - minSequence) / 86400000L;
@@ -476,8 +473,7 @@ public class DateUtil {
             final String date = DateFormatUtils.format(System.currentTimeMillis(), "yyyyMMdd");
             final DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
             return dateFormat.parse(date).getTime();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return 0L;
         }
@@ -488,8 +484,7 @@ public class DateUtil {
             final String date = DateFormatUtils.format(System.currentTimeMillis() - 86400000L, "yyyyMMdd");
             final DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
             return dateFormat.parse(date).getTime();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return 0L;
         }
@@ -527,8 +522,7 @@ public class DateUtil {
             calendar.set(13, 0);
             calendar.set(14, 0);
             return calendar.getTimeInMillis();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return 0L;
         }

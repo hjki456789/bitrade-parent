@@ -31,10 +31,10 @@ public interface MemberWalletDao extends BaseDao<MemberWallet> {
      * @param amount
      * @return
      */
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     @Modifying
     @Query("update MemberWallet wallet set wallet.balance = wallet.balance + :amount,wallet.version= wallet.version+1 where wallet.id = :walletId and wallet.version=:version")
-    int increaseBalance(@Param("walletId")  long walletId, @Param("amount")  BigDecimal amount, @Param("version")  int version);
+    int increaseBalance(@Param("walletId") long walletId, @Param("amount") BigDecimal amount, @Param("version") int version);
 
 
     /**
@@ -103,20 +103,20 @@ public interface MemberWalletDao extends BaseDao<MemberWallet> {
 
     List<MemberWallet> findAllByMemberId(Long memberId);
 
-    @Query(value = "select * from member_wallet  where coin_id like CONCAT('%',:coinId,'%') and member_id=:memberId",nativeQuery = true)
-    List<MemberWallet> findAllByMemberIdAndCoin(@Param("coinId")String coinId,@Param("memberId")Long memberId);
+    @Query(value = "select * from member_wallet  where coin_id like CONCAT('%',:coinId,'%') and member_id=:memberId", nativeQuery = true)
+    List<MemberWallet> findAllByMemberIdAndCoin(@Param("coinId") String coinId, @Param("memberId") Long memberId);
 
     List<MemberWallet> findAllByCoin(Coin coin);
 
-    @Query(value="select ifnull(sum(a.balance),0)+ ifnull(sum(a.frozen_balance),0) as allBalance from member_wallet a where a.coin_id = :coinName",nativeQuery = true)
+    @Query(value = "select ifnull(sum(a.balance),0)+ ifnull(sum(a.frozen_balance),0) as allBalance from member_wallet a where a.coin_id = :coinName", nativeQuery = true)
     BigDecimal getWalletAllBalance(@Param("coinName") String coinName);
 
 
     @Query("select m from MemberWallet m where m.coin=:coin and m.memberId in (:memberIdList)")
     List<MemberWallet> findALLByCoinIdAndMemberIdList(@Param("coin") Coin coin, @Param("memberIdList") List<Long> memberIdList);
 
-    @Query(value = "select * from member_wallet  where coin_id=:coinId and member_id=:memberId",nativeQuery = true)
-    MemberWallet findCoinIdAndMemberId(@Param("coinId")String coinId,@Param("memberId")Long memberId);
+    @Query(value = "select * from member_wallet  where coin_id=:coinId and member_id=:memberId", nativeQuery = true)
+    MemberWallet findCoinIdAndMemberId(@Param("coinId") String coinId, @Param("memberId") Long memberId);
 
     /**
      * 新增账户快照表
@@ -124,14 +124,14 @@ public interface MemberWalletDao extends BaseDao<MemberWallet> {
     @Transactional(rollbackFor = Exception.class)
     @Modifying
     @Query(value = "CREATE TABLE member_wallet_:times SELECT * FROM member_wallet where coin_id=:coinId AND balance>0" +
-            " AND is_lock=0",nativeQuery = true)
-    Integer createGiftTable(@Param("times")Long times,@Param("coinId")String coinId);
+            " AND is_lock=0", nativeQuery = true)
+    Integer createGiftTable(@Param("times") Long times, @Param("coinId") String coinId);
 
-    @Query(value = "SELECT * FROM member_wallet_:times ",nativeQuery = true)
-    List<MemberWallet> findGiftTable(@Param("times")Long times);
+    @Query(value = "SELECT * FROM member_wallet_:times ", nativeQuery = true)
+    List<MemberWallet> findGiftTable(@Param("times") Long times);
 
-    @Query(value = "SELECT sum(balance) FROM member_wallet_:times ",nativeQuery = true)
-    BigDecimal sumGiftTable(@Param("times")Long times);
+    @Query(value = "SELECT sum(balance) FROM member_wallet_:times ", nativeQuery = true)
+    BigDecimal sumGiftTable(@Param("times") Long times);
 
     @Transactional(rollbackFor = Exception.class)
     @Modifying
@@ -139,20 +139,20 @@ public interface MemberWalletDao extends BaseDao<MemberWallet> {
     int releaseReisterGiving(@Param("amount") BigDecimal amount, @Param("walletId") Long id);
 
     @Query(value = "select id from member_wallet where member_id = :memberId and coin_id = :coinId for update", nativeQuery = true)
-    Integer findWalletForUpdate(@Param("memberId")Long memberId, @Param("coinId")String coinId);
+    Integer findWalletForUpdate(@Param("memberId") Long memberId, @Param("coinId") String coinId);
 
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     @Modifying
     @Query("update MemberWallet wallet set wallet.balance=:balance,wallet.blockBalance=:blockBalance, wallet.version=wallet.version+1 where wallet.id=:id and wallet.version=:version")
     int updateBalanceAndBlockBalance(@Param("id") final Long p0, @Param("balance") final BigDecimal p1, @Param("blockBalance") final BigDecimal p2, @Param("version") final int p3);
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     @Modifying
     @Query("update MemberWallet wallet set wallet.blockBalance=:blockBalance, wallet.version=wallet.version+1 where wallet.id=:id and wallet.version=:version")
     int updateBlockBalance(@Param("id") final Long p0, @Param("blockBalance") final BigDecimal p1, @Param("version") final int p2);
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     @Modifying
     @Query("update MemberWallet wallet set wallet.frozenBalance=:frozenBalance where wallet.id=:id")
     int updateFrozenBalance(@Param("id") final Long p0, @Param("frozenBalance") final BigDecimal p1);
@@ -161,12 +161,12 @@ public interface MemberWalletDao extends BaseDao<MemberWallet> {
     @Query("update MemberWallet wallet set wallet.balance = wallet.balance + :amount where wallet.id = :walletId")
     int increaseMemberBalance(@Param("walletId") final long p0, @Param("amount") final BigDecimal p1);
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     @Modifying
     @Query("update MemberWallet wallet set  wallet.balance=:balance,  wallet.frozenBalance=:frozenBalance, wallet.version=wallet.version+1  where wallet.id=:id  AND wallet.version=:version")
     int updateWalletBalanceAndFrozenBalance(@Param("id") final Long p0, @Param("balance") final BigDecimal p1, @Param("frozenBalance") final BigDecimal p2, @Param("version") final int p3);
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     @Modifying
     @Query("update MemberWallet wallet set  wallet.balance=:balance,  wallet.frozenBalance=:frozenBalance  where wallet.id=:id ")
     int updateBalanceAndFrozenBalance(@Param("id") final Long p0, @Param("balance") final BigDecimal p1, @Param("frozenBalance") final BigDecimal p2);

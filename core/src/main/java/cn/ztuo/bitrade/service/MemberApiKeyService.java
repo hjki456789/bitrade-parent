@@ -18,26 +18,26 @@ import java.util.List;
 public class MemberApiKeyService extends BaseService<MemberApiKey> {
 
     @Autowired
-    private MemberApiKeyDao apiKeyDao ;
+    private MemberApiKeyDao apiKeyDao;
 
     public MemberApiKey findMemberApiKeyByApiKey(String apiKey) {
         return apiKeyDao.findMemberApiKeyByApiKey(apiKey);
     }
 
-    public MemberApiKey findByMemberIdAndId(Long memberId,Long id){
-        return apiKeyDao.findMemberApiKeyByMemberIdAndId(memberId,id);
+    public MemberApiKey findByMemberIdAndId(Long memberId, Long id) {
+        return apiKeyDao.findMemberApiKeyByMemberIdAndId(memberId, id);
     }
 
-    public MemberApiKey save(MemberApiKey memberApiKey){
+    public MemberApiKey save(MemberApiKey memberApiKey) {
         return apiKeyDao.save(memberApiKey);
     }
 
 
-    public void del(Long id){
+    public void del(Long id) {
         apiKeyDao.del(id);
     }
 
-    public List<MemberApiKey> findAllByMemberId(Long memberId){
+    public List<MemberApiKey> findAllByMemberId(Long memberId) {
         return apiKeyDao.findAllByMemberId(memberId);
     }
 }

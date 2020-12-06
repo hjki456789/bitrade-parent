@@ -8,7 +8,7 @@ import lombok.Data;
  * @Date: 2019/4/26 4:32 PM
  */
 @Data
-public class EmptionRecrodVO extends BaseQueryVO{
+public class EmptionRecrodVO extends BaseQueryVO {
 
 
     private Long userId;

@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface MemberDepositDao extends JpaRepository<MemberDeposit,Long>,QuerydslPredicateExecutor<MemberDeposit>{
+public interface MemberDepositDao extends JpaRepository<MemberDeposit, Long>, QuerydslPredicateExecutor<MemberDeposit> {
     MemberDeposit findByAddressAndTxid(String address, String txid);
 
-    @Query(value="select unit ,sum(amount) from member_deposit where date_format(create_time,'%Y-%m-%d') = :date group by unit",nativeQuery = true)
+    @Query(value = "select unit ,sum(amount) from member_deposit where date_format(create_time,'%Y-%m-%d') = :date group by unit", nativeQuery = true)
     List<Object[]> getDepositStatistics(@Param("date") String date);
 
     @Query(value = "select unit ,sum(amount) from member_deposit where member_id in (:memberIds) group by unit", nativeQuery = true)

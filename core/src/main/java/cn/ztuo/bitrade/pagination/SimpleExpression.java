@@ -1,10 +1,11 @@
 package cn.ztuo.bitrade.pagination;
+
 import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.*;
+
 /**
  * 简单条件表达式
-
  */
 public class SimpleExpression implements Criterion {
 
@@ -21,23 +22,26 @@ public class SimpleExpression implements Criterion {
     public String getFieldName() {
         return fieldName;
     }
+
     public Object getValue() {
         return value;
     }
+
     public Operator getOperator() {
         return operator;
     }
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public Predicate toPredicate(Root<?> root, CriteriaQuery<?> query,
                                  CriteriaBuilder builder) {
         Path expression = null;
-        if(fieldName.contains(".")){
+        if (fieldName.contains(".")) {
             String[] names = StringUtils.split(fieldName, ".");
             expression = root.get(names[0]);
             for (int i = 1; i < names.length; i++) {
                 expression = expression.get(names[i]);
             }
-        }else{
+        } else {
             expression = root.get(fieldName);
         }
 

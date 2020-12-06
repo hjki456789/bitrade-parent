@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class HotTransferRecordService extends TopBaseService<HotTransferRecord,HotTransferRecordDao> {
+public class HotTransferRecordService extends TopBaseService<HotTransferRecord, HotTransferRecordDao> {
 
     @Autowired
     public void setDao(HotTransferRecordDao dao) {

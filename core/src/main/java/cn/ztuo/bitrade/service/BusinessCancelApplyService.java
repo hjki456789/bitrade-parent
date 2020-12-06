@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class BusinessCancelApplyService extends TopBaseService<BusinessCancelApply,BusinessCancelApplyDao>{
+public class BusinessCancelApplyService extends TopBaseService<BusinessCancelApply, BusinessCancelApplyDao> {
 
     @Autowired
     public void setDao(BusinessCancelApplyDao dao) {
@@ -21,37 +21,37 @@ public class BusinessCancelApplyService extends TopBaseService<BusinessCancelApp
     }
 
     @Autowired
-    private OrderDao orderDao ;
+    private OrderDao orderDao;
 
     @Autowired
-    private AppealDao appealDao ;
+    private AppealDao appealDao;
 
     @Autowired
-    private AdvertiseDao advertiseDao ;
+    private AdvertiseDao advertiseDao;
 
     @Autowired
-    private MemberDao memberDao ;
+    private MemberDao memberDao;
 
 
-    public List<BusinessCancelApply> findByMemberAndStaus(Member member, CertifiedBusinessStatus status){
-        return dao.findByMemberAndStatusOrderByIdDesc(member,status);
+    public List<BusinessCancelApply> findByMemberAndStaus(Member member, CertifiedBusinessStatus status) {
+        return dao.findByMemberAndStatusOrderByIdDesc(member, status);
     }
 
-    public List<BusinessCancelApply> findByMember(Member member){
+    public List<BusinessCancelApply> findByMember(Member member) {
         return dao.findByMemberOrderByIdDesc(member);
     }
 
-    public Map<String,Object> getBusinessOrderStatistics(Long memberId) {
-       return orderDao.getBusinessStatistics(memberId);
+    public Map<String, Object> getBusinessOrderStatistics(Long memberId) {
+        return orderDao.getBusinessStatistics(memberId);
     }
 
-    public  Map<String,Object> getBusinessAppealStatistics(Long memberId){
-        Map<String,Object> map = new HashedMap();
+    public Map<String, Object> getBusinessAppealStatistics(Long memberId) {
+        Map<String, Object> map = new HashedMap();
         Long complainantNum = appealDao.getBusinessAppealInitiatorIdStatistics(memberId);
         Long defendantNum = appealDao.getBusinessAppealAssociateIdStatistics(memberId);
-        map.put("defendantNum",defendantNum);
-        map.put("complainantNum",complainantNum);
-        return map ;
+        map.put("defendantNum", defendantNum);
+        map.put("complainantNum", complainantNum);
+        return map;
     }
 
     public Long getAdvertiserNum(Long memberId) {
@@ -59,7 +59,7 @@ public class BusinessCancelApplyService extends TopBaseService<BusinessCancelApp
         return advertiseDao.getAdvertiseNum(member);
     }
 
-    public long countAuditing(){
+    public long countAuditing() {
         return dao.countAllByStatus(CertifiedBusinessStatus.CANCEL_AUTH);
     }
 

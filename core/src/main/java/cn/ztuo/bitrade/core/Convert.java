@@ -128,6 +128,6 @@ public class Convert {
     }
 
     public static char intToChar(int backnum) {
-        return (char)backnum;
+        return (char) backnum;
     }
 }

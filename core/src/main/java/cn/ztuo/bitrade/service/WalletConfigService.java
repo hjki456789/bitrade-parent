@@ -9,13 +9,12 @@ import org.springframework.data.domain.*;
 import cn.ztuo.bitrade.entity.*;
 
 @Service
-public class WalletConfigService extends BaseService
-{
+public class WalletConfigService extends BaseService {
     @Autowired
     private WalletConfigDao walletConfigDao;
-    
+
     public Page<WalletConfig> findAll(final Predicate predicate, final Pageable pageable) {
-        final Page<WalletConfig> page = (Page<WalletConfig>)this.walletConfigDao.findAll(predicate, pageable);
+        final Page<WalletConfig> page = (Page<WalletConfig>) this.walletConfigDao.findAll(predicate, pageable);
         return page;
     }
 }

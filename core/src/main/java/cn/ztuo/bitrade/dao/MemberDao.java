@@ -126,7 +126,7 @@ public interface MemberDao extends BaseDao<Member> {
     @Query(value = "select id from member_wallet where member_id = :memberId for update", nativeQuery = true)
     List<Integer> selectMemberWalletForUpdate(@Param("memberId") Long memberId);
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     @Modifying
     @Query("update Member set inviter_id = :inviterId where id = :memberId")
     int updateInviterId(@Param("memberId") final Long p0, @Param("inviterId") final Long p1);
@@ -146,7 +146,6 @@ public interface MemberDao extends BaseDao<Member> {
     @Modifying
     @Query("update Member set memberGradeId = :memberGradeId where id = :memberId")
     int updateMemberGradeId(@Param("memberId") final Long p0, @Param("memberGradeId") final long p1);
-
 
 
 }

@@ -5,14 +5,15 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.*;
+
 import java.util.*;
+
 import org.hibernate.annotations.*;
 import com.fasterxml.jackson.annotation.*;
 
 @Entity
 @Table(name = "chain_last_block")
-public class ChainLastBlock
-{
+public class ChainLastBlock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -63,45 +64,45 @@ public class ChainLastBlock
         if (!(o instanceof ChainLastBlock)) {
             return false;
         }
-        final ChainLastBlock other = (ChainLastBlock)o;
+        final ChainLastBlock other = (ChainLastBlock) o;
         if (!other.canEqual(this)) {
             return false;
         }
         final Object this$id = this.getId();
         final Object other$id = other.getId();
-        Label_0065: {
+        Label_0065:
+        {
             if (this$id == null) {
                 if (other$id == null) {
                     break Label_0065;
                 }
-            }
-            else if (this$id.equals(other$id)) {
+            } else if (this$id.equals(other$id)) {
                 break Label_0065;
             }
             return false;
         }
         final Object this$lastBlockNum = this.getLastBlockNum();
         final Object other$lastBlockNum = other.getLastBlockNum();
-        Label_0102: {
+        Label_0102:
+        {
             if (this$lastBlockNum == null) {
                 if (other$lastBlockNum == null) {
                     break Label_0102;
                 }
-            }
-            else if (this$lastBlockNum.equals(other$lastBlockNum)) {
+            } else if (this$lastBlockNum.equals(other$lastBlockNum)) {
                 break Label_0102;
             }
             return false;
         }
         final Object this$assetsName = this.getAssetsName();
         final Object other$assetsName = other.getAssetsName();
-        Label_0139: {
+        Label_0139:
+        {
             if (this$assetsName == null) {
                 if (other$assetsName == null) {
                     break Label_0139;
                 }
-            }
-            else if (this$assetsName.equals(other$assetsName)) {
+            } else if (this$assetsName.equals(other$assetsName)) {
                 break Label_0139;
             }
             return false;
@@ -112,8 +113,7 @@ public class ChainLastBlock
             if (other$updateTime == null) {
                 return true;
             }
-        }
-        else if (this$updateTime.equals(other$updateTime)) {
+        } else if (this$updateTime.equals(other$updateTime)) {
             return true;
         }
         return false;

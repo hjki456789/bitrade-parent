@@ -89,19 +89,19 @@ public class Coin {
     /**
      * 排序
      */
-    private int sort=10;
+    private int sort = 10;
 
     /**
      * 是否能提币
      */
     @Enumerated(EnumType.ORDINAL)
-    private BooleanEnum canWithdraw=BooleanEnum.IS_TRUE;
+    private BooleanEnum canWithdraw = BooleanEnum.IS_TRUE;
 
     /**
      * 是否能充币
      */
     @Enumerated(EnumType.ORDINAL)
-    private BooleanEnum canRecharge=BooleanEnum.IS_TRUE;
+    private BooleanEnum canRecharge = BooleanEnum.IS_TRUE;
 
 
     /**
@@ -114,7 +114,7 @@ public class Coin {
      * 是否能自动提币
      */
     @Enumerated(EnumType.ORDINAL)
-    private BooleanEnum canAutoWithdraw=BooleanEnum.IS_FALSE;
+    private BooleanEnum canAutoWithdraw = BooleanEnum.IS_FALSE;
 
     /**
      * 提币阈值
@@ -140,12 +140,12 @@ public class Coin {
     private Boolean hasLegal = false;
 
     @Transient
-    private BigDecimal allBalance ;
+    private BigDecimal allBalance;
 
-    private String coldWalletAddress ;
+    private String coldWalletAddress;
 
     @Transient
-    private BigDecimal hotAllBalance ;
+    private BigDecimal hotAllBalance;
 
     /**
      * 转账时付给矿工的手续费
@@ -163,7 +163,7 @@ public class Coin {
     private String masterAddress;
 
     @Column(columnDefinition = "decimal(20,8) default 0 comment '单日最大提币量'")
-    private BigDecimal maxDailyWithdrawRate=BigDecimal.ZERO;
+    private BigDecimal maxDailyWithdrawRate = BigDecimal.ZERO;
 
     /**
      * 图片地址
@@ -231,7 +231,7 @@ public class Coin {
     @Column(columnDefinition = "decimal(20,8) default 0 comment '流通总量'")
     private BigDecimal circulateAmount = BigDecimal.ZERO;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="coin")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "coin")
     @JsonIgnore
     private List<CoinChainRelation> coinChainRelationList;
 

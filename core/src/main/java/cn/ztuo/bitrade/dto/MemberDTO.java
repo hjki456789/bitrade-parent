@@ -9,8 +9,8 @@ import java.util.List;
 @Data
 public class MemberDTO {
 
-    private Member member ;
+    private Member member;
 
-    private List<MemberWallet> list ;
+    private List<MemberWallet> list;
 
 }

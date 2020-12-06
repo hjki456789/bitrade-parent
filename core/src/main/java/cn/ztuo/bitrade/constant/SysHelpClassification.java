@@ -16,7 +16,7 @@ import lombok.Setter;
 public enum SysHelpClassification implements BaseEnum {
 
     HELP("新手入门"),
-    
+
     FAQ("常见问题"),
 
     RECHARGE("充值指南"),
@@ -27,6 +27,7 @@ public enum SysHelpClassification implements BaseEnum {
 
     @Setter
     private String cnName;
+
     @Override
     @JsonValue
     public int getOrdinal() {

@@ -11,5 +11,4 @@ public class MemberWalletSeHistoryService extends BaseService {
     private MemberWalletSeHistoryDao memberWalletDao;
 
 
-
 }

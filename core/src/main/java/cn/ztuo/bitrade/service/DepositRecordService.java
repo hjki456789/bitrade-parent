@@ -22,35 +22,35 @@ public class DepositRecordService extends BaseService {
     @Autowired
     private DepositRecordDao depositRecordDao;
 
-    public List<DepositRecord> getAll(){
+    public List<DepositRecord> getAll() {
         return depositRecordDao.findAll();
     }
 
-    public Page<DepositRecord> list(Predicate predicate, PageModel pageModel){
-        return depositRecordDao.findAll(predicate,pageModel.getPageable());
+    public Page<DepositRecord> list(Predicate predicate, PageModel pageModel) {
+        return depositRecordDao.findAll(predicate, pageModel.getPageable());
     }
 
-    public List<DepositRecord> findAll(Predicate predicate){
+    public List<DepositRecord> findAll(Predicate predicate) {
         return (List<DepositRecord>) depositRecordDao.findAll(predicate);
     }
 
-    public DepositRecord findOne(String id){
+    public DepositRecord findOne(String id) {
         return depositRecordDao.findById(id);
     }
 
-    public void update(DepositRecord depositRecord){
+    public void update(DepositRecord depositRecord) {
         depositRecordDao.save(depositRecord);
     }
 
-    public void create(DepositRecord depositRecord){
+    public void create(DepositRecord depositRecord) {
         depositRecordDao.save(depositRecord);
     }
 
-    public List<DepositRecord> findByMemberAndStatus(Member member, DepositStatusEnum status){
-        return depositRecordDao.findByMemberAndStatus(member,status);
+    public List<DepositRecord> findByMemberAndStatus(Member member, DepositStatusEnum status) {
+        return depositRecordDao.findByMemberAndStatus(member, status);
     }
 
-    public DepositRecord save(DepositRecord depositRecord){
+    public DepositRecord save(DepositRecord depositRecord) {
         return depositRecordDao.save(depositRecord);
     }
 }

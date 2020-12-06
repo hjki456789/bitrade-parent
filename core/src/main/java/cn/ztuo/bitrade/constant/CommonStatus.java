@@ -29,7 +29,7 @@ public enum CommonStatus implements BaseEnum {
 
     @Override
     @JsonValue
-    public int getOrdinal(){
+    public int getOrdinal() {
         return this.ordinal();
     }
 }

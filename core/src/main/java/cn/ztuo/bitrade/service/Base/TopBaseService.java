@@ -25,7 +25,7 @@ import java.util.List;
 public class TopBaseService<E, D extends BaseDao> {
 
     @Autowired
-    protected EntityManager entityManager ;
+    protected EntityManager entityManager;
 
     @Setter
     protected D dao;
@@ -109,30 +109,31 @@ public class TopBaseService<E, D extends BaseDao> {
 
     /**
      * 原生sql 多表关联分页查询 映射Map 或者 Class
+     *
      * @param countSql
      * @param sql
      * @param pageModel
-     * @param result  映射的对象 （Map 或者 Class）
+     * @param result    映射的对象 （Map 或者 Class）
      * @return
      */
     @SuppressWarnings("deprecation")
-    public Page createNativePageQuery(StringBuilder countSql , StringBuilder sql , PageModel pageModel,ResultTransformer result){
+    public Page createNativePageQuery(StringBuilder countSql, StringBuilder sql, PageModel pageModel, ResultTransformer result) {
         Query query1 = entityManager.createNativeQuery(countSql.toString());
-        long count =((BigInteger) query1.getSingleResult()).longValue() ;
-        if(pageModel.getProperty()!=null && pageModel.getProperty().size()>0 && pageModel.getDirection().size() == pageModel.getProperty().size()){
-            sql.append(" order by") ;
-            for(int i = 0 ; i < pageModel.getProperty().size() ; i++){
-                sql.append(" "+pageModel.getProperty().get(i)+" "+pageModel.getDirection().get(i)+" ");
-                if(i < pageModel.getProperty().size()-1){
+        long count = ((BigInteger) query1.getSingleResult()).longValue();
+        if (pageModel.getProperty() != null && pageModel.getProperty().size() > 0 && pageModel.getDirection().size() == pageModel.getProperty().size()) {
+            sql.append(" order by");
+            for (int i = 0; i < pageModel.getProperty().size(); i++) {
+                sql.append(" " + pageModel.getProperty().get(i) + " " + pageModel.getDirection().get(i) + " ");
+                if (i < pageModel.getProperty().size() - 1) {
                     sql.append(",");
                 }
             }
         }
-        sql.append(" limit "+pageModel.getPageSize()*(pageModel.getPageNo()-1)+" , "+pageModel.getPageSize());
+        sql.append(" limit " + pageModel.getPageSize() * (pageModel.getPageNo() - 1) + " , " + pageModel.getPageSize());
         Query query2 = entityManager.createNativeQuery(sql.toString());
         query2.unwrap(NativeQuery.class).setResultTransformer(result);
-        List list = query2.getResultList() ;
-        return new PageImpl<>(list,pageModel.getPageable(),count);
+        List list = query2.getResultList();
+        return new PageImpl<>(list, pageModel.getPageable(), count);
     }
 
 }

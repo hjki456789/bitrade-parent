@@ -18,6 +18,7 @@ public enum WorkOrderType implements BaseEnum {
 
     @Setter
     private String cnName;
+
     @Override
     @JsonValue
     public int getOrdinal() {

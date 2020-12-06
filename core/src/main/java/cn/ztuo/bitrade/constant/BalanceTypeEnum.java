@@ -7,10 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.beans.*;
+
 @AllArgsConstructor
 @Getter
-public enum BalanceTypeEnum implements BaseEnum
-{
+public enum BalanceTypeEnum implements BaseEnum {
     BALANCE("可用余额"),
     FROZEN_BALANCE("冻结余额"),
     RELAESE_BALANCE("可释放余额"),

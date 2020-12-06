@@ -7,8 +7,7 @@ import org.springframework.data.repository.query.*;
 import org.springframework.data.jpa.repository.*;
 
 @Repository
-public interface HotWalletInfoDao extends BaseDao<HotWalletInfo>
-{
+public interface HotWalletInfoDao extends BaseDao<HotWalletInfo> {
     HotWalletInfo getOne(final Long p0);
 
     @Query("select a from HotWalletInfo a where a.chainType = :chainType")

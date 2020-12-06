@@ -110,6 +110,7 @@ public class JDBCUtils {
 
     /**
      * 糖果赠送
+     *
      * @param giftId
      */
     public void giftJDBC(Long giftId) {
@@ -120,12 +121,12 @@ public class JDBCUtils {
         Long dateStr = startTime;
         //查询赠送设置记录
         GiftConfig giftConfig = giftConfigService.findById(giftId);
-        if (giftConfig == null){
+        if (giftConfig == null) {
             log.info("------该赠送配置不存在");
             return;
         }
-        Integer createResult = memberWalletService.createGiftTable(dateStr,giftConfig.getHaveCoin());
-        if (createResult == 0){
+        Integer createResult = memberWalletService.createGiftTable(dateStr, giftConfig.getHaveCoin());
+        if (createResult == 0) {
             log.info("------创建快照表失败");
             return;
         }
@@ -155,18 +156,18 @@ public class JDBCUtils {
                 stmt.setString(3, giftConfig.getGiftCoin());
                 BigDecimal memberBalance = allList.get(i).getBalance();
                 //计算用户所占比例
-                BigDecimal ratio = memberBalance.divide(sumAmount,4,BigDecimal.ROUND_DOWN);
-                if (ratio.compareTo(BigDecimal.ZERO) == 0){
+                BigDecimal ratio = memberBalance.divide(sumAmount, 4, BigDecimal.ROUND_DOWN);
+                if (ratio.compareTo(BigDecimal.ZERO) == 0) {
                     continue;
                 }
                 //计算用户增加数量
-                BigDecimal addBalance = giftConfig.getAmount().multiply(ratio).setScale(4,BigDecimal.ROUND_DOWN);
+                BigDecimal addBalance = giftConfig.getAmount().multiply(ratio).setScale(4, BigDecimal.ROUND_DOWN);
                 stmt.setBigDecimal(4, addBalance);
                 stmt.setString(5, date);
 
-                updateStmt.setBigDecimal(1,addBalance);
-                updateStmt.setString(2,giftConfig.getGiftCoin());
-                updateStmt.setLong(3,allList.get(i).getMemberId());
+                updateStmt.setBigDecimal(1, addBalance);
+                updateStmt.setString(2, giftConfig.getGiftCoin());
+                updateStmt.setLong(3, allList.get(i).getMemberId());
 
                 stmt.addBatch();
                 updateStmt.addBatch();
@@ -209,7 +210,6 @@ public class JDBCUtils {
         log.info("------糖果赠送执行时间：" + (endTime - startTime) + "ms");
 
     }
-
 
 
     //分红到用户钱包
@@ -281,8 +281,6 @@ public class JDBCUtils {
     }
 
 
-
-
     /**
      * ES同步数据使用
      */
@@ -301,42 +299,42 @@ public class JDBCUtils {
             String sql2 = " AND id<";
             int total = 2471348;
             int start = 22162;
-            int end= 24162;
+            int end = 24162;
             for (int i = 1; i <= 1225; i++) {
-                if ( end >= total){
+                if (end >= total) {
                     end = total;
                 }
-                String sql = sql1+start+sql2+end;
+                String sql = sql1 + start + sql2 + end;
                 start = end;
-                end =end+2000;
-                log.info("====sql===="+sql);
+                end = end + 2000;
+                log.info("====sql====" + sql);
                 rs = statement.executeQuery(sql);
 
                 JSONObject jsonObject = null;
-                while(rs.next()){
+                while (rs.next()) {
                     //rs.get+数据库中对应的类型+(数据库中对应的列别名)
                     jsonObject = new JSONObject();
-                    jsonObject.put("id",rs.getLong("id"));
-                    jsonObject.put("exchange_order_id",rs.getString("exchange_order_id"));
-                    jsonObject.put("member_id",rs.getString("member_id"));
-                    jsonObject.put("mine_amount",rs.getBigDecimal("mine_amount").doubleValue());
-                    jsonObject.put("poundage_amount",rs.getBigDecimal("poundage_amount") == null ? 0 : rs.getBigDecimal("poundage_amount").doubleValue());
-                    jsonObject.put("poundage_amount_Eth",rs.getBigDecimal("poundage_amount_Eth") == null ? 0 : rs.getBigDecimal("poundage_amount_Eth").doubleValue());
-                    jsonObject.put("bouns_state",rs.getString("bouns_state"));
-                    jsonObject.put("coin_id",rs.getString("coin_id"));
+                    jsonObject.put("id", rs.getLong("id"));
+                    jsonObject.put("exchange_order_id", rs.getString("exchange_order_id"));
+                    jsonObject.put("member_id", rs.getString("member_id"));
+                    jsonObject.put("mine_amount", rs.getBigDecimal("mine_amount").doubleValue());
+                    jsonObject.put("poundage_amount", rs.getBigDecimal("poundage_amount") == null ? 0 : rs.getBigDecimal("poundage_amount").doubleValue());
+                    jsonObject.put("poundage_amount_Eth", rs.getBigDecimal("poundage_amount_Eth") == null ? 0 : rs.getBigDecimal("poundage_amount_Eth").doubleValue());
+                    jsonObject.put("bouns_state", rs.getString("bouns_state"));
+                    jsonObject.put("coin_id", rs.getString("coin_id"));
                     jsonObject.put("transaction_time", DateUtil.dateToString(rs.getDate("transaction_time")));
-                    jsonObject.put("inviter_mobile",rs.getString("inviter_mobile") == null ? "": rs.getString("inviter_mobile"));
-                    jsonObject.put("inviter_name",rs.getString("inviter_name") == null ? "" : rs.getString("inviter_name") );
-                    jsonObject.put("type",rs.getString("type"));
-                    jsonObject.put("symbol",rs.getString("symbol"));
-                    jsonObject.put("direction",rs.getString("direction"));
-                    jsonObject.put("inviter_state",rs.getString("inviter_state"));
-                    log.info("===存入ES 数据==="+jsonObject);
+                    jsonObject.put("inviter_mobile", rs.getString("inviter_mobile") == null ? "" : rs.getString("inviter_mobile"));
+                    jsonObject.put("inviter_name", rs.getString("inviter_name") == null ? "" : rs.getString("inviter_name"));
+                    jsonObject.put("type", rs.getString("type"));
+                    jsonObject.put("symbol", rs.getString("symbol"));
+                    jsonObject.put("direction", rs.getString("direction"));
+                    jsonObject.put("inviter_state", rs.getString("inviter_state"));
+                    log.info("===存入ES 数据===" + jsonObject);
                     boolean result = esUtils.save(jsonObject);
-                    log.info("====result===="+result);
-                    if ( result){
+                    log.info("====result====" + result);
+                    if (result) {
                         log.info("====存入ES成功====");
-                    }else {
+                    } else {
                         log.info("====存入ES失败====");
                     }
                     Thread.sleep(10);
@@ -348,7 +346,7 @@ public class JDBCUtils {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             try {
                 if (statement != null) {
                     connection.close();
@@ -385,50 +383,50 @@ public class JDBCUtils {
             String sql2 = " AND id<";
             int total = 10058359;
             int start = 1;
-            int end= 2000;
+            int end = 2000;
             for (int i = 1; i <= 5030; i++) {
-                if ( end >= total){
+                if (end >= total) {
                     end = total;
                 }
-                String sql = sql1+start+sql2+end;
+                String sql = sql1 + start + sql2 + end;
                 start = end;
-                end =end+2000;
-                log.info("====sql===="+sql);
+                end = end + 2000;
+                log.info("====sql====" + sql);
                 rs = statement.executeQuery(sql);
 
                 JSONObject jsonObject = null;
-                while(rs.next()){
+                while (rs.next()) {
                     //rs.get+数据库中对应的类型+(数据库中对应的列别名)
                     jsonObject = new JSONObject();
-                    jsonObject.put("id",rs.getLong("id"));
-                    jsonObject.put("address",rs.getString("address"));
-                    jsonObject.put("member_id",rs.getString("member_id"));
-                    jsonObject.put("amount",rs.getBigDecimal("amount").doubleValue());
-                    jsonObject.put("create_time",DateUtil.dateToString(rs.getDate("create_time")));
-                    jsonObject.put("fee",rs.getBigDecimal("fee").doubleValue());
-                    jsonObject.put("flag",rs.getString("flag"));
+                    jsonObject.put("id", rs.getLong("id"));
+                    jsonObject.put("address", rs.getString("address"));
+                    jsonObject.put("member_id", rs.getString("member_id"));
+                    jsonObject.put("amount", rs.getBigDecimal("amount").doubleValue());
+                    jsonObject.put("create_time", DateUtil.dateToString(rs.getDate("create_time")));
+                    jsonObject.put("fee", rs.getBigDecimal("fee").doubleValue());
+                    jsonObject.put("flag", rs.getString("flag"));
                     jsonObject.put("symbol", rs.getString("symbol"));
-                    jsonObject.put("real_fee",rs.getString("real_fee"));
-                    jsonObject.put("discount_fee",rs.getString("discount_fee"));
-                    jsonObject.put("type",rs.getString("type"));
-                    log.info("===存入ES 数据==="+jsonObject);
-                    boolean result = esUtils.saveForAnyOne(jsonObject,"member_transaction","mem_transaction");
-                    log.info("====result===="+result);
-                    if ( result){
+                    jsonObject.put("real_fee", rs.getString("real_fee"));
+                    jsonObject.put("discount_fee", rs.getString("discount_fee"));
+                    jsonObject.put("type", rs.getString("type"));
+                    log.info("===存入ES 数据===" + jsonObject);
+                    boolean result = esUtils.saveForAnyOne(jsonObject, "member_transaction", "mem_transaction");
+                    log.info("====result====" + result);
+                    if (result) {
                         log.info("====存入ES成功====");
-                    }else {
+                    } else {
                         log.info("====存入ES失败====");
                     }
                     Thread.sleep(10);
 
                 }
-                log.info(">>>>>>此次插入时间>>>>"+(System.currentTimeMillis()-startTime));
+                log.info(">>>>>>此次插入时间>>>>" + (System.currentTimeMillis() - startTime));
             }
             //5.处理ResultSet
 
         } catch (Exception e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             try {
                 if (statement != null) {
                     connection.close();
@@ -450,9 +448,10 @@ public class JDBCUtils {
 
     /**
      * 初始化 wealthInfo 表
+     *
      * @param members
      */
-    public void dataSynchronization2MemberWealthInfo(List<Member> members){
+    public void dataSynchronization2MemberWealthInfo(List<Member> members) {
         long startTime = System.currentTimeMillis();
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -477,7 +476,7 @@ public class JDBCUtils {
                 stmt.setLong(1, members.get(i).getId());
                 stmt.setString(2, members.get(i).getRealName());
                 stmt.setString(3, members.get(i).getMobilePhone());
-                stmt.setString(4, members.get(i).getInviterId()==null?null:members.get(i).getInviterId().toString());
+                stmt.setString(4, members.get(i).getInviterId() == null ? null : members.get(i).getInviterId().toString());
                 stmt.setString(5, "0");
                 stmt.setString(6, "10000");
                 stmt.setString(7, "0");
@@ -544,23 +543,23 @@ public class JDBCUtils {
 
             rs = statement.executeQuery(sql);
 
-            while(rs.next()){
+            while (rs.next()) {
                 Long memberId = rs.getLong("inviter_id");
                 Long counts = rs.getLong("counts");
-                String updateSql = "update member_wallet set to_released=to_released - "+(counts*60 )+" where member_id = "+memberId+ " AND coin_id='BHB' ";
-                log.info(">>>>>>更新sql>>>>>"+updateSql);
+                String updateSql = "update member_wallet set to_released=to_released - " + (counts * 60) + " where member_id = " + memberId + " AND coin_id='BHB' ";
+                log.info(">>>>>>更新sql>>>>>" + updateSql);
                 updateStatement.executeUpdate(updateSql);
-                log.info(">>>>此次更新数据会员id>>"+memberId+">>>金额>>>>"+(counts*60)+">>>>清理会员>>>"+counts);
-                log.info("会员:"+memberId+"名下有:"+counts+"被邀请人未实名，扣减BHB数量:"+(counts*60));
+                log.info(">>>>此次更新数据会员id>>" + memberId + ">>>金额>>>>" + (counts * 60) + ">>>>清理会员>>>" + counts);
+                log.info("会员:" + memberId + "名下有:" + counts + "被邀请人未实名，扣减BHB数量:" + (counts * 60));
                 Thread.sleep(10);
 
             }
-            log.info(">>>>>>此次插入时间>>>>"+(System.currentTimeMillis()-startTime));
-        //5.处理ResultSet
+            log.info(">>>>>>此次插入时间>>>>" + (System.currentTimeMillis() - startTime));
+            //5.处理ResultSet
 
         } catch (Exception e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             try {
                 if (statement != null) {
                     connection.close();
@@ -579,7 +578,7 @@ public class JDBCUtils {
         }
     }
 
-    public void synchronization2MemberRegisterWallet(List<Member> members,String coinId) {
+    public void synchronization2MemberRegisterWallet(List<Member> members, String coinId) {
         long startTime = System.currentTimeMillis();
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -607,11 +606,11 @@ public class JDBCUtils {
             rs = state.executeQuery(querySql);
             conn.setAutoCommit(false);
 
-            int i=0;
-            while(rs.next()){
+            int i = 0;
+            while (rs.next()) {
 
-                log.info("sql>>>>"+sql);
-                log.info("会员id>>>>>"+rs.getLong("id")+">>>>币种>>>"+coinId);
+                log.info("sql>>>>" + sql);
+                log.info("会员id>>>>>" + rs.getLong("id") + ">>>>币种>>>" + coinId);
                 stmt.setLong(1, rs.getLong("id"));
                 stmt.setString(2, coinId);
                 i++;

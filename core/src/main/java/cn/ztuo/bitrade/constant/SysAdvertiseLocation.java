@@ -27,6 +27,7 @@ public enum SysAdvertiseLocation implements BaseEnum {
     PC_ADVICE_BG("pc公告页背景");
     @Setter
     private String cnName;
+
     @Override
     @JsonValue
     public int getOrdinal() {

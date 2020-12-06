@@ -4,6 +4,7 @@ import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.ztuo.bitrade.constant.BooleanEnum;
 import cn.ztuo.bitrade.constant.CommonStatus;
 import lombok.Data;
+
 import javax.validation.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -62,21 +63,23 @@ public class OtcCoin {
     @Excel(name = "otc货币单位", orderNum = "1", width = 20)
     private int sort;
 
-    /** 是否是平台币 */
+    /**
+     * 是否是平台币
+     */
     @Enumerated(EnumType.ORDINAL)
-    private BooleanEnum isPlatformCoin=BooleanEnum.IS_FALSE;
+    private BooleanEnum isPlatformCoin = BooleanEnum.IS_FALSE;
     /**
      * 币种精度
      */
     @Column(columnDefinition = "int(11) default 8 comment '币种精度'")
-    private Integer coinScale=8;
+    private Integer coinScale = 8;
 
     /**
      * 最大交易时间
      */
     @Column(columnDefinition = "int(11) default 0 comment '广告上架后自动下架时间，单位为秒，0表示不过期'")
-    private Integer maxTradingTime=0;
+    private Integer maxTradingTime = 0;
 
     @Column(columnDefinition = "int(11) default 0 comment '最大挂单数量，0表示不限制'")
-    private Integer maxVolume=0;
+    private Integer maxVolume = 0;
 }

@@ -6,8 +6,7 @@ import org.springframework.data.querydsl.*;
 import org.springframework.data.repository.query.*;
 import org.springframework.data.jpa.repository.*;
 
-public interface UnBlockLotteryRecordRepository extends BaseDao<UnblockLotteryRecord>
-{
+public interface UnBlockLotteryRecordRepository extends BaseDao<UnblockLotteryRecord> {
     @Query(value = "select count(*) from unblock_lottery_record where member_id =:memberId ", nativeQuery = true)
     Long countByMemberId(@Param("memberId") final Long p0);
 

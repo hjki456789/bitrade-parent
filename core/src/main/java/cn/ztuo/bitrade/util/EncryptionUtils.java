@@ -2,8 +2,7 @@ package cn.ztuo.bitrade.util;
 
 import java.security.*;
 
-public class EncryptionUtils
-{
+public class EncryptionUtils {
     private static final char[] HEX_DIGITS;
 
     public static String getMd5String(final String str) {
@@ -20,8 +19,7 @@ public class EncryptionUtils
                 sb.append(EncryptionUtils.HEX_DIGITS[(aByte & 0xF0) >> 4]).append(EncryptionUtils.HEX_DIGITS[aByte & 0xF]);
             }
             return sb.toString();
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             return "";
         }
@@ -35,7 +33,7 @@ public class EncryptionUtils
             final byte[] digest;
             final byte[] b = digest = bmd5.digest();
             for (final int i : digest) {
-                final byte value = (byte)i;
+                final byte value = (byte) i;
                 if (i < 0) {
                     i += 256;
                 }
@@ -45,14 +43,13 @@ public class EncryptionUtils
                 buf.append(Integer.toHexString(i));
             }
             return buf.toString();
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             return "";
         }
     }
 
     static {
-        HEX_DIGITS = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+        HEX_DIGITS = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
     }
 }

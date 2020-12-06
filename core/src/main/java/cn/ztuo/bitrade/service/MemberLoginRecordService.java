@@ -27,7 +27,7 @@ public class MemberLoginRecordService extends BaseService {
     private MemberLoginRecordDao memberLoginRecordDao;
 
 
-    public void saveLoginRecord(Member member, LoginStatus status,String ip,String way) {
+    public void saveLoginRecord(Member member, LoginStatus status, String ip, String way) {
         MemberLoginRecord memberLoginRecord = new MemberLoginRecord();
         memberLoginRecord.setMemberId(member.getId());
         memberLoginRecord.setStatus(status);
@@ -38,7 +38,7 @@ public class MemberLoginRecordService extends BaseService {
     }
 
     @Transactional(readOnly = true)
-    public PageResult<MemberLoginRecord> query(Long memberId,Integer pageNo, Integer pageSize) {
+    public PageResult<MemberLoginRecord> query(Long memberId, Integer pageNo, Integer pageSize) {
         List<MemberLoginRecord> list;
         JPAQuery<MemberLoginRecord> jpaQuery = queryFactory.selectFrom(QMemberLoginRecord.memberLoginRecord);
         List<BooleanExpression> booleanExpressionList = new ArrayList();

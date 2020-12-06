@@ -2,14 +2,14 @@ package cn.ztuo.bitrade.entity.contractdouble;
 
 import java.io.*;
 import javax.persistence.*;
+
 import cn.ztuo.bitrade.entity.*;
 import lombok.Data;
 
 @Entity
 @Table
 @Data
-public class ContractDoubleMemberApi implements Serializable
-{
+public class ContractDoubleMemberApi implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;

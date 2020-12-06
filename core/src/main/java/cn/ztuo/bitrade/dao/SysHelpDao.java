@@ -20,8 +20,8 @@ public interface SysHelpDao extends BaseDao<SysHelp> {
     @Query("select max(s.sort) from SysHelp s")
     int findMaxSort();
 
-    @Query(value = "select * from sys_help WHERE sys_help_classification=:cate and is_top='0' and locale = :locale",nativeQuery = true)
-    List<SysHelp> getCateTop(@Param("cate") String cate,@Param("locale") String locale);
+    @Query(value = "select * from sys_help WHERE sys_help_classification=:cate and is_top='0' and locale = :locale", nativeQuery = true)
+    List<SysHelp> getCateTop(@Param("cate") String cate, @Param("locale") String locale);
 
     @Query(value = "SELECT * FROM sys_help s WHERE s.status ='0' and s.locale = :locale ORDER BY s.is_top asc , s.sort DESC", nativeQuery = true)
     List<SysHelp> findAllByStatusNotAndSortAndLocale(@Param("locale") String locale);

@@ -77,7 +77,7 @@ public class OrderService extends BaseService {
                 throw new InformationExpiredException(msService.getMessage("INFORMATION_EXPIRED"));
             }
             //更改钱包
-            OtcWallet memberWallet = otcWalletService.findByOtcCoinAndMemberId(order.getCustomerId(),order.getCoin());
+            OtcWallet memberWallet = otcWalletService.findByOtcCoinAndMemberId(order.getCustomerId(), order.getCoin());
             MessageResult result = otcWalletService.thawBalance(memberWallet, order.getNumber());
             if (result.getCode() != 0) {
                 throw new InformationExpiredException(msService.getMessage("INFORMATION_EXPIRED"));
@@ -136,10 +136,10 @@ public class OrderService extends BaseService {
         return orderDao.updateAppealOrder(OrderStatus.APPEAL, orderSn);
     }
 
-    public int payForOrder(String orderSn,String payMode) {
-        if(StringUtils.isEmpty(payMode)){
+    public int payForOrder(String orderSn, String payMode) {
+        if (StringUtils.isEmpty(payMode)) {
             return orderDao.updatePayOrder(new Date(), OrderStatus.PAID, orderSn);
-        }else{
+        } else {
             return orderDao.updatePayOrder(new Date(), OrderStatus.PAID, orderSn, payMode);
         }
     }
@@ -156,9 +156,10 @@ public class OrderService extends BaseService {
 
     /**
      * 取消未付款的订单
+     *
      * @return
      */
-    public int cancelNopaymentOrder(String orderSn){
+    public int cancelNopaymentOrder(String orderSn) {
         return orderDao.cancelNopaymentOrder(new Date(), OrderStatus.CANCELLED, orderSn);
     }
 
@@ -189,11 +190,11 @@ public class OrderService extends BaseService {
         PageRequest pageRequest = PageRequest.of(pageNo, pageSize, orders);
         Criteria<Order> specification = new Criteria<Order>();
         specification.add(Restrictions.or(Restrictions.eq("memberId", id, false), Restrictions.eq("customerId", id, false)));
-        if(orderScreen.getIsTrading()!=null && orderScreen.getIsTrading()){
+        if (orderScreen.getIsTrading() != null && orderScreen.getIsTrading()) {
             specification.add(Restrictions.or(Restrictions.eq("status", OrderStatus.PAID, false),
                     Restrictions.eq("status", OrderStatus.NONPAYMENT, false),
                     Restrictions.eq("status", OrderStatus.APPEAL, false)));
-        }else if (orderScreen.getStatus() != null) {
+        } else if (orderScreen.getStatus() != null) {
             specification.add(Restrictions.eq("status", orderScreen.getStatus(), false));
         }
         if (StringUtils.isNotBlank(orderScreen.getOrderSn())) {
@@ -206,7 +207,7 @@ public class OrderService extends BaseService {
             specification.add(Restrictions.gte("createTime", orderScreen.getStartTime(), false));
         }
         if (orderScreen.getEndTime() != null) {
-            specification.add(Restrictions.lte("createTime", DateUtil.dateAddDay(orderScreen.getEndTime(),1), false));
+            specification.add(Restrictions.lte("createTime", DateUtil.dateAddDay(orderScreen.getEndTime(), 1), false));
         }
         return orderDao.findAll(specification, pageRequest);
     }
@@ -258,11 +259,12 @@ public class OrderService extends BaseService {
     public Order findOneByOrderId(String orderId) {
         return orderDao.getOrderByOrderSn(orderId);
     }
+
     public Page<Order> findAll(Predicate predicate, Pageable pageable) {
         return orderDao.findAll(predicate, pageable);
     }
 
-    public Page<OtcOrderVO> outExcel(List<Predicate> predicates , PageModel pageModel){
+    public Page<OtcOrderVO> outExcel(List<Predicate> predicates, PageModel pageModel) {
         List<OrderSpecifier> orderSpecifiers = pageModel.getOrderSpecifiers();
         JPAQuery<OtcOrderVO> query = queryFactory.select(
                 Projections.fields(OtcOrderVO.class,
@@ -288,24 +290,24 @@ public class OrderService extends BaseService {
                         QOrder.order.status.as("status"))
         ).from(QOrder.order).where(predicates.toArray(new BooleanExpression[predicates.size()]));
         query.orderBy(orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]));
-        List<OtcOrderVO> list = query.offset((pageModel.getPageNo()-1)*pageModel.getPageSize()).limit(pageModel.getPageSize()).fetch();
-        long total = query.fetchCount() ;
-        return new PageImpl<>(list,pageModel.getPageable(),total);
+        List<OtcOrderVO> list = query.offset((pageModel.getPageNo() - 1) * pageModel.getPageSize()).limit(pageModel.getPageSize()).fetch();
+        long total = query.fetchCount();
+        return new PageImpl<>(list, pageModel.getPageable(), total);
     }
 
-    public List<Object[]> getOtcOrderStatistics(String date){
+    public List<Object[]> getOtcOrderStatistics(String date) {
         return orderDao.getOtcTurnoverAmount(date);
     }
 
-    public long countByMemberProcessing(Long memberId){
+    public long countByMemberProcessing(Long memberId) {
         return orderDao.count(QOrder.order.status.eq(OrderStatus.PAID).or(QOrder.order.status.eq(OrderStatus.NONPAYMENT)).and(QOrder.order.memberId.eq(memberId).or(QOrder.order.customerId.eq(memberId))));
     }
 
-    public int countOrderByMemberIdAndCreateTime(Date startTime,Date endTime){
-        List<Object[]> objectList=orderDao.countOrdersByMemberIdAndCreateTime(startTime,endTime);
-        if(objectList!=null&&objectList.size()>0){
+    public int countOrderByMemberIdAndCreateTime(Date startTime, Date endTime) {
+        List<Object[]> objectList = orderDao.countOrdersByMemberIdAndCreateTime(startTime, endTime);
+        if (objectList != null && objectList.size() > 0) {
             return objectList.size();
-        }else{
+        } else {
             return 0;
         }
     }
@@ -313,6 +315,7 @@ public class OrderService extends BaseService {
     public OtcOrderOverview countMemberOrderOverview(Long id) {
         return orderDao.countMemberOrderOverview(DateUtil.dateAddDay(new Date(), -30), id);
     }
+
     public OtcOrderCount countAdvertiseOrder(Long id) {
         return orderDao.countAdvertiseOrder(DateUtil.dateAddDay(new Date(), -30), id);
     }
@@ -321,11 +324,11 @@ public class OrderService extends BaseService {
         return orderDao.countOtcOrder(DateUtil.dateAddDay(new Date(), -30), id);
     }
 
-    public int countByCustomerIdAndStatusAndAdvertiseTypeAndCancelTimeBetween(Long memberId, OrderStatus status, AdvertiseType type, Date startTime, Date endTime){
-        return orderDao.countByCustomerIdAndStatusAndAdvertiseTypeAndCancelTimeBetween(memberId,status,type,startTime,endTime);
+    public int countByCustomerIdAndStatusAndAdvertiseTypeAndCancelTimeBetween(Long memberId, OrderStatus status, AdvertiseType type, Date startTime, Date endTime) {
+        return orderDao.countByCustomerIdAndStatusAndAdvertiseTypeAndCancelTimeBetween(memberId, status, type, startTime, endTime);
     }
 
-    public String  sumByAdvertiseIdAndStatus(Long advertiseId,OrderStatus status){
-        return orderDao.sumByAdvertiseIdAndStatus(advertiseId,status);
+    public String sumByAdvertiseIdAndStatus(Long advertiseId, OrderStatus status) {
+        return orderDao.sumByAdvertiseIdAndStatus(advertiseId, status);
     }
 }

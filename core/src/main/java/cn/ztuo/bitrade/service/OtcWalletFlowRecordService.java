@@ -8,8 +8,7 @@ import cn.ztuo.bitrade.entity.*;
 import cn.ztuo.bitrade.util.*;
 
 @Service
-public class OtcWalletFlowRecordService extends BaseService
-{
+public class OtcWalletFlowRecordService extends BaseService {
     @Autowired
     private OtcWalletFlowRecordDao otcWalletFlowRecordDao;
 

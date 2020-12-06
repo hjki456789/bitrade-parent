@@ -5,8 +5,8 @@ import java.util.UUID;
 
 public class UUIDUtil {
 
-    public static String getUUID(){
-        return UUID.randomUUID().toString().replace("-","").toUpperCase() ;
+    public static String getUUID() {
+        return UUID.randomUUID().toString().replace("-", "").toUpperCase();
     }
 
     public static String getIdFromMemberIdAndUnit(long memberId, String unit) {

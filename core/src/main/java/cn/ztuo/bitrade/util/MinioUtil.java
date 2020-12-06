@@ -60,25 +60,25 @@ public class MinioUtil {
     }
 
     /**
-     * @Title: upload
-     * @Description:上传主功能
      * @return
      * @throws Exception
+     * @Title: upload
+     * @Description:上传主功能
      */
-    public static String upload(byte[] uploadBytes, String key)  {
+    public static String upload(byte[] uploadBytes, String key) {
         try {
             Collection<?> mimeTypes = MimeUtil.getMimeTypes(uploadBytes);
             MinioClient minioClient = new MinioClient(minio_url, minioAccesskey, minioSecretKey);
             InputStream inputStream = new ByteArrayInputStream(uploadBytes);
             minioClient.putObject(minioBucket, key, inputStream, uploadBytes.length, mimeTypes.toString());
-            log.info("Content-Type==="+mimeTypes.toString());
-            return minio_base_url+"/"+minioBucket+"/"+key;
+            log.info("Content-Type===" + mimeTypes.toString());
+            return minio_base_url + "/" + minioBucket + "/" + key;
         } catch (Exception e) {
             return null;
         }
     }
 
-    public   static void main(String[] arg){
+    public static void main(String[] arg) {
         upload(new byte[1024], "a.jpg");
     }
 }

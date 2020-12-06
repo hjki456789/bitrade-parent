@@ -6,6 +6,7 @@ import cn.ztuo.bitrade.constant.CommonStatus;
 import cn.ztuo.bitrade.constant.SysAdvertiseLocation;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+
 import javax.validation.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -60,7 +61,7 @@ public class SysAdvertise {
 
     private String author;
 
-    private int sort = 0 ;
+    private int sort = 0;
 
     /**
      * 语种（"en-US", "zh-CN", "ja-JP", "ko-KR", "ar-AE"）

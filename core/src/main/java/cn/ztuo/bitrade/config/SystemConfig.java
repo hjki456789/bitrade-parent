@@ -17,12 +17,12 @@ import javax.sql.DataSource;
 public class SystemConfig {
 
     @Bean
-    public IdWorkByTwitter idWorkByTwitter(@Value("${bdtop.system.work-id:0}")long workId,@Value("${bdtop.system.data-center-id:0}")long dataCenterId){
+    public IdWorkByTwitter idWorkByTwitter(@Value("${bdtop.system.work-id:0}") long workId, @Value("${bdtop.system.data-center-id:0}") long dataCenterId) {
         return new IdWorkByTwitter(workId, dataCenterId);
     }
 
     @Bean
-    public DB db(@Qualifier("dataSource") DataSource dataSource){
+    public DB db(@Qualifier("dataSource") DataSource dataSource) {
         return new DB(dataSource, true);
     }
 

@@ -7,10 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.beans.*;
+
 @AllArgsConstructor
 @Getter
-public enum CommissionType implements BaseEnum
-{
+public enum CommissionType implements BaseEnum {
     PROFIT_LOSS("盈亏返佣"),
     FEE("手续费返佣");
 

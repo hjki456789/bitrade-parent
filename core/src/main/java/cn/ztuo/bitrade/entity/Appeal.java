@@ -55,7 +55,7 @@ public class Appeal {
      */
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = true)
-    private BooleanEnum isSuccess ;
+    private BooleanEnum isSuccess;
     /**
      * 处理状态
      */

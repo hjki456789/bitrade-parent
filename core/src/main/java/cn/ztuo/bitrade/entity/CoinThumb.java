@@ -9,13 +9,13 @@ import java.util.List;
 public class CoinThumb {
     private String symbol;
     private BigDecimal open = BigDecimal.ZERO;
-    private BigDecimal high= BigDecimal.ZERO;
-    private BigDecimal low= BigDecimal.ZERO;
-    private BigDecimal close=BigDecimal.ZERO;
+    private BigDecimal high = BigDecimal.ZERO;
+    private BigDecimal low = BigDecimal.ZERO;
+    private BigDecimal close = BigDecimal.ZERO;
     private BigDecimal chg = BigDecimal.ZERO.setScale(2);
     private BigDecimal change = BigDecimal.ZERO.setScale(2);
     private BigDecimal volume = BigDecimal.ZERO.setScale(2);
-    private BigDecimal turnover= BigDecimal.ZERO;
+    private BigDecimal turnover = BigDecimal.ZERO;
     //昨日收盘价
     private BigDecimal lastDayClose = BigDecimal.ZERO;
     //交易币对usd汇率
@@ -24,12 +24,12 @@ public class CoinThumb {
     private BigDecimal baseUsdRate;
     private String closeStr;
     //web端用的
-    private List<BigDecimal> trend ;
+    private List<BigDecimal> trend;
 
     private BigDecimal proportion;
 
-    private String cnyPrice ;
+    private String cnyPrice;
 
-    private String cnName ;
+    private String cnName;
 
 }

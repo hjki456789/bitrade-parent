@@ -18,7 +18,7 @@ public class MemberLevelService extends BaseService {
     @Autowired
     private MemberLevelDao memberLevelDao;
 
-    public List<MemberLevel> findAll(){
+    public List<MemberLevel> findAll() {
         return memberLevelDao.findAll();
     }
 
@@ -27,8 +27,8 @@ public class MemberLevelService extends BaseService {
      * @description id查询一个
      * @date 2017/12/27 10:54
      */
-    public MemberLevel findOne(Long id){
-        return  memberLevelDao.findById(id).orElse(null);
+    public MemberLevel findOne(Long id) {
+        return memberLevelDao.findById(id).orElse(null);
     }
 
     /**
@@ -46,7 +46,7 @@ public class MemberLevelService extends BaseService {
      * @date 2017/12/27 11:02
      */
     public int updateDefault() {
-       return memberLevelDao.updateDefault();
+        return memberLevelDao.updateDefault();
     }
 
     public MemberLevel save(MemberLevel memberLevel) {

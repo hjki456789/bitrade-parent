@@ -26,21 +26,21 @@ public class RewardRecordService extends BaseService {
     @Autowired
     private RewardRecordDao rewardRecordDao;
 
-    public RewardRecord save(RewardRecord rewardRecord){
+    public RewardRecord save(RewardRecord rewardRecord) {
         return rewardRecordDao.save(rewardRecord);
     }
 
-    public List<RewardRecord> queryRewardPromotionList(Member member){
+    public List<RewardRecord> queryRewardPromotionList(Member member) {
         return rewardRecordDao.findAllByMemberAndType(member, RewardRecordType.PROMOTION);
     }
 
-    public Map<String,BigDecimal> getAllPromotionReward(long memberId,RewardRecordType type){
-        List<Object[]> list = rewardRecordDao.getAllPromotionReward(memberId,type.getOrdinal());
-        Map<String,BigDecimal> map = new HashMap<>() ;
-        for(Object[] array:list){
-            map.put(array[0].toString(),(BigDecimal)array[1]);
+    public Map<String, BigDecimal> getAllPromotionReward(long memberId, RewardRecordType type) {
+        List<Object[]> list = rewardRecordDao.getAllPromotionReward(memberId, type.getOrdinal());
+        Map<String, BigDecimal> map = new HashMap<>();
+        for (Object[] array : list) {
+            map.put(array[0].toString(), (BigDecimal) array[1]);
         }
-        return map ;
+        return map;
     }
 
 
@@ -55,7 +55,7 @@ public class RewardRecordService extends BaseService {
     }
 
     @Transactional(readOnly = true)
-    public Long  findCount(Predicate predicate) {
+    public Long findCount(Predicate predicate) {
         return rewardRecordDao.count(predicate);
     }
 

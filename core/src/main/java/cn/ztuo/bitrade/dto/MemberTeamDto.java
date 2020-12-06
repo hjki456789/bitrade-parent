@@ -3,8 +3,7 @@ package cn.ztuo.bitrade.dto;
 import lombok.Data;
 
 @Data
-public class MemberTeamDto extends BaseMemberDTO
-{
+public class MemberTeamDto extends BaseMemberDTO {
     private Long memberId;
     private String username;
     private String mobilePhone;

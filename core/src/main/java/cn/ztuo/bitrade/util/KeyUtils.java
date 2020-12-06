@@ -3,8 +3,7 @@ package cn.ztuo.bitrade.util;
 import java.text.*;
 import java.util.*;
 
-public class KeyUtils
-{
+public class KeyUtils {
     public static synchronized String generateUniqueKey() {
         final Random random = new Random();
         final int r = random.nextInt(900) + 100;
@@ -13,7 +12,7 @@ public class KeyUtils
         final String timeStr = sdf.format(new Date());
         return timeStr + r;
     }
-    
+
     public static String paramsConvertUrl(final Map<String, String> params) {
         final StringBuilder urlParams = new StringBuilder("");
         final Set<Map.Entry<String, String>> entries = params.entrySet();

@@ -7,12 +7,11 @@ import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.*;
 
 @Service
-public class MemberAccountOperateRecordService extends BaseService
-{
+public class MemberAccountOperateRecordService extends BaseService {
     @Autowired
     private MemberAccountOperateRecordDao memberAccountOperateRecordDao;
 
     public MemberAccountOperateRecord save(final MemberAccountOperateRecord record) {
-        return (MemberAccountOperateRecord)this.memberAccountOperateRecordDao.saveAndFlush(record);
+        return (MemberAccountOperateRecord) this.memberAccountOperateRecordDao.saveAndFlush(record);
     }
 }

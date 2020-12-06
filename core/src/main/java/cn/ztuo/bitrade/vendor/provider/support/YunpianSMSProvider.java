@@ -43,7 +43,7 @@ public class YunpianSMSProvider implements SMSProvider {
         params.put("text", content);
         params.put("mobile", mobile);
         log.info("yunpianParameters====", params.toString());
-        String resultXml= HttpSend.yunpianPost(gateway, params);
+        String resultXml = HttpSend.yunpianPost(gateway, params);
         log.info("result = {}", resultXml);
         return parseXml(resultXml);
     }
@@ -65,7 +65,7 @@ public class YunpianSMSProvider implements SMSProvider {
         params.put("apikey", apikey);
         params.put("text", content);
         params.put("mobile", mobile);
-        String resultXml= HttpSend.yunpianPost(gateway, params);
+        String resultXml = HttpSend.yunpianPost(gateway, params);
         log.info("result = {}", resultXml);
         return parseXml(resultXml);
     }
@@ -87,17 +87,16 @@ public class YunpianSMSProvider implements SMSProvider {
         return sendSingleMessage(mobile, content);
     }
 
-    public MessageResult sendLoginMessage(String ip,String phone) throws Exception {
-        String content=sendLoginMessage(ip);
-        return sendSingleMessage(content,phone);
+    public MessageResult sendLoginMessage(String ip, String phone) throws Exception {
+        String content = sendLoginMessage(ip);
+        return sendSingleMessage(content, phone);
     }
 
     private MessageResult parseXml(String xml) {
         JSONObject myJsonObject = JSONObject.fromObject(xml);
         int code = myJsonObject.getInt("code");
         MessageResult result = new MessageResult(500, "系统错误");
-        if(code == 0)
-        {
+        if (code == 0) {
             result.setCode(code);
             result.setMessage(myJsonObject.getString("msg"));
         }
@@ -108,6 +107,7 @@ public class YunpianSMSProvider implements SMSProvider {
     public MessageResult sendNationalMessage(final String content, final String nationCode, final String phone) throws Exception {
         return null;
     }
+
     @Override
     public MessageResult sendTemplateMessage(final String mobilePhone, final String templateId) throws Exception {
         return null;

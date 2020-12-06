@@ -7,12 +7,13 @@ import cn.ztuo.bitrade.entity.contractdouble.*;
 import cn.ztuo.bitrade.pagination.*;
 import org.springframework.data.jpa.domain.*;
 import org.springframework.data.domain.*;
+
 import java.util.*;
+
 import com.querydsl.core.types.*;
 
 @Service
-public class ContractDoubleMemberApiService
-{
+public class ContractDoubleMemberApiService {
     @Autowired
     private ContractDoubleMemberApiDao contractDoubleMemberApiDao;
 
@@ -23,7 +24,7 @@ public class ContractDoubleMemberApiService
         specification.add(Restrictions.eq("memberId", memberId, true));
         specification.add(Restrictions.eq("deleteFlag", 0, false));
         specification.add(Restrictions.eq("ifDefault", ifDefault, false));
-        return (Page<ContractDoubleMemberApi>)this.contractDoubleMemberApiDao.findAll((Specification)specification, (Pageable)pageRequest);
+        return (Page<ContractDoubleMemberApi>) this.contractDoubleMemberApiDao.findAll((Specification) specification, (Pageable) pageRequest);
     }
 
     public ContractDoubleMemberApi findMemberApiByIfDefault(final long memberId, final int ifDefault) {
@@ -44,7 +45,7 @@ public class ContractDoubleMemberApiService
         specification.add(Restrictions.eq("deleteFlag", 0, false));
         specification.add(Restrictions.eq("apiKey", apiKey, false));
         specification.add(Restrictions.eq("secretKey", secretKey, false));
-        return (ContractDoubleMemberApi)this.contractDoubleMemberApiDao.findOne((Specification)specification).get();
+        return (ContractDoubleMemberApi) this.contractDoubleMemberApiDao.findOne((Specification) specification).get();
     }
 
     public int updateApiIfDefault(final long memberId, final int ifDefault) {
@@ -52,7 +53,7 @@ public class ContractDoubleMemberApiService
     }
 
     public ContractDoubleMemberApi get(final Long id) {
-        return (ContractDoubleMemberApi)this.contractDoubleMemberApiDao.getOne(id);
+        return (ContractDoubleMemberApi) this.contractDoubleMemberApiDao.getOne(id);
     }
 
     public int updateApiDefault(final Long id) {
@@ -66,11 +67,11 @@ public class ContractDoubleMemberApiService
     public List<ContractDoubleMemberApi> findAll() {
         final Criteria<ContractDoubleMemberApi> specification = new Criteria<ContractDoubleMemberApi>();
         specification.add(Restrictions.eq("deleteFlag", 0, false));
-        return (List<ContractDoubleMemberApi>)this.contractDoubleMemberApiDao.findAll((Specification)specification);
+        return (List<ContractDoubleMemberApi>) this.contractDoubleMemberApiDao.findAll((Specification) specification);
     }
 
     public Page<ContractDoubleMemberApi> findAll(final Predicate predicate, final Pageable pageable) {
-        final Page<ContractDoubleMemberApi> page = (Page<ContractDoubleMemberApi>)this.contractDoubleMemberApiDao.findAll(predicate, pageable);
+        final Page<ContractDoubleMemberApi> page = (Page<ContractDoubleMemberApi>) this.contractDoubleMemberApiDao.findAll(predicate, pageable);
         return page;
     }
 
@@ -78,6 +79,6 @@ public class ContractDoubleMemberApiService
         final Criteria<ContractDoubleMemberApi> specification = new Criteria<ContractDoubleMemberApi>();
         specification.add(Restrictions.eq("memberId", memberId, true));
         specification.add(Restrictions.eq("deleteFlag", 0, false));
-        return (List<ContractDoubleMemberApi>)this.contractDoubleMemberApiDao.findAll((Specification)specification);
+        return (List<ContractDoubleMemberApi>) this.contractDoubleMemberApiDao.findAll((Specification) specification);
     }
 }

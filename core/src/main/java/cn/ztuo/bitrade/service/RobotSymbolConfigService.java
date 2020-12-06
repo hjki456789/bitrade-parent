@@ -8,38 +8,40 @@ import org.springframework.stereotype.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.dao.*;
 import org.springframework.data.jpa.domain.*;
+
 import java.io.*;
+
 import com.querydsl.core.types.*;
 import org.springframework.data.domain.*;
 import cn.ztuo.bitrade.entity.*;
+
 import java.util.*;
 import javax.persistence.criteria.*;
 
 @Service
-public class RobotSymbolConfigService extends BaseService
-{
+public class RobotSymbolConfigService extends BaseService {
     @Autowired
     private RobotSymbolConfigDao robotSymbolConfigDao;
     @Autowired
     private MemberDao memberDao;
 
     public List<RobotSymbolConfig> findAllEnabled() {
-        final Specification<RobotSymbolConfig> specification = (Specification<RobotSymbolConfig>)((root, criteriaQuery, criteriaBuilder) -> {
+        final Specification<RobotSymbolConfig> specification = (Specification<RobotSymbolConfig>) ((root, criteriaQuery, criteriaBuilder) -> {
             criteriaQuery.where(criteriaBuilder.equal(root.get("status"), 1));
             return null;
         });
-        return (List<RobotSymbolConfig>)this.robotSymbolConfigDao.findAll((Specification)specification);
+        return (List<RobotSymbolConfig>) this.robotSymbolConfigDao.findAll((Specification) specification);
     }
 
     public RobotSymbolConfig findOne(final String symbol) {
-        return (RobotSymbolConfig)this.robotSymbolConfigDao.getOne(symbol);
+        return (RobotSymbolConfig) this.robotSymbolConfigDao.getOne(symbol);
     }
 
     public Page<RobotSymbolConfig> findAll(final Predicate predicate, final Pageable pageable) {
-        final Page<RobotSymbolConfig> page = (Page<RobotSymbolConfig>)this.robotSymbolConfigDao.findAll(predicate, pageable);
+        final Page<RobotSymbolConfig> page = (Page<RobotSymbolConfig>) this.robotSymbolConfigDao.findAll(predicate, pageable);
         if (page != null && page.getContent() != null) {
             for (final RobotSymbolConfig robotSymbolConfig : page.getContent()) {
-                final Member member = (Member)this.memberDao.getOne(robotSymbolConfig.getMemberId());
+                final Member member = (Member) this.memberDao.getOne(robotSymbolConfig.getMemberId());
                 robotSymbolConfig.setMember(member);
             }
         }
@@ -52,7 +54,7 @@ public class RobotSymbolConfigService extends BaseService
     }
 
     public RobotSymbolConfig update(final RobotSymbolConfig robotSymbolConfig) {
-        return (RobotSymbolConfig)this.robotSymbolConfigDao.save(robotSymbolConfig);
+        return (RobotSymbolConfig) this.robotSymbolConfigDao.save(robotSymbolConfig);
     }
 
     public int deleteRobotSymbolConfig(final String symbol) {

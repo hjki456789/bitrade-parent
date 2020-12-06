@@ -13,10 +13,10 @@ import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 
-/** 
- * @Description: RSA工具类
- * @ClassName: RsaKeyUtil 
+/**
  * @author nz
+ * @Description: RSA工具类
+ * @ClassName: RsaKeyUtil
  * @date 2019年4月22日 下午3:53:41
  */
 public class RsaKeyUtil {
@@ -47,13 +47,13 @@ public class RsaKeyUtil {
 //    }
 
 
-    /** 
+    /**
      * RSA私钥签名
-     * @Title: sign 
+     *
      * @param data
      * @param privateKey
-     * @return 设定文件 
-     * @return byte[]    返回类型 
+     * @return byte[]    返回类型
+     * @Title: sign
      * @lastModify 2019年4月22日
      */
     public static byte[] sign(String data, byte[] privateKey) {
@@ -73,14 +73,14 @@ public class RsaKeyUtil {
         return null;
     }
 
-    /** 
-     * TODO(这里用一句话描述这个方法的作用) 
-     * @Title: verify 
+    /**
+     * TODO(这里用一句话描述这个方法的作用)
+     *
      * @param data
      * @param publicKey
      * @param signatureBytes
-     * @return 设定文件 
-     * @return boolean    返回类型 
+     * @return boolean    返回类型
+     * @Title: verify
      * @lastModify 2019年4月22日
      */
     public static boolean verify(String data, byte[] publicKey, byte[] signatureBytes) {
@@ -145,55 +145,55 @@ public class RsaKeyUtil {
             e.printStackTrace();
         }
     }
-    
-	public static byte[] decryptBASE64(String key) {
-		return Base64.decodeBase64(key);
-	}
 
-	public static String encryptBASE64(byte[] bytes) {
-		return Base64.encodeBase64String(bytes);
-	}
-	
-	
-	/**
-	 * 使用模和指数生成RSA公钥
-	 * 注意：【此代码用了默认补位方式，为RSA/None/PKCS1Padding，不同JDK默认的补位方式可能不同，如Android默认是RSA/None/NoPadding】
-	 * 
-	 * @param modulus 模
-	 * @param pubexponent 指数
-	 * @return
-	 */
-	public static String getPublicKey(String modulus, String pubexponent) {
-		try {
-			BigInteger b1 = new BigInteger(modulus);
-			BigInteger b2 = new BigInteger(pubexponent);
-			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-			RSAPublicKeySpec keySpec = new RSAPublicKeySpec(b1, b2);
-			return bytesToHexString(((RSAPublicKey) keyFactory.generatePublic(keySpec)).getEncoded());
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+    public static byte[] decryptBASE64(String key) {
+        return Base64.decodeBase64(key);
+    }
 
-	/**
-	 * 使用模和指数生成RSA私钥
-	 * 注意：【此代码用了默认补位方式，为RSA/None/PKCS1Padding，不同JDK默认的补位方式可能不同，如Android默认是RSA/None/NoPadding】
-	 * 
-	 * @param modulus 模
-	 * @param priexponent 指数
-	 * @return
-	 */
-	public static String getPrivateKey(String modulus, String priexponent) {
-		try {
-			BigInteger b1 = new BigInteger(modulus);
-			BigInteger b2 = new BigInteger(priexponent);
-			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-			RSAPrivateKeySpec keySpec = new RSAPrivateKeySpec(b1, b2);
-			return bytesToHexString(((RSAPrivateKey) keyFactory.generatePrivate(keySpec)).getEncoded());
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+    public static String encryptBASE64(byte[] bytes) {
+        return Base64.encodeBase64String(bytes);
+    }
+
+
+    /**
+     * 使用模和指数生成RSA公钥
+     * 注意：【此代码用了默认补位方式，为RSA/None/PKCS1Padding，不同JDK默认的补位方式可能不同，如Android默认是RSA/None/NoPadding】
+     *
+     * @param modulus     模
+     * @param pubexponent 指数
+     * @return
+     */
+    public static String getPublicKey(String modulus, String pubexponent) {
+        try {
+            BigInteger b1 = new BigInteger(modulus);
+            BigInteger b2 = new BigInteger(pubexponent);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            RSAPublicKeySpec keySpec = new RSAPublicKeySpec(b1, b2);
+            return bytesToHexString(((RSAPublicKey) keyFactory.generatePublic(keySpec)).getEncoded());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 使用模和指数生成RSA私钥
+     * 注意：【此代码用了默认补位方式，为RSA/None/PKCS1Padding，不同JDK默认的补位方式可能不同，如Android默认是RSA/None/NoPadding】
+     *
+     * @param modulus     模
+     * @param priexponent 指数
+     * @return
+     */
+    public static String getPrivateKey(String modulus, String priexponent) {
+        try {
+            BigInteger b1 = new BigInteger(modulus);
+            BigInteger b2 = new BigInteger(priexponent);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            RSAPrivateKeySpec keySpec = new RSAPrivateKeySpec(b1, b2);
+            return bytesToHexString(((RSAPrivateKey) keyFactory.generatePrivate(keySpec)).getEncoded());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

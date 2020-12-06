@@ -24,23 +24,23 @@ public class MemberGrade {
     /**
      * 等级名称
      */
-    private String gradeName ;
+    private String gradeName;
     /**
      * 等级code
      */
-    private String gradeCode ;
+    private String gradeCode;
     /**
      * 每日提币数量限制
      */
-    private BigDecimal withdrawCoinAmount ;
+    private BigDecimal withdrawCoinAmount;
     /**
      * 每日提币笔数
      */
-    private Integer dayWithdrawCount ;
+    private Integer dayWithdrawCount;
     /**
      * 吃单手续费比例
      */
-    private BigDecimal exchangeFeeRate ;
+    private BigDecimal exchangeFeeRate;
     /**
      * 等级界限
      */

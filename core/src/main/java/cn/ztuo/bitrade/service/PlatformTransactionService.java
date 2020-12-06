@@ -13,7 +13,7 @@ public class PlatformTransactionService {
     @Autowired
     private PlatformTransactionDao platformTransactionDao;
 
-    public void add(BigDecimal amount,int direction,int type,String bizOrderId){
+    public void add(BigDecimal amount, int direction, int type, String bizOrderId) {
         PlatformTransaction transaction = new PlatformTransaction();
         transaction.setAmount(amount);
         transaction.setDirection(direction);
@@ -24,7 +24,7 @@ public class PlatformTransactionService {
         save(transaction);
     }
 
-    public void save(PlatformTransaction transaction){
+    public void save(PlatformTransaction transaction) {
         platformTransactionDao.save(transaction);
     }
 }

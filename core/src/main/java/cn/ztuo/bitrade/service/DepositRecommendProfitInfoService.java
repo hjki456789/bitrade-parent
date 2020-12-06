@@ -4,15 +4,18 @@ import cn.ztuo.bitrade.service.Base.*;
 import org.springframework.stereotype.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.dao.*;
+
 import java.math.*;
+
 import com.querydsl.core.types.*;
 import org.springframework.data.domain.*;
+
 import java.util.*;
+
 import cn.ztuo.bitrade.entity.*;
 
 @Service
-public class DepositRecommendProfitInfoService extends BaseService
-{
+public class DepositRecommendProfitInfoService extends BaseService {
     @Autowired
     private DepositRecommendProfitInfoDao depositRecommendProfitInfoDao;
     @Autowired
@@ -27,7 +30,7 @@ public class DepositRecommendProfitInfoService extends BaseService
     private MemberTransactionService memberTransactionService;
 
     public DepositRecommendProfitInfo save(final DepositRecommendProfitInfo depositRecommendProfitInfo) {
-        return (DepositRecommendProfitInfo)this.depositRecommendProfitInfoDao.save(depositRecommendProfitInfo);
+        return (DepositRecommendProfitInfo) this.depositRecommendProfitInfoDao.save(depositRecommendProfitInfo);
     }
 
     public List<DepositRecommendProfitInfo> findListByMemberId(final Long memberId, final Long lastSequence) {
@@ -39,7 +42,7 @@ public class DepositRecommendProfitInfoService extends BaseService
     }
 
     public Page<DepositRecommendProfitInfo> findAll(final Predicate predicate, final Pageable pageable) {
-        final Page<DepositRecommendProfitInfo> page = (Page<DepositRecommendProfitInfo>)this.depositRecommendProfitInfoDao.findAll(predicate, pageable);
+        final Page<DepositRecommendProfitInfo> page = (Page<DepositRecommendProfitInfo>) this.depositRecommendProfitInfoDao.findAll(predicate, pageable);
         if (page != null) {
             for (final DepositRecommendProfitInfo data : page.getContent()) {
                 final Member member = this.memberService.findOne(data.getMemberId());

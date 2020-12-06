@@ -6,24 +6,27 @@ import org.springframework.beans.factory.annotation.*;
 import com.querydsl.core.types.*;
 import org.springframework.data.domain.*;
 import cn.ztuo.bitrade.entity.unblock.*;
+
 import java.io.*;
+
 import cn.ztuo.bitrade.util.*;
+
 import java.util.*;
+
 import org.slf4j.*;
 
 @Service
-public class UnblockRobotTicketService
-{
+public class UnblockRobotTicketService {
     private static final Logger log;
     @Autowired
     private UnblockRobotTicketRepository unblockRobotTicketRepository;
 
     public Page<UnblockRobotTicket> findAll(final Predicate predicate, final Pageable pageable) {
-        return (Page<UnblockRobotTicket>)this.unblockRobotTicketRepository.findAll(predicate, pageable);
+        return (Page<UnblockRobotTicket>) this.unblockRobotTicketRepository.findAll(predicate, pageable);
     }
 
     public UnblockRobotTicket findById(final String id) {
-        return (UnblockRobotTicket)this.unblockRobotTicketRepository.getOne(id);
+        return (UnblockRobotTicket) this.unblockRobotTicketRepository.getOne(id);
     }
 
     public void insertUnblockRobotTicket(final int num, final int effectiveDay) {
@@ -42,6 +45,6 @@ public class UnblockRobotTicketService
     }
 
     static {
-        log = LoggerFactory.getLogger((Class)UnblockRobotTicketService.class);
+        log = LoggerFactory.getLogger((Class) UnblockRobotTicketService.class);
     }
 }

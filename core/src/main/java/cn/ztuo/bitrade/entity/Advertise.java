@@ -37,7 +37,7 @@ public class Advertise implements Serializable {
     @Excel(name = "价格", orderNum = "1", width = 25)
     @DecimalMin(value = "0", message = "{Advertise.price.more}")
     @Column(columnDefinition = "decimal(18,2) comment '交易价格'")
-    @ApiModelProperty(value="交易价格(及时变动)")
+    @ApiModelProperty(value = "交易价格(及时变动)")
     private BigDecimal price;
 
     /**
@@ -54,7 +54,7 @@ public class Advertise implements Serializable {
     @ExcelEntity
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
-    @ApiModelProperty(hidden=true)
+    @ApiModelProperty(hidden = true)
     private Member member;
 
     @Excel(name = "广告创建时间", orderNum = "1", width = 25)
@@ -74,7 +74,7 @@ public class Advertise implements Serializable {
     @JoinColumn(name = "coin_id")
     @NotNull(message = "{Advertise.coin.null}")
     @ManyToOne
-    @ApiModelProperty(name = "coin.id",dataType = "string")
+    @ApiModelProperty(name = "coin.id", dataType = "string")
     private OtcCoin coin;
 
     /**
@@ -90,7 +90,7 @@ public class Advertise implements Serializable {
      */
     @DecimalMin(value = "0.01", message = "{Advertise.minLimit.min}")
     @Column(columnDefinition = "decimal(18,2) comment '最低单笔交易额'")
-    @ApiModelProperty(value="最低单笔交易额")
+    @ApiModelProperty(value = "最低单笔交易额")
     private BigDecimal minLimit;
 
     /**
@@ -98,27 +98,27 @@ public class Advertise implements Serializable {
      */
     @DecimalMin(value = "0.01", message = "{Advertise.maxLimit.min}")
     @Column(columnDefinition = "decimal(18,2) comment '最高单笔交易额'")
-    @ApiModelProperty(value="最高单笔交易额")
+    @ApiModelProperty(value = "最高单笔交易额")
     private BigDecimal maxLimit;
 
     /**
      * 备注
      */
-    @ApiModelProperty(value="备注")
+    @ApiModelProperty(value = "备注")
     private String remark;
 
     /**
      * 付款期限，单位分钟
      */
     @DecimalMin(value = "10", message = "{Advertise.timeLimit.min}")
-    @ApiModelProperty(value="付款期限，单位分钟")
+    @ApiModelProperty(value = "付款期限，单位分钟")
     private Integer timeLimit;
 
     /**
      * 溢价百分比
      */
     @Column(columnDefinition = "decimal(18,6) comment '溢价百分比'")
-    @ApiModelProperty(value="溢价百分比")
+    @ApiModelProperty(value = "溢价百分比")
     private BigDecimal premiseRate = BigDecimal.ZERO;
 
     /**
@@ -153,15 +153,15 @@ public class Advertise implements Serializable {
 
     @DecimalMin(value = "0", message = "{Advertise.number.min}")
     @Column(columnDefinition = "decimal(20,8) comment '计划数量'")
-    @ApiModelProperty(value="计划数量")
+    @ApiModelProperty(value = "计划数量")
     private BigDecimal number;
 
     @Column(columnDefinition = "decimal(20,8) comment '交易中数量'")
-    @ApiModelProperty(value="交易中数量")
+    @ApiModelProperty(value = "交易中数量")
     private BigDecimal dealAmount = BigDecimal.ZERO;
 
     @Column(columnDefinition = "decimal(20,8) comment '计划剩余数量'")
-    @ApiModelProperty(value="计划剩余数量")
+    @ApiModelProperty(value = "计划剩余数量")
     private BigDecimal remainAmount;
 
     /**
@@ -174,13 +174,13 @@ public class Advertise implements Serializable {
      * 市场价
      */
     @Transient
-    @ApiModelProperty(value="市场价")
+    @ApiModelProperty(value = "市场价")
     private BigDecimal marketPrice;
 
     /**
      * 自动回复内容
      */
-    @ApiModelProperty(value="自动回复内容")
+    @ApiModelProperty(value = "自动回复内容")
     private String autoword;
     private String limitMoney;
     private String username;

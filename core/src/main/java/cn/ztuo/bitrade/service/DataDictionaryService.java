@@ -34,7 +34,7 @@ public class DataDictionaryService extends TopBaseService<DataDictionary, DataDi
     }
 
     public void updateByBond(String bond, String value) {
-        dataDictionaryDao.updateByBond(bond,value);
+        dataDictionaryDao.updateByBond(bond, value);
     }
 
 }

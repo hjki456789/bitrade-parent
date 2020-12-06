@@ -24,7 +24,7 @@ public interface OtcWalletDao extends BaseDao<OtcWallet> {
 
 //    OtcWallet findOtcWalletByMemberIdAndCoinId(Long memberId,String coinId);
 
-    OtcWallet findByMemberIdAndCoin( Long memberId,Coin coin);
+    OtcWallet findByMemberIdAndCoin(Long memberId, Coin coin);
 
     @Modifying
     @Query("update OtcWallet set balance = balance+:amount where id=:id")
@@ -43,7 +43,7 @@ public interface OtcWalletDao extends BaseDao<OtcWallet> {
 
     @Modifying
     @Query("update OtcWallet wallet set wallet.frozenBalance=wallet.frozenBalance - :amount where wallet.id = :walletId and wallet.frozenBalance >= :amount")
-    Integer decreaseFrozen(@Param("walletId") Long walletId,@Param("amount") BigDecimal amount);
+    Integer decreaseFrozen(@Param("walletId") Long walletId, @Param("amount") BigDecimal amount);
 
     /**
      * 增加钱包余额

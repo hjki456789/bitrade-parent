@@ -45,34 +45,34 @@ public class MemberAddressService extends BaseService {
         memberAddress.setCoin(coin);
         memberAddress.setMemberId(memberId);
         memberAddress.setRemark(remark);
-        MemberAddress memberAddress1=memberAddressDao.saveAndFlush(memberAddress);
-        if (memberAddress1!=null){
+        MemberAddress memberAddress1 = memberAddressDao.saveAndFlush(memberAddress);
+        if (memberAddress1 != null) {
             return MessageResult.success();
-        }else {
+        } else {
             return MessageResult.error(messageSource.getMessage("FAIL"));
         }
     }
 
-    public MessageResult deleteMemberAddress(Long memberId,Long addressId){
-        int is=memberAddressDao.deleteMemberAddress(new Date(), addressId, memberId);
-        if (is>0){
+    public MessageResult deleteMemberAddress(Long memberId, Long addressId) {
+        int is = memberAddressDao.deleteMemberAddress(new Date(), addressId, memberId);
+        if (is > 0) {
             return MessageResult.success();
-        }else {
+        } else {
             return MessageResult.error(messageSource.getMessage("FAIL"));
         }
     }
 
-    public Page<MemberAddress> pageQuery(int pageNo, Integer pageSize, long id,String unit) {
+    public Page<MemberAddress> pageQuery(int pageNo, Integer pageSize, long id, String unit) {
         Sort orders = Criteria.sortStatic("id.desc");
         PageRequest pageRequest = PageRequest.of(pageNo, pageSize, orders);
         Criteria<MemberAddress> specification = new Criteria<>();
-        specification.add(Restrictions.eq("memberId",id,false));
+        specification.add(Restrictions.eq("memberId", id, false));
         specification.add(Restrictions.eq("status", CommonStatus.NORMAL, false));
-        specification.add(Restrictions.eq("coin.unit",unit,false));
+        specification.add(Restrictions.eq("coin.unit", unit, false));
         return memberAddressDao.findAll(specification, pageRequest);
     }
 
-    public List<Map<String,String>> queryAddress(long userId,String coinId)  {
+    public List<Map<String, String>> queryAddress(long userId, String coinId) {
         try {
             return new Model("member_address")
                     .field(" remark,address")
@@ -84,11 +84,11 @@ public class MemberAddressService extends BaseService {
         return new ArrayList<>();
     }
 
-    public List<MemberAddress> findByMemberIdAndAddress(long userId,String address){
-        return memberAddressDao.findAllByMemberIdAndAddressAndStatus(userId,address,CommonStatus.NORMAL);
+    public List<MemberAddress> findByMemberIdAndAddress(long userId, String address) {
+        return memberAddressDao.findAllByMemberIdAndAddressAndStatus(userId, address, CommonStatus.NORMAL);
     }
 
-    public List<MemberAddress> findByMemberIdAndCoinAndAddress(long userId,Coin coin ,String address,CommonStatus status){
-        return  memberAddressDao.findByMemberIdAndCoinAndAddressAndStatus(userId,coin,address,status);
+    public List<MemberAddress> findByMemberIdAndCoinAndAddress(long userId, Coin coin, String address, CommonStatus status) {
+        return memberAddressDao.findByMemberIdAndCoinAndAddressAndStatus(userId, coin, address, status);
     }
 }

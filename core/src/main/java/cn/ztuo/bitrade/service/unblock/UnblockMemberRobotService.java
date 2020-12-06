@@ -6,25 +6,26 @@ import org.springframework.beans.factory.annotation.*;
 import com.querydsl.core.types.*;
 import org.springframework.data.domain.*;
 import cn.ztuo.bitrade.entity.unblock.*;
+
 import java.io.*;
 import java.util.*;
+
 import cn.ztuo.bitrade.pagination.*;
 import org.springframework.data.jpa.domain.*;
 import org.slf4j.*;
 
 @Service
-public class UnblockMemberRobotService
-{
+public class UnblockMemberRobotService {
     private static final Logger log;
     @Autowired
     private UnblockMemberRobotRepository unblockMemberRobotRepository;
 
     public Page<UnblockMemberRobot> findAll(final Predicate predicate, final Pageable pageable) {
-        return (Page<UnblockMemberRobot>)this.unblockMemberRobotRepository.findAll(predicate, pageable);
+        return (Page<UnblockMemberRobot>) this.unblockMemberRobotRepository.findAll(predicate, pageable);
     }
 
     public UnblockMemberRobot findById(final Long id) {
-        return (UnblockMemberRobot)this.unblockMemberRobotRepository.getOne(id);
+        return (UnblockMemberRobot) this.unblockMemberRobotRepository.getOne(id);
     }
 
     public int updateStatus(final Long id, final int status, final Long version, final Date updateTime) {
@@ -38,7 +39,7 @@ public class UnblockMemberRobotService
     public List<UnblockMemberRobot> findAllByStatus(final int status) {
         final Criteria<UnblockMemberRobot> specification = new Criteria<UnblockMemberRobot>();
         specification.add(Restrictions.eq("status", status, true));
-        return (List<UnblockMemberRobot>)this.unblockMemberRobotRepository.findAll((Specification)specification);
+        return (List<UnblockMemberRobot>) this.unblockMemberRobotRepository.findAll((Specification) specification);
     }
 
     public UnblockMemberRobot findByMemberIdAndSymbol(final long memberId, final String symbol) {
@@ -51,12 +52,12 @@ public class UnblockMemberRobotService
             robot.setStatus(0);
             robot.setUpdateTime(new Date());
             robot.setVersion(0L);
-            robot = (UnblockMemberRobot)this.unblockMemberRobotRepository.saveAndFlush(robot);
+            robot = (UnblockMemberRobot) this.unblockMemberRobotRepository.saveAndFlush(robot);
         }
         return robot;
     }
 
     static {
-        log = LoggerFactory.getLogger((Class)UnblockMemberRobotService.class);
+        log = LoggerFactory.getLogger((Class) UnblockMemberRobotService.class);
     }
 }

@@ -154,7 +154,7 @@ public class RemindService {
         String orderSn = order.getOrderSn();
         switch (type) {
             case ORDER:
-                return ImmutableMap.of("id", order.getAdvertiseId().toString(),"account",order.getCustomerName());
+                return ImmutableMap.of("id", order.getAdvertiseId().toString(), "account", order.getCustomerName());
             case PAY:
                 return ImmutableMap.of("name", member.getUsername());
             case RELEASE:

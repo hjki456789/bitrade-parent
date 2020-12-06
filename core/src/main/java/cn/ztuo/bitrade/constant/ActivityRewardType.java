@@ -22,7 +22,7 @@ public enum ActivityRewardType implements BaseEnum {
      */
     TRANSACTION("交易奖励"),
     /**
-    /**
+     * /**
      * 充值奖励
      */
     RECHARGE("充值奖励");

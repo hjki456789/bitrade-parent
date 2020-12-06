@@ -2,13 +2,14 @@ package cn.ztuo.bitrade.vendor.provider.support;
 
 import cn.ztuo.bitrade.vendor.provider.*;
 import cn.ztuo.bitrade.util.*;
+
 import java.util.*;
+
 import com.alibaba.fastjson.*;
 import com.mashape.unirest.http.*;
 import org.slf4j.*;
 
-public class DaHanSMSProvider implements SMSProvider
-{
+public class DaHanSMSProvider implements SMSProvider {
     private static final Logger log;
     private String gateway;
     private String username;
@@ -30,8 +31,7 @@ public class DaHanSMSProvider implements SMSProvider
         final DaHanSMSProvider provide = new DaHanSMSProvider(sms_gateway, sms_username, sms_password, sms_sign);
         try {
             provide.sendTemplateMessage("8618019918606", "3329");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -62,8 +62,7 @@ public class DaHanSMSProvider implements SMSProvider
                 System.err.println(paramMap);
             }
             return this.parseResult(re);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             resSuccess = false;
             msg = e.getMessage();
             return this.parseResult(null);
@@ -87,8 +86,8 @@ public class DaHanSMSProvider implements SMSProvider
             final String msg = json.getString("desc");
             mr.setCode(code);
             mr.setMessage(msg);
+        } catch (Exception ex) {
         }
-        catch (Exception ex) {}
         return mr;
     }
 
@@ -98,7 +97,7 @@ public class DaHanSMSProvider implements SMSProvider
         final HttpResponse<String> response = Unirest.post(this.gateway).field("accesskey", this.username).field("secret", this.password).field("mobile", mobile).field("content", "").field("sign", this.sign).field("templateId", templateId).asString();
         DaHanSMSProvider.log.info(" mobile : " + mobile + "templateId : " + templateId);
         DaHanSMSProvider.log.info("result = {}", response.getBody());
-        return this.parseResult((String)response.getBody());
+        return this.parseResult((String) response.getBody());
     }
 
     @Override
@@ -121,8 +120,7 @@ public class DaHanSMSProvider implements SMSProvider
             paramMap.put("sendtime", "");
             final String re = HttpClientUtil.httpPostWithJSON(this.gateway, JSON.toJSONString(paramMap));
             return this.parseResult(re);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return this.parseResult(null);
         }
@@ -134,6 +132,6 @@ public class DaHanSMSProvider implements SMSProvider
     }
 
     static {
-        log = LoggerFactory.getLogger((Class)DaHanSMSProvider.class);
+        log = LoggerFactory.getLogger((Class) DaHanSMSProvider.class);
     }
 }

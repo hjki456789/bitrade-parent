@@ -25,12 +25,12 @@ public class BeanMapUtils {
         Field[] var7 = fields;
         int var6 = fields.length;
 
-        for(int var5 = 0; var5 < var6; ++var5) {
+        for (int var5 = 0; var5 < var6; ++var5) {
             Field field = var7[var5];
             field.setAccessible(true);
             String key = field.getName();
             if (field.isAnnotationPresent(cn.ztuo.bitrade.core.Field.class)) {
-                cn.ztuo.bitrade.core.Field alias = (cn.ztuo.bitrade.core.Field)field.getAnnotation(cn.ztuo.bitrade.core.Field.class);
+                cn.ztuo.bitrade.core.Field alias = (cn.ztuo.bitrade.core.Field) field.getAnnotation(cn.ztuo.bitrade.core.Field.class);
                 key = alias.value();
             }
 
@@ -59,12 +59,12 @@ public class BeanMapUtils {
         Field[] var7 = fields;
         int var6 = fields.length;
 
-        for(int var5 = 0; var5 < var6; ++var5) {
+        for (int var5 = 0; var5 < var6; ++var5) {
             Field field = var7[var5];
             field.setAccessible(true);
             String key = field.getName();
             if (field.isAnnotationPresent(cn.ztuo.bitrade.core.Field.class)) {
-                cn.ztuo.bitrade.core.Field alias = (cn.ztuo.bitrade.core.Field)field.getAnnotation(cn.ztuo.bitrade.core.Field.class);
+                cn.ztuo.bitrade.core.Field alias = (cn.ztuo.bitrade.core.Field) field.getAnnotation(cn.ztuo.bitrade.core.Field.class);
                 key = alias.value();
             }
 

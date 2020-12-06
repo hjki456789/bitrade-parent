@@ -16,11 +16,11 @@ import java.util.List;
  */
 public interface MemberBonusDao extends BaseDao<MemberBonusDTO> {
 
-//    @Query(value = "SELECT id,member_id,have_time,arrive_time,mem_bouns,coin_id from member_bonus where member_id=:memberId",nativeQuery = true)
-    @Query(value = "SELECT * from member_bonus  where member_id=:memberId ORDER BY id DESC " ,nativeQuery = true)
-    List<MemberBonusDTO> getBonusByMemberId(@Param("memberId")long memberId);
+    //    @Query(value = "SELECT id,member_id,have_time,arrive_time,mem_bouns,coin_id from member_bonus where member_id=:memberId",nativeQuery = true)
+    @Query(value = "SELECT * from member_bonus  where member_id=:memberId ORDER BY id DESC ", nativeQuery = true)
+    List<MemberBonusDTO> getBonusByMemberId(@Param("memberId") long memberId);
 
-    @Query(value = "SELECT SUM(mem_bouns) from member_bonus  where member_id=:memberId" ,nativeQuery = true)
-    BigDecimal getBonusAmountByMemberId(@Param("memberId")long memberId);
-    
+    @Query(value = "SELECT SUM(mem_bouns) from member_bonus  where member_id=:memberId", nativeQuery = true)
+    BigDecimal getBonusAmountByMemberId(@Param("memberId") long memberId);
+
 }

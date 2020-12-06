@@ -31,29 +31,29 @@ public class TwoFiveThreeProvider implements SMSProvider {
 
     @Override
     public MessageResult sendSingleMessage(String mobile, String content) throws Exception {
-        log.info("sms content={"+content+"}");
+        log.info("sms content={" + content + "}");
         //请求地址
-        String url=this.gateway;
+        String url = this.gateway;
         //API账号，50位以内。必填
-        String account=this.username;
+        String account = this.username;
         //API账号对应密钥，联系客服获取。必填
-        String password=this.password;
+        String password = this.password;
         //短信内容。长度不能超过536个字符。必填
-        String msg="【"+this.sign+"】"+content;
+        String msg = "【" + this.sign + "】" + content;
         //组装请求参数
-        JSONObject map=new JSONObject();
+        JSONObject map = new JSONObject();
         map.put("account", account);
         map.put("password", password);
         map.put("msg", msg);
         map.put("mobile", mobile);
-        String params=map.toString();
+        String params = map.toString();
         log.info("请求参数为:" + params);
         HttpResponse<String> response = Unirest.post(url)
                 .header("Content-Type", "application/json")
                 .body(params)
                 .asString();
         log.info("返回参数为:" + response);
-        JSONObject jsonObject =  JSON.parseObject(response.getBody());
+        JSONObject jsonObject = JSON.parseObject(response.getBody());
         String code = jsonObject.get("code").toString();
         String msgid = jsonObject.get("msgid").toString();
         String error = jsonObject.get("error").toString();
@@ -62,19 +62,19 @@ public class TwoFiveThreeProvider implements SMSProvider {
     }
 
     @Override
-    public MessageResult sendInternationalMessage(String content, String phone,String... templateId) throws Exception {
+    public MessageResult sendInternationalMessage(String content, String phone, String... templateId) throws Exception {
         return this.sendSingleMessage(phone, content);
     }
 
-    public MessageResult sendLoginMessage(String ip,String phone) throws Exception {
-        String content=sendLoginMessage(ip);
-        return sendSingleMessage(phone,content);
+    public MessageResult sendLoginMessage(String ip, String phone) throws Exception {
+        String content = sendLoginMessage(ip);
+        return sendSingleMessage(phone, content);
     }
 
     private MessageResult parseResult(JSONObject jsonObject) {
         MessageResult mr = new MessageResult(500, "系统错误");
         mr.setCode(Integer.parseInt(jsonObject.getString("code")));
-        if(mr.getCode()==0){
+        if (mr.getCode() == 0) {
             mr.setMessage("操作成功");
         }
         return mr;

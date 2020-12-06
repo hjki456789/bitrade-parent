@@ -10,8 +10,7 @@ import java.beans.*;
 
 @AllArgsConstructor
 @Getter
-public enum AccountTypeEnum implements BaseEnum
-{
+public enum AccountTypeEnum implements BaseEnum {
     COIN("币币账户"),
     CONTRACT("合约账户"),
     OTC("法币账户"),

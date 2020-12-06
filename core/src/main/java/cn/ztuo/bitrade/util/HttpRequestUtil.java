@@ -56,6 +56,7 @@ public class HttpRequestUtil {
         connectionManager.setMaxTotal(maxTotalConnections);
         client = HttpClients.createMinimal(connectionManager);
     }
+
     private static void config(HttpRequestBase httpRequestBase) {
         // 设置Header等
         // httpRequestBase.setHeader("User-Agent", "Mozilla/5.0");
@@ -72,6 +73,7 @@ public class HttpRequestUtil {
                 .setConnectTimeout(connectionTimeOut).setSocketTimeout(socketTimeOut).build();
         httpRequestBase.setConfig(requestConfig);
     }
+
     /**
      * POST方式表单提交数据
      *
@@ -101,7 +103,7 @@ public class HttpRequestUtil {
     }
 
     public static String URLPostForException(String url, Map<String, Object> busiParams, Map<String, Object>
-            headParams) throws IOException{
+            headParams) throws IOException {
         String response = EMPTY;
         HttpPost postMethod = null;
         try {
@@ -124,6 +126,7 @@ public class HttpRequestUtil {
         }
         return response;
     }
+
     /**
      * POST方式提交数据 json
      *
@@ -133,7 +136,7 @@ public class HttpRequestUtil {
      */
     public static String URLPostJSONParams(String url, String busiParams, Map<String, Object> headParams) {
         logger.info("URLPostJSONParams>>>url>>>" + url + ">>>busiParams>>>" + busiParams + ">>>headParams>>>" +
-				headParams);
+                headParams);
         String response = EMPTY;
         try {
             response = URLPostJSONParamsForException(url, busiParams, headParams);
@@ -158,7 +161,7 @@ public class HttpRequestUtil {
     public static String URLPostJSONParamsForException(String url, String busiParams, Map<String, Object> headParams)
             throws IOException {
         logger.info("URLPostJSONParams>>>url>>>" + url + ">>>busiParams>>>" + busiParams + ">>>headParams>>>" +
-				headParams);
+                headParams);
         String response = EMPTY;
         HttpPost postMethod = null;
         try {

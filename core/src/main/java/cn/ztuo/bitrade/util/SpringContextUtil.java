@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 public class SpringContextUtil implements ApplicationContextAware {
 
     /**
-     *  Spring应用上下文环境
+     * Spring应用上下文环境
      */
     private static ApplicationContext applicationContext;
 
@@ -44,11 +44,11 @@ public class SpringContextUtil implements ApplicationContextAware {
             Consumer<ApplicationContext> consumer;
             do {
                 consumer = consumers.poll();
-                if(consumer != null)
+                if (consumer != null)
                     consumer.accept(applicationContext);
                 else
                     break;
-            }while (true);
+            } while (true);
         }
     }
 
@@ -62,6 +62,7 @@ public class SpringContextUtil implements ApplicationContextAware {
     public static <T> T getBean(String beanId, Class<T> requiredType) throws BeansException {
         return applicationContext.getBean(beanId, requiredType);
     }
+
     public static <T> T getBean(Class<T> requiredType) throws BeansException {
         return applicationContext.getBean(requiredType);
     }

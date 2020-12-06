@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 public enum PayMode implements BaseEnum {
-    ALIPAY("支付宝"), WECHAT("微信"), BANK("银联"),PAYPAL("Paypal");
+    ALIPAY("支付宝"), WECHAT("微信"), BANK("银联"), PAYPAL("Paypal");
 
     @Setter
     private String cnName;

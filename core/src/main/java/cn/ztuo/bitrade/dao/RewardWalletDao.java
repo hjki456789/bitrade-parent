@@ -14,6 +14,7 @@ import java.util.List;
 public interface RewardWalletDao extends JpaRepository<RewardWallet, String>, JpaSpecificationExecutor<RewardWallet>, QuerydslPredicateExecutor<RewardWallet> {
     /**
      * 根据用户查询奖励钱包
+     *
      * @param memberId
      * @return
      */
@@ -21,14 +22,16 @@ public interface RewardWalletDao extends JpaRepository<RewardWallet, String>, Jp
 
     /**
      * 根据用户查询奖励钱包
+     *
      * @param memberId
-     *@param unit
+     * @param unit
      * @return
      */
     RewardWallet findRewardWalletByMemberIdAndCoinUnit(Long memberId, String unit);
 
     /**
      * 生成钱包
+     *
      * @param rewardWallet
      * @return
      */
@@ -58,6 +61,7 @@ public interface RewardWalletDao extends JpaRepository<RewardWallet, String>, Jp
 
     /**
      * 根据用户查询奖励钱包
+     *
      * @param memberId
      * @return
      */
@@ -65,6 +69,7 @@ public interface RewardWalletDao extends JpaRepository<RewardWallet, String>, Jp
 
     /**
      * 根据用户查询奖励钱包
+     *
      * @param
      * @return
      */

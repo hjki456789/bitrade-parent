@@ -4,12 +4,12 @@ import org.springframework.stereotype.*;
 import cn.ztuo.bitrade.dao.contractstrategy.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.contractstrategy.*;
+
 import java.io.*;
 import java.util.*;
 
 @Service
-public class ContractStrategyExchangeConfigService
-{
+public class ContractStrategyExchangeConfigService {
     @Autowired
     private ContractStrategyExchangeConfigRepository contractStrategyExchangeConfigRepository;
 

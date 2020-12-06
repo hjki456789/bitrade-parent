@@ -6,6 +6,7 @@ import cn.ztuo.bitrade.constant.CommonStatus;
 import cn.ztuo.bitrade.constant.SysHelpClassification;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+
 import javax.validation.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -48,18 +49,18 @@ public class SysHelp {
     /**
      * 类型不为二维码时有效，为新手入门，充值指南，交易指南等的具体内容
      */
-    @Column(columnDefinition="TEXT")
-    @Basic(fetch=FetchType.LAZY)
+    @Column(columnDefinition = "TEXT")
+    @Basic(fetch = FetchType.LAZY)
     private String content = "";
 
     private String author = "admin";
 
-    private int sort = 0 ;
+    private int sort = 0;
 
     /**
      * 是否置顶（0，置顶  1，不置顶（默认））
      */
-    private String isTop = "1" ;
+    private String isTop = "1";
 
     /**
      * 语种（"en-US", "zh-CN", "ja-JP", "ko-KR", "ar-AE"）

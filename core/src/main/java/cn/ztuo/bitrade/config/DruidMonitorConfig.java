@@ -12,11 +12,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(prefix = "druid",name = "monitor",havingValue = "on")
+@ConditionalOnProperty(prefix = "druid", name = "monitor", havingValue = "on")
 public class DruidMonitorConfig {
     private Logger logger = LoggerFactory.getLogger(DruidMonitorConfig.class);
+
     /**
      * 注册ServletRegistrationBean
+     *
      * @return
      */
     @Bean
@@ -41,6 +43,7 @@ public class DruidMonitorConfig {
 
     /**
      * 注册FilterRegistrationBean
+     *
      * @return
      */
     @Bean
@@ -49,7 +52,7 @@ public class DruidMonitorConfig {
         //添加过滤规则.
         bean.addUrlPatterns("/*");
         //添加不需要忽略的格式信息.
-        bean.addInitParameter("exclusions","*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid2/*");
+        bean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid2/*");
         return bean;
     }
 }

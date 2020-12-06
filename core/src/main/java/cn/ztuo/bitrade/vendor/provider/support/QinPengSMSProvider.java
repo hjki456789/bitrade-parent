@@ -67,7 +67,7 @@ public class QinPengSMSProvider implements SMSProvider {
         return parse2Result(responseString);
     }
 
-    private MessageResult parse2Result(String result){
+    private MessageResult parse2Result(String result) {
         //{"result":[{"phone":"15738776414","msgid":"1806282017484877844","return":"0","info":"成功"}],"id":1}
         JSONObject jsonObject = JSONObject.parseObject(result);
         MessageResult mr = new MessageResult(500, "系统错误");
@@ -80,9 +80,10 @@ public class QinPengSMSProvider implements SMSProvider {
 
     @Override
     public MessageResult sendLoginMessage(String ip, String phone) throws Exception {
-        String content=sendLoginMessage(ip)+"【BD】";
-        return sendSingleMessage(content,phone);
+        String content = sendLoginMessage(ip) + "【BD】";
+        return sendSingleMessage(content, phone);
     }
+
     @Override
     public MessageResult sendTemplateMessage(final String mobilePhone, final String templateId) throws Exception {
         return null;

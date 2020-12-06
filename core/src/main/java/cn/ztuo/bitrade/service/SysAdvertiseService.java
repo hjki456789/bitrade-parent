@@ -57,7 +57,7 @@ public class SysAdvertiseService extends BaseService {
         return sysAdvertiseDao.findById(serialNumber).orElse(null);
     }
 
-    public int getMaxSort(){
+    public int getMaxSort() {
         return sysAdvertiseDao.findMaxSort();
     }
 
@@ -80,7 +80,7 @@ public class SysAdvertiseService extends BaseService {
         }
     }
 
-    public List<SysAdvertise> findAllNormal(SysAdvertiseLocation sysAdvertiseLocation,String locale) {
+    public List<SysAdvertise> findAllNormal(SysAdvertiseLocation sysAdvertiseLocation, String locale) {
         return sysAdvertiseDao.findAllByStatusAndSysAdvertiseLocationAndLocaleOrderBySortDesc(CommonStatus.NORMAL, sysAdvertiseLocation, locale);
     }
 

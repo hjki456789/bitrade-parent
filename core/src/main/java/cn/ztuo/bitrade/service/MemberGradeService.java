@@ -22,19 +22,21 @@ public class MemberGradeService extends BaseService<MemberGrade> {
     @Autowired
     private MemberGradeDao dao;
     @Autowired
-    private RedisUtil redisUtil ;
+    private RedisUtil redisUtil;
 
     /**
      * 查询所有
+     *
      * @return
      */
     @Override
-    public List<MemberGrade> findAll(){
+    public List<MemberGrade> findAll() {
         return dao.findAll();
     }
 
     /**
      * 根据id查询单个
+     *
      * @param id
      * @return
      */
@@ -52,28 +54,28 @@ public class MemberGradeService extends BaseService<MemberGrade> {
 
     /**
      * 保存
+     *
      * @param memberGrade
      * @return
      */
-    public MemberGrade save(MemberGrade memberGrade){
-        if(memberGrade.getId()!=null){
-            redisUtil.delete(SysConstant.CUSTOMER_INTEGRATION_GRADE+memberGrade.getId());
+    public MemberGrade save(MemberGrade memberGrade) {
+        if (memberGrade.getId() != null) {
+            redisUtil.delete(SysConstant.CUSTOMER_INTEGRATION_GRADE + memberGrade.getId());
         }
         return dao.save(memberGrade);
     }
 
-    public int updateMemberGrade(BigDecimal exchangeFeeRate, BigDecimal exchangeMakerFeeRate){
-        return dao.updateMemberGrade( exchangeFeeRate, exchangeMakerFeeRate);
+    public int updateMemberGrade(BigDecimal exchangeFeeRate, BigDecimal exchangeMakerFeeRate) {
+        return dao.updateMemberGrade(exchangeFeeRate, exchangeMakerFeeRate);
     }
 
-    public int updateOtcFee(BigDecimal otcFeeRate){
-        return dao.updateOtcFee( otcFeeRate );
+    public int updateOtcFee(BigDecimal otcFeeRate) {
+        return dao.updateOtcFee(otcFeeRate);
     }
 
-    public int updateSeDiscountRate(BigDecimal seDiscountRate){
-        return dao.updateSeDiscountRate( seDiscountRate );
+    public int updateSeDiscountRate(BigDecimal seDiscountRate) {
+        return dao.updateSeDiscountRate(seDiscountRate);
     }
-
 
 
 }

@@ -32,7 +32,7 @@ public class MemberAddress {
     private Coin coin;
     private String address;
     @Enumerated(EnumType.ORDINAL)
-    private CommonStatus status=CommonStatus.NORMAL;
+    private CommonStatus status = CommonStatus.NORMAL;
     private Long memberId;
     private String remark;
 

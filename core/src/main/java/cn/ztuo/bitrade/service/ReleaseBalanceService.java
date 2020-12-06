@@ -57,11 +57,11 @@ public class ReleaseBalanceService extends BaseService {
                 // 获取释放余额.
                 BigDecimal rbMoney = releaseBalance.getReleaseBalance();
                 BigDecimal mwMoney = memberWallet.getReleaseBalance();
-                if(mwMoney.compareTo(rbMoney) > -1){   //a大于等于b
+                if (mwMoney.compareTo(rbMoney) > -1) {   //a大于等于b
                     // 将获取的释放余额  加 到钱包余额里面
-                    int num= memberWalletDao.releaseReisterGiving(rbMoney,memberWallet.getId());
+                    int num = memberWalletDao.releaseReisterGiving(rbMoney, memberWallet.getId());
                     //更改审核状态 1 - 已审核
-                    if(num ==1) {
+                    if (num == 1) {
                         releaseBalance.setReleaseState("1");
                         releaseBalance.setReleaseTime(new Date());
                         releaseBalanceDao.save(releaseBalance);

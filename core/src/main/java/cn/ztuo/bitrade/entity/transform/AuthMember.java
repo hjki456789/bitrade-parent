@@ -37,7 +37,7 @@ public class AuthMember implements Serializable {
     public static AuthMember toAuthMember(Member member) {
         return AuthMember.builder()
                 .id(member.getId())
-                .name(StringUtils.isNotEmpty(member.getUsername())?member.getUsername():"")
+                .name(StringUtils.isNotEmpty(member.getUsername()) ? member.getUsername() : "")
                 .realName(member.getRealName())
                 .location(member.getLocation())
                 .mobilePhone(member.getMobilePhone())

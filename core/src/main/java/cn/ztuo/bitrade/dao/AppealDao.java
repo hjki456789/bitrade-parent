@@ -21,5 +21,5 @@ public interface AppealDao extends BaseDao<Appeal> {
 
     long countAllByStatus(AppealStatus status);
 
-    Appeal findByOrderAndStatus(Order order,AppealStatus status);
+    Appeal findByOrderAndStatus(Order order, AppealStatus status);
 }

@@ -10,5 +10,5 @@ import java.util.List;
 public interface NavigationDao extends BaseDao<Navigation> {
 
     @Query(value = "SELECT * FROM navigation s WHERE s.status ='0' and s.locale = :locale and s.type = :type ORDER BY s.sort DESC", nativeQuery = true)
-    List<Navigation> findAllByStatusNotAndTypeAndLocale(@Param("type") String type,@Param("locale") String locale);
+    List<Navigation> findAllByStatusNotAndTypeAndLocale(@Param("type") String type, @Param("locale") String locale);
 }

@@ -30,13 +30,13 @@ public class RewardStatisticsService extends BaseService {
      * @return
      */
     @Transactional(readOnly = true)
-    public Page<Object[]> findAll(long mamberId,String month, PageModel pageModel) {
-        Pageable pageable = PageRequest.of(pageModel.getPageNo()- 1, pageModel.getPageSize());
-        return rewardStatisticsDao.findAll(mamberId,month,pageable);
+    public Page<Object[]> findAll(long mamberId, String month, PageModel pageModel) {
+        Pageable pageable = PageRequest.of(pageModel.getPageNo() - 1, pageModel.getPageSize());
+        return rewardStatisticsDao.findAll(mamberId, month, pageable);
     }
 
     @Transactional(readOnly = true)
     public List<Object[]> findAll(String month, int limit) {
-        return rewardStatisticsDao.findAllList(month,limit);
+        return rewardStatisticsDao.findAllList(month, limit);
     }
 }

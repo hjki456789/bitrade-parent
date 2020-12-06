@@ -21,18 +21,18 @@ import java.util.List;
 public class TestQueryDSLService extends BaseService {
     @Autowired
     private AdvertiseDao advertiseDao;
- 
+
     @Autowired
     private EntityManager entityManager;
     //查询工厂实体
     private JPAQueryFactory queryFactory;
+
     //实例化控制器完成后执行该方法实例化JPAQueryFactory
     @PostConstruct
-    public void initFactory()
-    {
+    public void initFactory() {
         queryFactory = new JPAQueryFactory(entityManager);
     }
- 
+
 
     public Page<Advertise> test(int page) {
 
@@ -41,10 +41,11 @@ public class TestQueryDSLService extends BaseService {
         Predicate predicate = qAdvertise.id.gt(1);
         //分页排序
         Sort orders = Criteria.sortStatic("id");
-        PageRequest pageRequest = PageRequest.of(page-1, 10, orders);
+        PageRequest pageRequest = PageRequest.of(page - 1, 10, orders);
         //Page<Advertise> all = advertiseDao.findAll(predicate, pageRequest);
-        return advertiseDao.findAll(predicate,pageRequest);
+        return advertiseDao.findAll(predicate, pageRequest);
     }
+
     public List<Advertise> test2() {
         QAdvertise quser = QAdvertise.advertise;
         return queryFactory.selectFrom(quser)

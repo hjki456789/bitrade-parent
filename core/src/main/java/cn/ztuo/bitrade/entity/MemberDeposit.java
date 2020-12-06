@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Data
 @Entity
-@Table(uniqueConstraints ={@UniqueConstraint(columnNames={"txid", "address"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"txid", "address"})})
 public class MemberDeposit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,7 @@ public class MemberDeposit {
     private int collectType;
 
     @Transient
-    private String username ;
+    private String username;
 
     @Transient
     private int isAddMemberBalance;

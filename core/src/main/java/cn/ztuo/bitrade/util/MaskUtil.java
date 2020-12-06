@@ -1,4 +1,5 @@
 package cn.ztuo.bitrade.util;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,22 +16,23 @@ import com.google.common.collect.Maps;
 
 /**
  * 掩码工具类
- * @author Dabria_ly
  *
+ * @author Dabria_ly
  */
 public class MaskUtil {
     /**
      * 掩码手机号
+     *
      * @param mobile
      * @return
      */
     public static String maskMobile(String mobile) {
-        if(StringUtils.isEmpty(mobile)){
+        if (StringUtils.isEmpty(mobile)) {
             return mobile;
         }
         int cutBegin = mobile.length() * 3 / 11;
-        int cutEnd =  mobile.length() * 7 / 11;
-        if(cutEnd < cutBegin){
+        int cutEnd = mobile.length() * 7 / 11;
+        if (cutEnd < cutBegin) {
             return mobile;
         }
         return StringUtils.rightPad(StringUtils.left(mobile, cutBegin), cutEnd, "*") + StringUtils.right(mobile, mobile.length() - cutEnd);
@@ -38,15 +40,16 @@ public class MaskUtil {
 
     /**
      * 掩码邮箱
+     *
      * @param email
      * @return
      */
     public static String maskEmail(String email) {
-        if(StringUtils.isEmpty(email)){
+        if (StringUtils.isEmpty(email)) {
             return email;
         }
         int length = email.indexOf("@");
-        if(length <= 0){
+        if (length <= 0) {
             return email;
         }
         int cutBegin = length / 2;

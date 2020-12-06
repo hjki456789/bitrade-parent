@@ -26,7 +26,7 @@ public class Feedback {
     /**
      * 反馈者
      */
-    @JoinColumn(name = "member_id",nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
     private Member member;
 }

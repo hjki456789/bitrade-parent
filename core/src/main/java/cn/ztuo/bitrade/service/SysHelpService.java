@@ -55,12 +55,12 @@ public class SysHelpService extends BaseService {
         }
     }
 
-    public int getMaxSort(){
+    public int getMaxSort() {
         return sysHelpDao.findMaxSort();
     }
 
     public List<SysHelp> findBySysHelpClassification(SysHelpClassification sysHelpClassification, String locale) {
-        return sysHelpDao.findAllBySysHelpClassificationAndStatusNotAndLocale(sysHelpClassification,CommonStatus.ILLEGAL, locale);
+        return sysHelpDao.findAllBySysHelpClassificationAndStatusNotAndLocale(sysHelpClassification, CommonStatus.ILLEGAL, locale);
     }
 
     /**
@@ -90,12 +90,13 @@ public class SysHelpService extends BaseService {
 
     /**
      * 根据分类分页查询
+     *
      * @param pageNo
      * @param pageSize
      * @param cate
      * @return
      */
-    public Page<SysHelp> findByCondition(int pageNo,int pageSize,SysHelpClassification cate, String locale){
+    public Page<SysHelp> findByCondition(int pageNo, int pageSize, SysHelpClassification cate, String locale) {
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "sort"));
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
         Specification specification = new Specification() {
@@ -103,16 +104,16 @@ public class SysHelpService extends BaseService {
 
             @Override
             public javax.persistence.criteria.Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                predicates.add(criteriaBuilder.equal(root.get("sysHelpClassification"),cate));
-                predicates.add(criteriaBuilder.equal(root.get("locale"),locale));
+                predicates.add(criteriaBuilder.equal(root.get("sysHelpClassification"), cate));
+                predicates.add(criteriaBuilder.equal(root.get("locale"), locale));
                 return criteriaBuilder.and(predicates.toArray(new javax.persistence.criteria.Predicate[predicates.size()]));
             }
         };
-        return sysHelpDao.findAll(specification,pageable);
+        return sysHelpDao.findAll(specification, pageable);
     }
 
-    public List<SysHelp> getgetCateTops(String cate,String locale){
-        return sysHelpDao.getCateTop(cate,locale);
+    public List<SysHelp> getgetCateTops(String cate, String locale) {
+        return sysHelpDao.getCateTop(cate, locale);
     }
 
     public List<SysHelp> findAllByStatusNotAndSortAndLocale(String locale) {

@@ -15,7 +15,6 @@ import java.util.Date;
 
 /**
  * @desc 会员交易记录，包括充值、提现、转账等
- *
  */
 @Entity
 @Data
@@ -60,15 +59,15 @@ public class MemberTransaction {
      * 交易手续费
      * 提现和转账才有手续费，充值没有;如果是法币交易，只收发布广告的那一方的手续费
      */
-    @Column(precision = 19,scale = 8)
-    private BigDecimal fee = BigDecimal.ZERO ;
+    @Column(precision = 19, scale = 8)
+    private BigDecimal fee = BigDecimal.ZERO;
 
     private String feeUnit;
 
     /**
      * 标识位，特殊情况会用到，默认为0
      */
-    @Column(nullable=false,columnDefinition="int default 0")
+    @Column(nullable = false, columnDefinition = "int default 0")
     private int flag = 0;
     /**
      * 空投ID，只有空投时才有
@@ -108,8 +107,6 @@ public class MemberTransaction {
     @Transient
     private String amountStr;
     private Long lotteryCount;
-
-
 
 
     public MemberTransaction() {

@@ -8,6 +8,7 @@ import lombok.Setter;
 
 /**
  * 积分赠送类型
+ *
  * @author MrGao
  * @date 2019/04/25
  */

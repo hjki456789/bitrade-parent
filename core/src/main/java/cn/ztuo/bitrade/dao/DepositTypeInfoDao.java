@@ -2,13 +2,16 @@ package cn.ztuo.bitrade.dao;
 
 import cn.ztuo.bitrade.dao.base.*;
 import cn.ztuo.bitrade.entity.*;
+
 import java.util.*;
+
 import org.springframework.data.repository.query.*;
+
 import javax.transaction.*;
+
 import org.springframework.data.jpa.repository.*;
 
-public interface DepositTypeInfoDao extends BaseDao<DepositTypeInfo>
-{
+public interface DepositTypeInfoDao extends BaseDao<DepositTypeInfo> {
     @Query("select a from DepositTypeInfo a where a.status = 1 ")
     List<DepositTypeInfo> getAllEnableList();
 

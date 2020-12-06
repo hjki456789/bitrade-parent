@@ -11,6 +11,7 @@ import java.util.Date;
 
 /**
  * 推荐奖励设置
+ *
  * @author Seven
  * @date 2019年03月08日
  */
@@ -35,7 +36,6 @@ public class RewardActivitySetting {
     /**
      * 注册奖励：{"amount": 0.5}
      * <p>
-     *
      */
     private String info;
 

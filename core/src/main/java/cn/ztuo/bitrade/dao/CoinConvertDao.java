@@ -4,13 +4,14 @@ import cn.ztuo.bitrade.dao.base.*;
 import cn.ztuo.bitrade.entity.*;
 import org.springframework.stereotype.*;
 import org.springframework.data.repository.query.*;
+
 import java.util.*;
 import javax.transaction.*;
+
 import org.springframework.data.jpa.repository.*;
 
 @Repository
-public interface CoinConvertDao extends BaseDao<CoinConvert>
-{
+public interface CoinConvertDao extends BaseDao<CoinConvert> {
     CoinConvert getOne(final Long p0);
 
     @Query("select a from CoinConvert a where a.baseCoin = :baseCoin")

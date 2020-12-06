@@ -22,7 +22,7 @@ public class FeedbackService extends BaseService {
     @Autowired
     private FeedbackDao feedbackDao;
 
-    public Feedback save(Feedback feedback){
+    public Feedback save(Feedback feedback) {
         return feedbackDao.save(feedback);
     }
 
@@ -32,10 +32,10 @@ public class FeedbackService extends BaseService {
         if (null != memberId) {
             specification.add(Restrictions.eq("member.id", memberId, true));
         }
-        if (StringUtils.isNotEmpty((CharSequence)username)) {
+        if (StringUtils.isNotEmpty((CharSequence) username)) {
             specification.add(Restrictions.like("member.username", username, true));
         }
-        if (StringUtils.isNotEmpty((CharSequence)mobilePhone)) {
+        if (StringUtils.isNotEmpty((CharSequence) mobilePhone)) {
             specification.add(Restrictions.like("member.mobilePhone", mobilePhone, true));
         }
         if (null != startTime) {

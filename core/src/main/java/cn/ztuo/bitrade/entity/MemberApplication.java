@@ -6,6 +6,7 @@ import cn.ztuo.bitrade.enums.CredentialsType;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.validation.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -46,7 +47,7 @@ public class MemberApplication {
     private String identityCardImgInHand;
 
     /**
-     *  审核状态
+     * 审核状态
      */
     @NotNull
     @Enumerated(EnumType.ORDINAL)
@@ -55,7 +56,7 @@ public class MemberApplication {
     /**
      * 审核信息所有者
      */
-    @JoinColumn(name = "member_id",nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
     private Member member;
 

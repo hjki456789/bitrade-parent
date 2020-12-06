@@ -6,8 +6,7 @@ import java.util.*;
 
 @Entity
 @Table
-public class UnblockCommonConfig implements Serializable
-{
+public class UnblockCommonConfig implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -17,63 +16,63 @@ public class UnblockCommonConfig implements Serializable
     private Integer orderId;
     private Date updateTime;
     private Long version;
-    
+
     public Long getId() {
         return this.id;
     }
-    
+
     public String getName() {
         return this.name;
     }
-    
+
     public String getValue() {
         return this.value;
     }
-    
+
     public String getRemark() {
         return this.remark;
     }
-    
+
     public Integer getOrderId() {
         return this.orderId;
     }
-    
+
     public Date getUpdateTime() {
         return this.updateTime;
     }
-    
+
     public Long getVersion() {
         return this.version;
     }
-    
+
     public void setId(final Long id) {
         this.id = id;
     }
-    
+
     public void setName(final String name) {
         this.name = name;
     }
-    
+
     public void setValue(final String value) {
         this.value = value;
     }
-    
+
     public void setRemark(final String remark) {
         this.remark = remark;
     }
-    
+
     public void setOrderId(final Integer orderId) {
         this.orderId = orderId;
     }
-    
+
     public void setUpdateTime(final Date updateTime) {
         this.updateTime = updateTime;
     }
-    
+
     public void setVersion(final Long version) {
         this.version = version;
     }
-    
+
     @Override
     public boolean equals(final Object o) {
         if (o == this) {
@@ -82,84 +81,84 @@ public class UnblockCommonConfig implements Serializable
         if (!(o instanceof UnblockCommonConfig)) {
             return false;
         }
-        final UnblockCommonConfig other = (UnblockCommonConfig)o;
+        final UnblockCommonConfig other = (UnblockCommonConfig) o;
         if (!other.canEqual(this)) {
             return false;
         }
         final Object this$id = this.getId();
         final Object other$id = other.getId();
-        Label_0065: {
+        Label_0065:
+        {
             if (this$id == null) {
                 if (other$id == null) {
                     break Label_0065;
                 }
-            }
-            else if (this$id.equals(other$id)) {
+            } else if (this$id.equals(other$id)) {
                 break Label_0065;
             }
             return false;
         }
         final Object this$name = this.getName();
         final Object other$name = other.getName();
-        Label_0102: {
+        Label_0102:
+        {
             if (this$name == null) {
                 if (other$name == null) {
                     break Label_0102;
                 }
-            }
-            else if (this$name.equals(other$name)) {
+            } else if (this$name.equals(other$name)) {
                 break Label_0102;
             }
             return false;
         }
         final Object this$value = this.getValue();
         final Object other$value = other.getValue();
-        Label_0139: {
+        Label_0139:
+        {
             if (this$value == null) {
                 if (other$value == null) {
                     break Label_0139;
                 }
-            }
-            else if (this$value.equals(other$value)) {
+            } else if (this$value.equals(other$value)) {
                 break Label_0139;
             }
             return false;
         }
         final Object this$remark = this.getRemark();
         final Object other$remark = other.getRemark();
-        Label_0176: {
+        Label_0176:
+        {
             if (this$remark == null) {
                 if (other$remark == null) {
                     break Label_0176;
                 }
-            }
-            else if (this$remark.equals(other$remark)) {
+            } else if (this$remark.equals(other$remark)) {
                 break Label_0176;
             }
             return false;
         }
         final Object this$orderId = this.getOrderId();
         final Object other$orderId = other.getOrderId();
-        Label_0213: {
+        Label_0213:
+        {
             if (this$orderId == null) {
                 if (other$orderId == null) {
                     break Label_0213;
                 }
-            }
-            else if (this$orderId.equals(other$orderId)) {
+            } else if (this$orderId.equals(other$orderId)) {
                 break Label_0213;
             }
             return false;
         }
         final Object this$updateTime = this.getUpdateTime();
         final Object other$updateTime = other.getUpdateTime();
-        Label_0250: {
+        Label_0250:
+        {
             if (this$updateTime == null) {
                 if (other$updateTime == null) {
                     break Label_0250;
                 }
-            }
-            else if (this$updateTime.equals(other$updateTime)) {
+            } else if (this$updateTime.equals(other$updateTime)) {
                 break Label_0250;
             }
             return false;
@@ -170,17 +169,16 @@ public class UnblockCommonConfig implements Serializable
             if (other$version == null) {
                 return true;
             }
-        }
-        else if (this$version.equals(other$version)) {
+        } else if (this$version.equals(other$version)) {
             return true;
         }
         return false;
     }
-    
+
     protected boolean canEqual(final Object other) {
         return other instanceof UnblockCommonConfig;
     }
-    
+
     @Override
     public int hashCode() {
         final int PRIME = 59;
@@ -201,7 +199,7 @@ public class UnblockCommonConfig implements Serializable
         result = result * 59 + (($version == null) ? 43 : $version.hashCode());
         return result;
     }
-    
+
     @Override
     public String toString() {
         return "UnblockCommonConfig(id=" + this.getId() + ", name=" + this.getName() + ", value=" + this.getValue() + ", remark=" + this.getRemark() + ", orderId=" + this.getOrderId() + ", updateTime=" + this.getUpdateTime() + ", version=" + this.getVersion() + ")";

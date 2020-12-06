@@ -6,8 +6,7 @@ import java.util.*;
 
 @Entity
 @Table
-public class ContractDoubleExchangeConfig implements Serializable
-{
+public class ContractDoubleExchangeConfig implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -16,55 +15,55 @@ public class ContractDoubleExchangeConfig implements Serializable
     private String apiUrl;
     private Date createTime;
     private String content;
-    
+
     public Long getId() {
         return this.id;
     }
-    
+
     public String getName() {
         return this.name;
     }
-    
+
     public String getCnName() {
         return this.cnName;
     }
-    
+
     public String getApiUrl() {
         return this.apiUrl;
     }
-    
+
     public Date getCreateTime() {
         return this.createTime;
     }
-    
+
     public String getContent() {
         return this.content;
     }
-    
+
     public void setId(final Long id) {
         this.id = id;
     }
-    
+
     public void setName(final String name) {
         this.name = name;
     }
-    
+
     public void setCnName(final String cnName) {
         this.cnName = cnName;
     }
-    
+
     public void setApiUrl(final String apiUrl) {
         this.apiUrl = apiUrl;
     }
-    
+
     public void setCreateTime(final Date createTime) {
         this.createTime = createTime;
     }
-    
+
     public void setContent(final String content) {
         this.content = content;
     }
-    
+
     @Override
     public boolean equals(final Object o) {
         if (o == this) {
@@ -73,71 +72,71 @@ public class ContractDoubleExchangeConfig implements Serializable
         if (!(o instanceof ContractDoubleExchangeConfig)) {
             return false;
         }
-        final ContractDoubleExchangeConfig other = (ContractDoubleExchangeConfig)o;
+        final ContractDoubleExchangeConfig other = (ContractDoubleExchangeConfig) o;
         if (!other.canEqual(this)) {
             return false;
         }
         final Object this$id = this.getId();
         final Object other$id = other.getId();
-        Label_0065: {
+        Label_0065:
+        {
             if (this$id == null) {
                 if (other$id == null) {
                     break Label_0065;
                 }
-            }
-            else if (this$id.equals(other$id)) {
+            } else if (this$id.equals(other$id)) {
                 break Label_0065;
             }
             return false;
         }
         final Object this$name = this.getName();
         final Object other$name = other.getName();
-        Label_0102: {
+        Label_0102:
+        {
             if (this$name == null) {
                 if (other$name == null) {
                     break Label_0102;
                 }
-            }
-            else if (this$name.equals(other$name)) {
+            } else if (this$name.equals(other$name)) {
                 break Label_0102;
             }
             return false;
         }
         final Object this$cnName = this.getCnName();
         final Object other$cnName = other.getCnName();
-        Label_0139: {
+        Label_0139:
+        {
             if (this$cnName == null) {
                 if (other$cnName == null) {
                     break Label_0139;
                 }
-            }
-            else if (this$cnName.equals(other$cnName)) {
+            } else if (this$cnName.equals(other$cnName)) {
                 break Label_0139;
             }
             return false;
         }
         final Object this$apiUrl = this.getApiUrl();
         final Object other$apiUrl = other.getApiUrl();
-        Label_0176: {
+        Label_0176:
+        {
             if (this$apiUrl == null) {
                 if (other$apiUrl == null) {
                     break Label_0176;
                 }
-            }
-            else if (this$apiUrl.equals(other$apiUrl)) {
+            } else if (this$apiUrl.equals(other$apiUrl)) {
                 break Label_0176;
             }
             return false;
         }
         final Object this$createTime = this.getCreateTime();
         final Object other$createTime = other.getCreateTime();
-        Label_0213: {
+        Label_0213:
+        {
             if (this$createTime == null) {
                 if (other$createTime == null) {
                     break Label_0213;
                 }
-            }
-            else if (this$createTime.equals(other$createTime)) {
+            } else if (this$createTime.equals(other$createTime)) {
                 break Label_0213;
             }
             return false;
@@ -148,17 +147,16 @@ public class ContractDoubleExchangeConfig implements Serializable
             if (other$content == null) {
                 return true;
             }
-        }
-        else if (this$content.equals(other$content)) {
+        } else if (this$content.equals(other$content)) {
             return true;
         }
         return false;
     }
-    
+
     protected boolean canEqual(final Object other) {
         return other instanceof ContractDoubleExchangeConfig;
     }
-    
+
     @Override
     public int hashCode() {
         final int PRIME = 59;
@@ -177,7 +175,7 @@ public class ContractDoubleExchangeConfig implements Serializable
         result = result * 59 + (($content == null) ? 43 : $content.hashCode());
         return result;
     }
-    
+
     @Override
     public String toString() {
         return "ContractDoubleExchangeConfig(id=" + this.getId() + ", name=" + this.getName() + ", cnName=" + this.getCnName() + ", apiUrl=" + this.getApiUrl() + ", createTime=" + this.getCreateTime() + ", content=" + this.getContent() + ")";

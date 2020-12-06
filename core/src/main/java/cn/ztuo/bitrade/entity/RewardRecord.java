@@ -11,6 +11,7 @@ import java.util.Date;
 
 /**
  * 奖励记录
+ *
  * @author Seven
  * @date 2019年03月08日
  */
@@ -23,7 +24,7 @@ public class RewardRecord {
     @JoinColumn(name = "coin_id", nullable = false)
     @ManyToOne
     private Coin coin;
-    private String  remark;
+    private String remark;
     @Enumerated(EnumType.ORDINAL)
     private RewardRecordType type;
     @Column(columnDefinition = "decimal(20,8) comment '数目'")

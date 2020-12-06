@@ -3,7 +3,7 @@ package cn.ztuo.bitrade.vo;
 import lombok.Data;
 
 @Data
-public class InviteManagementVO{
+public class InviteManagementVO {
     private Long id;
     private String realName;
     private String mobilePhone;

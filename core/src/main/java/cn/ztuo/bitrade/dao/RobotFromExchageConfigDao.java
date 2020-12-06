@@ -7,6 +7,5 @@ import org.springframework.data.querydsl.*;
 import org.springframework.stereotype.*;
 
 @Repository
-public interface RobotFromExchageConfigDao extends BaseDao<RobotFromExchageConfig>
-{
+public interface RobotFromExchageConfigDao extends BaseDao<RobotFromExchageConfig> {
 }

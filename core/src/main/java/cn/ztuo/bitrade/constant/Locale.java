@@ -19,7 +19,7 @@ public interface Locale {
 
     List<String> locales = Arrays.asList(Locale.EN_US, Locale.ZH_CN, Locale.JA_JP, Locale.KO_KR, Locale.AR_AE);
 
-    Map<String,String> Locale_MAP = new HashMap<String , String>(){{
+    Map<String, String> Locale_MAP = new HashMap<String, String>() {{
         put(Locale.EN_US, "English");
         put(Locale.ZH_CN, "简体中文");
         put(Locale.JA_JP, "にほんご");

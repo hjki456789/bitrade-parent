@@ -27,13 +27,13 @@ public class ESClient {
     @Autowired
     private ESConfig esConfig;
 
-    public JSONObject getClient(String method, String endPoint, JSONObject params){
+    public JSONObject getClient(String method, String endPoint, JSONObject params) {
 
-        log.info("=====method:"+method+"<>====endPoint:"+endPoint+"<>===params+"+params);
+        log.info("=====method:" + method + "<>====endPoint:" + endPoint + "<>===params+" + params);
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY,
                 new UsernamePasswordCredentials(esConfig.getEsUsername(), esConfig.getEsPassword()));
-            RestClient restClient = RestClient.builder(new HttpHost(esConfig.getPrivateNet(), esConfig.getEsPort()))
+        RestClient restClient = RestClient.builder(new HttpHost(esConfig.getPrivateNet(), esConfig.getEsPort()))
                 .setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
                     @Override
                     public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
@@ -47,28 +47,28 @@ public class ESClient {
             request.setEntity(httpEntity);
             request.addParameter("pretty", "true");
             Response response = restClient.performRequest(request);
-            log.info("======response:"+response);
+            log.info("======response:" + response);
 
             int statusCode = response.getStatusLine().getStatusCode();
             String result = EntityUtils.toString(response.getEntity());
-            log.info("=====result:"+result);
+            log.info("=====result:" + result);
             JSONObject jsonObject = JSONObject.parseObject(result);
             restClient.close();
-            if (200 == statusCode || 201 == statusCode){
+            if (200 == statusCode || 201 == statusCode) {
                 return jsonObject;
-            }else {
-                log.info("es client 调用失败"+response);
+            } else {
+                log.info("es client 调用失败" + response);
                 return null;
             }
         } catch (IOException e) {
             e.printStackTrace();
-            log.info("es client 调用失败={}",e);
-        }finally {
+            log.info("es client 调用失败={}", e);
+        } finally {
             try {
                 restClient.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                log.info("es client 调用失败={}",e);
+                log.info("es client 调用失败={}", e);
             }
         }
         return null;

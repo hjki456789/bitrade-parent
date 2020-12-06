@@ -29,13 +29,13 @@ public class SettlementCoinService extends BaseService {
     public Page<SettlementCoin> findAll(PageModel pageModel, String coinName, CommonStatus status) {
         Sort orders = Criteria.sortStatic("createTime.desc");
         //分页参数
-        PageRequest pageRequest = PageRequest.of(pageModel.getPageNo()-1, pageModel.getPageSize(), orders);
-        if(StringUtils.isNotEmpty(coinName)||status !=null){
+        PageRequest pageRequest = PageRequest.of(pageModel.getPageNo() - 1, pageModel.getPageSize(), orders);
+        if (StringUtils.isNotEmpty(coinName) || status != null) {
             //查询条件
             Criteria<SettlementCoin> specification = new Criteria<SettlementCoin>();
-            if(StringUtils.isNotEmpty(coinName))
+            if (StringUtils.isNotEmpty(coinName))
                 specification.add(Restrictions.eq("coinName", coinName, false));
-            if(status !=null)
+            if (status != null)
                 specification.add(Restrictions.eq("status", status, false));
             return settlementCoinDao.findAll(specification, pageRequest);
         }

@@ -2,14 +2,17 @@ package cn.ztuo.bitrade.dao;
 
 import cn.ztuo.bitrade.dao.base.*;
 import org.springframework.data.repository.query.*;
+
 import java.math.*;
+
 import org.springframework.data.jpa.repository.*;
 import cn.ztuo.bitrade.entity.*;
+
 import java.util.*;
+
 import org.springframework.transaction.annotation.*;
 
-public interface ContractDoubleDirectionWalletDao extends BaseDao<ContractDoubleDirectionWallet>
-{
+public interface ContractDoubleDirectionWalletDao extends BaseDao<ContractDoubleDirectionWallet> {
     @Modifying
     @Query("update ContractDoubleDirectionWallet wallet set wallet.balance = wallet.balance + :amount,wallet.version= wallet.version+1 where wallet.id = :walletId and wallet.version=:version")
     int increaseBalance(@Param("walletId") final long p0, @Param("amount") final BigDecimal p1, @Param("version") final int p2);
@@ -49,12 +52,12 @@ public interface ContractDoubleDirectionWalletDao extends BaseDao<ContractDouble
     @Query(value = "select * from contract_double_direction_wallet  where coin_id=:coinId and member_id=:memberId limit 1", nativeQuery = true)
     ContractDoubleDirectionWallet findCoinIdAndMemberId(@Param("coinId") final String p0, @Param("memberId") final Long p1);
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     @Modifying
     @Query("update ContractDoubleDirectionWallet wallet set wallet.frozenBalance=:frozenBalance where wallet.id=:id")
     int updateFrozenBalance(@Param("id") final Long p0, @Param("frozenBalance") final BigDecimal p1);
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     @Modifying
     @Query("update ContractDoubleDirectionWallet wallet set  wallet.balance=:balance,  wallet.frozenBalance=:frozenBalance where wallet.id=:id")
     int updateBalance(@Param("id") final Long p0, @Param("balance") final BigDecimal p1, @Param("frozenBalance") final BigDecimal p2);
@@ -70,7 +73,7 @@ public interface ContractDoubleDirectionWalletDao extends BaseDao<ContractDouble
     @Query("update ContractDoubleDirectionWallet set is_lock = :isLock where id =:id")
     int updateIsLock(@Param("id") final Long p0, @Param("isLock") final Integer p1);
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     @Modifying
     @Query("update ContractDoubleDirectionWallet wallet set  wallet.balance=:balance,  wallet.frozenBalance=:frozenBalance, wallet.version=wallet.version+1 where  wallet.id=:id and wallet.version=:version")
     int updateWalletBalance(@Param("id") final Long p0, @Param("balance") final BigDecimal p1, @Param("frozenBalance") final BigDecimal p2, @Param("version") final int p3);

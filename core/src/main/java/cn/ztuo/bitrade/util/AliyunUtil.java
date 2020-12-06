@@ -5,6 +5,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONObject;
+
 import java.util.Base64;
 
 import javax.crypto.Mac;
@@ -18,8 +19,8 @@ public class AliyunUtil {
 
 
     /*
-    * 计算MD5+BASE64
-    */
+     * 计算MD5+BASE64
+     */
     public static String MD5Base64(String s) {
         if (s == null)
             return null;
@@ -55,7 +56,7 @@ public class AliyunUtil {
         return result;
     }
 
-    public static JSONObject doPost(String url,String body,String accessId,String accessKey) throws MalformedURLException, UnirestException {
+    public static JSONObject doPost(String url, String body, String accessId, String accessKey) throws MalformedURLException, UnirestException {
         String method = "POST";
         String accept = "application/json";
         String content_type = "application/json";
@@ -70,11 +71,11 @@ public class AliyunUtil {
         // 3.得到 authorization header
         String authHeader = "Dataplus " + accessId + ":" + signature;
 
-        HttpResponse<JsonNode> resp =  Unirest.post(url)
-                .header("accept",accept)
-                .header("content-type",content_type)
-                .header("date",date)
-                .header("Authorization",authHeader)
+        HttpResponse<JsonNode> resp = Unirest.post(url)
+                .header("accept", accept)
+                .header("content-type", content_type)
+                .header("date", date)
+                .header("Authorization", authHeader)
                 .body(body)
                 .asJson();
         JSONObject json = resp.getBody().getObject();

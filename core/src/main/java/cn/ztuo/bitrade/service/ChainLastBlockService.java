@@ -8,13 +8,12 @@ import cn.ztuo.bitrade.entity.*;
 import org.springframework.transaction.annotation.*;
 
 @Service
-public class ChainLastBlockService extends BaseService
-{
+public class ChainLastBlockService extends BaseService {
     @Autowired
     private ChainLastBlockDao chainLastBlockDao;
 
     public ChainLastBlock save(final ChainLastBlock chainLastBlock) {
-        return (ChainLastBlock)this.chainLastBlockDao.saveAndFlush(chainLastBlock);
+        return (ChainLastBlock) this.chainLastBlockDao.saveAndFlush(chainLastBlock);
     }
 
     public ChainLastBlock findById(final Long id) {

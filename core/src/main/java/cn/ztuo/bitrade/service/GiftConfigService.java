@@ -30,35 +30,35 @@ public class GiftConfigService extends BaseService {
     @Autowired
     private GiftConfigDao giftConfigDao;
 
-    public GiftConfig save(GiftConfig giftRecord){
+    public GiftConfig save(GiftConfig giftRecord) {
         return giftConfigDao.save(giftRecord);
     }
 
-    public GiftConfig findById(Long id){
+    public GiftConfig findById(Long id) {
         return giftConfigDao.findById(id).orElse(null);
     }
 
 
-    public Page<GiftConfig> getByPage(GiftConfigVO giftConfigVO) throws Exception{
+    public Page<GiftConfig> getByPage(GiftConfigVO giftConfigVO) throws Exception {
         ArrayList<BooleanExpression> booleanExpressions = new ArrayList<>();
-        if (StringUtils.isNotEmpty(giftConfigVO.getStartTime())){
+        if (StringUtils.isNotEmpty(giftConfigVO.getStartTime())) {
             booleanExpressions.add(QGiftConfig.giftConfig.createTime.goe(DateUtil.stringToDate(giftConfigVO
                     .getStartTime())));
         }
-        if (StringUtils.isNotEmpty(giftConfigVO.getEndTime())){
+        if (StringUtils.isNotEmpty(giftConfigVO.getEndTime())) {
             booleanExpressions.add(QGiftConfig.giftConfig.createTime.loe(DateUtil.stringToDate(giftConfigVO
                     .getEndTime())));
         }
-        if (StringUtils.isNotEmpty(giftConfigVO.getGiftName())){
-            booleanExpressions.add(QGiftConfig.giftConfig.giftName.loe("%"+giftConfigVO.getGiftName()+"%"));
+        if (StringUtils.isNotEmpty(giftConfigVO.getGiftName())) {
+            booleanExpressions.add(QGiftConfig.giftConfig.giftName.loe("%" + giftConfigVO.getGiftName() + "%"));
         }
-        if (giftConfigVO.getId() != null){
+        if (giftConfigVO.getId() != null) {
             booleanExpressions.add(QGiftConfig.giftConfig.id.eq(giftConfigVO.getId()));
         }
         Predicate predicate = PredicateUtils.getPredicate(booleanExpressions);
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(giftConfigVO.getPageNum() - 1, giftConfigVO.getPageSize(), sort);
-        return giftConfigDao.findAll(predicate,pageable);
+        return giftConfigDao.findAll(predicate, pageable);
     }
 
 

@@ -23,6 +23,6 @@ public class Airdrop {
     private Integer successCount;//成功的数量
     private String fileName;
     private Integer status;//0解析中，1成功，2失败
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition = "TEXT")
     private String errorMsg;//报错信息
 }

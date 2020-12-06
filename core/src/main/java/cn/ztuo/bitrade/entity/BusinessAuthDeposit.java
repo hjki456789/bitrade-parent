@@ -9,6 +9,7 @@ import java.util.Date;
 
 /**
  * 商家认证缴纳押金的币种和数量
+ *
  * @author zhang yingxin
  * @date 2018/5/5
  */

@@ -19,51 +19,54 @@ import java.util.*;
 
 @Slf4j
 @Service
-public class InviteManagementService extends BaseService{
+public class InviteManagementService extends BaseService {
     @Autowired
     private MemberDao dao;
 
     /**
      * 默认查询所有的用户
+     *
      * @return
      */
     public Page<Member> lookAll(@RequestBody InviteManagementVO inviteManagementVO) {
         Criteria<Member> releaseBalance = new Criteria<>();
         Sort sort = releaseBalance.sort("registrationTime.desc");
         // PageNum 当前页 PageSize 每页多少条
-        PageRequest pageRequest = PageRequest.of(inviteManagementVO.getPageNo() - 1,inviteManagementVO.getPageSize(),sort);
-        return dao.findAll(releaseBalance,pageRequest);
+        PageRequest pageRequest = PageRequest.of(inviteManagementVO.getPageNo() - 1, inviteManagementVO.getPageSize(), sort);
+        return dao.findAll(releaseBalance, pageRequest);
     }
 
     /**
      * 根据条件查询
+     *
      * @param imVO
      * @return
      */
     public Page<Member> queryCondition(InviteManagementVO imVO) {
         Criteria<Member> criteria = new Criteria<>();
         Sort sort = criteria.sort("registrationTime.desc");
-        if(StringUtils.isNotEmpty(imVO.getRealName())){
+        if (StringUtils.isNotEmpty(imVO.getRealName())) {
             criteria.add(Restrictions.eq("realName", imVO.getRealName(), false));
         }
-        if(imVO.getId() != null){
+        if (imVO.getId() != null) {
             criteria.add(Restrictions.eq("id", imVO.getId(), false));
         }
-        if(StringUtils.isNotEmpty(imVO.getPromotionCode())){
+        if (StringUtils.isNotEmpty(imVO.getPromotionCode())) {
             criteria.add(Restrictions.eq("promotionCode", imVO.getPromotionCode(), false));
         }
-        if(StringUtils.isNotEmpty(imVO.getMobilePhone())){
+        if (StringUtils.isNotEmpty(imVO.getMobilePhone())) {
             criteria.add(Restrictions.eq("mobilePhone", imVO.getMobilePhone(), false));
         }
-        if(StringUtils.isNotEmpty(imVO.getEmail())){
+        if (StringUtils.isNotEmpty(imVO.getEmail())) {
             criteria.add(Restrictions.eq("email", imVO.getEmail(), false));
         }
-        PageRequest pageRequest = PageRequest.of(imVO.getPageNo() - 1,imVO.getPageSize(),sort);
-        return dao.findAll(criteria,pageRequest);
+        PageRequest pageRequest = PageRequest.of(imVO.getPageNo() - 1, imVO.getPageSize(), sort);
+        return dao.findAll(criteria, pageRequest);
     }
 
     /**
      * 根据id查询1级2级用户
+     *
      * @param inviteManagementVO
      * @return
      */
@@ -88,7 +91,7 @@ public class InviteManagementService extends BaseService{
         }
         // 对查询出来的list进行ID倒序排序
         ListSort(memberList);
-        Pageable pageable = PageRequest.of(inviteManagementVO.getPageNumber() -1, inviteManagementVO.getPageSize());
+        Pageable pageable = PageRequest.of(inviteManagementVO.getPageNumber() - 1, inviteManagementVO.getPageSize());
         PageImpl<Member> pageData = getPageData(pageable, memberList);
 
         return pageData;
@@ -96,6 +99,7 @@ public class InviteManagementService extends BaseService{
 
     /**
      * list 分页工具
+     *
      * @param pageable
      * @param maps
      * @return
@@ -111,22 +115,23 @@ public class InviteManagementService extends BaseService{
                 endValue = maps.size();
             }
             List<Member> dataList = Lists.newArrayList();
-            for (int i = startValue; i <endValue ; i++) {
+            for (int i = startValue; i < endValue; i++) {
                 dataList.add(maps.get(i));
             }
             Long count = 0L;
-            if(dataList != null && dataList.size()>0){
+            if (dataList != null && dataList.size() > 0) {
                 count = Long.valueOf(maps.size());
             }
-            page = new PageImpl<>(dataList,pageable,count);
+            page = new PageImpl<>(dataList, pageable, count);
         } catch (Exception e) {
-            log.info("分页异常了 getPageData={}",e);
+            log.info("分页异常了 getPageData={}", e);
         }
         return page;
     }
 
     /**
      * 针对list集合排序
+     *
      * @param list
      */
     private static void ListSort(List<Member> list) {
@@ -143,7 +148,7 @@ public class InviteManagementService extends BaseService{
                     return 0;
                 }
             } catch (Exception e) {
-                log.info("倒序时间错误 ListSort={}",e);
+                log.info("倒序时间错误 ListSort={}", e);
             }
             return 0;
         });

@@ -2,16 +2,19 @@ package cn.ztuo.bitrade.service.unblock;
 
 import org.springframework.stereotype.*;
 import org.springframework.beans.factory.annotation.*;
+
 import java.math.*;
+
 import cn.ztuo.bitrade.enums.*;
+
 import java.util.*;
+
 import cn.ztuo.bitrade.entity.unblock.*;
 import org.springframework.transaction.annotation.*;
 import org.slf4j.*;
 
 @Service
-public class UnBlockLotteryService
-{
+public class UnBlockLotteryService {
     private static final Logger log;
     @Autowired
     private UnblockCommonConfigService unblockCommonConfigService;
@@ -19,8 +22,8 @@ public class UnBlockLotteryService
     private UnBlockLotteryDrawService unBlockLotteryDrawService;
     @Autowired
     private UnblockLotteryIncreasedRecordService unblockLotteryIncreasedRecordService;
-    
-    @Transactional(rollbackFor = { Exception.class })
+
+    @Transactional(rollbackFor = {Exception.class})
     public void memberLottery(final Long memberId, final BigDecimal usdtAmount) throws Exception {
         final UnblockLotteryDraw unblockLotteryDraw = this.unBlockLotteryDrawService.getUnBlockLotteryDrawByMemberId(memberId);
         final UnblockCommonConfig unblockCommonConfig = this.unblockCommonConfigService.findById(1L);
@@ -55,8 +58,8 @@ public class UnBlockLotteryService
         }
         this.unBlockLotteryDrawService.updateCountInfoById(unblockLotteryDraw.getId(), transCount, lotteryTransCount, lotteryDrawCount, new Date());
     }
-    
+
     static {
-        log = LoggerFactory.getLogger((Class)UnBlockLotteryService.class);
+        log = LoggerFactory.getLogger((Class) UnBlockLotteryService.class);
     }
 }

@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.contractstrategy.*;
 
 @Service
-public class ContractStrategyHedgingOrderService
-{
+public class ContractStrategyHedgingOrderService {
     @Autowired
     private ContractStrategyHedgingOrderRepository contractStrategyHedgingOrderRepository;
 

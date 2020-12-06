@@ -31,6 +31,7 @@ public class RedissonUtil {
 
     /**
      * 获取一个普通键值
+     *
      * @param key 键
      * @param <T> 类型，复杂类型需要实现Serializable或Externalizable接口
      * @return 值
@@ -41,6 +42,7 @@ public class RedissonUtil {
 
     /**
      * 获取一个集合
+     *
      * @param key 键
      * @param <T> 类型，复杂类型需要实现Serializable或Externalizable接口
      * @return 集合
@@ -51,6 +53,7 @@ public class RedissonUtil {
 
     /**
      * 获取一个带TTL的集合
+     *
      * @param key 键
      * @param <T> 类型，复杂类型需要实现Serializable或Externalizable接口
      * @return 集合
@@ -61,6 +64,7 @@ public class RedissonUtil {
 
     /**
      * 获取一个键值对映射表
+     *
      * @param key 键
      * @param <K> 键类型，复杂类型需要实现Serializable或Externalizable接口
      * @param <V> 值类型，复杂类型需要实现Serializable或Externalizable接口
@@ -73,6 +77,7 @@ public class RedissonUtil {
 
     /**
      * 获取一个带TTL的键值对映射表
+     *
      * @param key 键
      * @param <K> 键类型，复杂类型需要实现Serializable或Externalizable接口
      * @param <V> 值类型，复杂类型需要实现Serializable或Externalizable接口
@@ -84,6 +89,7 @@ public class RedissonUtil {
 
     /**
      * 获取一个列表
+     *
      * @param key 键
      * @param <T> 类型，复杂类型需要实现Serializable或Externalizable接口
      * @return 列表
@@ -98,6 +104,7 @@ public class RedissonUtil {
 
     /**
      * 获取一个公平锁
+     *
      * @param key 锁名
      * @return 公平锁
      */
@@ -107,6 +114,7 @@ public class RedissonUtil {
 
     /**
      * 获取多个公平锁
+     *
      * @param keys 锁名列表
      * @return 多个锁
      */

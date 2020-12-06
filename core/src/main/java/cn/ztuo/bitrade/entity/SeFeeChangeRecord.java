@@ -11,7 +11,6 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- *
  * @author Seven
  * @date 2019年01月02日
  */
@@ -23,21 +22,21 @@ public class SeFeeChangeRecord {
     @Id
     private Long id;
 
-    @ApiModelProperty(value="用户ID")
-    private  Long memberId;
+    @ApiModelProperty(value = "用户ID")
+    private Long memberId;
 
-    @ApiModelProperty(value="操作时间")
+    @ApiModelProperty(value = "操作时间")
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
-    @ApiModelProperty(value="类型")
+    @ApiModelProperty(value = "类型")
     private SeFeeChangeType type;
 
-    @ApiModelProperty(value="状态")
+    @ApiModelProperty(value = "状态")
     private SeFeeChangeStatus status;
 
-    @ApiModelProperty(value="操作方式")
+    @ApiModelProperty(value = "操作方式")
     private SeFeeChangeWay way;
 
 }

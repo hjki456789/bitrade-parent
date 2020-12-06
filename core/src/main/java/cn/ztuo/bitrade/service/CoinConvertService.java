@@ -5,13 +5,14 @@ import org.springframework.stereotype.*;
 import cn.ztuo.bitrade.dao.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.*;
+
 import java.util.*;
+
 import com.querydsl.core.types.*;
 import org.springframework.data.domain.*;
 
 @Service
-public class CoinConvertService extends BaseService
-{
+public class CoinConvertService extends BaseService {
     @Autowired
     private CoinConvertDao coinConvertDao;
 
@@ -29,11 +30,11 @@ public class CoinConvertService extends BaseService
 
     @Override
     public List<CoinConvert> findAll() {
-        return (List<CoinConvert>)this.coinConvertDao.findAll();
+        return (List<CoinConvert>) this.coinConvertDao.findAll();
     }
 
     public Page<CoinConvert> findAllPage(final Predicate predicate, final Pageable pageable) {
-        return (Page<CoinConvert>)this.coinConvertDao.findAll(predicate, pageable);
+        return (Page<CoinConvert>) this.coinConvertDao.findAll(predicate, pageable);
     }
 
     public void save(final CoinConvert coinConvert) {

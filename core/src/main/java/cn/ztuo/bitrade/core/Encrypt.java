@@ -51,7 +51,7 @@ public class Encrypt {
     private static String byteToString(byte[] bByte) {
         StringBuffer sBuffer = new StringBuffer();
 
-        for(int i = 0; i < bByte.length; ++i) {
+        for (int i = 0; i < bByte.length; ++i) {
             sBuffer.append(byteToArrayString(bByte[i]));
         }
 

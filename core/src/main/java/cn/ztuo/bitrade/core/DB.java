@@ -1,7 +1,6 @@
 package cn.ztuo.bitrade.core;
 
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -111,7 +110,7 @@ public class DB {
 
     private static void prepare(PreparedStatement statement, Object... parameters) throws SQLException {
         if (parameters.length != 0) {
-            for(int i = 0; i < parameters.length; ++i) {
+            for (int i = 0; i < parameters.length; ++i) {
                 statement.setObject(i + 1, parameters[i]);
             }
 
@@ -120,7 +119,7 @@ public class DB {
 
     protected static void prepare(CallableStatement paramCallableStatement, Parameter[] parameters) throws SQLException {
         if (parameters.length != 0) {
-            for(int i = 0; i < parameters.length; ++i) {
+            for (int i = 0; i < parameters.length; ++i) {
                 if (parameters[i].direction == ParameterDirection.OUT || parameters[i].direction == ParameterDirection.INOUT) {
                     paramCallableStatement.registerOutParameter(i + 1, parameters[i].type);
                 }
@@ -147,7 +146,7 @@ public class DB {
             }
 
             prepare(preparedStatement, params);
-            ret = (long)preparedStatement.executeUpdate();
+            ret = (long) preparedStatement.executeUpdate();
             ResultSet rs;
             if ((rs = preparedStatement.getGeneratedKeys()) != null && rs.next()) {
                 ret = rs.getLong(1);
@@ -177,7 +176,7 @@ public class DB {
                 preparedStatement = conn.prepareStatement(command);
             }
 
-            ret = (long)preparedStatement.executeUpdate();
+            ret = (long) preparedStatement.executeUpdate();
             ResultSet rs;
             if ((rs = preparedStatement.getGeneratedKeys()) != null && rs.next()) {
                 ret = rs.getLong(1);
@@ -247,7 +246,7 @@ public class DB {
         try {
             String sql = "{ call " + ProcedureName + "(";
 
-            for(int i = 0; i < params.length; ++i) {
+            for (int i = 0; i < params.length; ++i) {
                 sql = sql + (i > 0 ? ", ?" : "?");
             }
 
@@ -262,7 +261,7 @@ public class DB {
                 rs.close();
             }
 
-            for(int i = 0; i < params.length; ++i) {
+            for (int i = 0; i < params.length; ++i) {
                 if (params[i].direction == ParameterDirection.OUT || params[i].direction == ParameterDirection.INOUT) {
                     outParameterValues.add(statement.getObject(i + 1));
                 }
@@ -285,7 +284,7 @@ public class DB {
         try {
             String sql = "{ call " + ProcedureName + "(";
 
-            for(int i = 0; i < params.length; ++i) {
+            for (int i = 0; i < params.length; ++i) {
                 sql = sql + (i > 0 ? ", ?" : "?");
             }
 
@@ -295,7 +294,7 @@ public class DB {
             prepare(statement, params);
             statement.execute();
 
-            for(int i = 0; i < params.length; ++i) {
+            for (int i = 0; i < params.length; ++i) {
                 if (params[i].direction == ParameterDirection.OUT || params[i].direction == ParameterDirection.INOUT) {
                     outParams.add(statement.getObject(i + 1));
                 }
@@ -318,14 +317,14 @@ public class DB {
         try {
             String sql = "{ call " + ProcedureName + "(";
 
-            for(int i = 0; i < params.length; ++i) {
+            for (int i = 0; i < params.length; ++i) {
                 sql = sql + (i > 0 ? ", ?" : "?");
             }
 
             sql = sql + ") }";
             log(sql, params);
             CallableStatement statement = conn.prepareCall(sql);
-            prepare((PreparedStatement)statement, (Object[])params);
+            prepare((PreparedStatement) statement, (Object[]) params);
             statement.execute();
             ResultSet rs = statement.getResultSet();
             if (rs != null) {
@@ -348,10 +347,10 @@ public class DB {
         int j = metaData.getColumnCount();
         ArrayList list = new ArrayList();
 
-        while(rs.next()) {
+        while (rs.next()) {
             Map<String, String> map = new HashMap();
 
-            for(int i = 0; i < j; ++i) {
+            for (int i = 0; i < j; ++i) {
                 String columnName = metaData.getColumnLabel(i + 1);
                 String typeName = metaData.getColumnTypeName(i + 1);
                 if (rs.getObject(i + 1) == null) {
@@ -362,7 +361,7 @@ public class DB {
                     String content = "";
 
                     try {
-                        for(String strTmp = br.readLine(); strTmp != null; strTmp = br.readLine()) {
+                        for (String strTmp = br.readLine(); strTmp != null; strTmp = br.readLine()) {
                             content = strTmp + content;
                         }
 
@@ -394,7 +393,7 @@ public class DB {
                 StringBuffer sb = new StringBuffer("[SQL]： " + command);
                 sb.append("; params [");
 
-                for(int i = 0; i < params.length; ++i) {
+                for (int i = 0; i < params.length; ++i) {
                     sb.append(params[i]);
                     if (i != params.length - 1) {
                         sb.append(",");
@@ -413,7 +412,7 @@ public class DB {
             StringBuffer sb = new StringBuffer("[SQL]:" + commond);
             sb.append("; params [");
 
-            for(int i = 0; i < params.length; ++i) {
+            for (int i = 0; i < params.length; ++i) {
                 sb.append(params[i].value);
                 if (i != params.length - 1) {
                     sb.append(",");

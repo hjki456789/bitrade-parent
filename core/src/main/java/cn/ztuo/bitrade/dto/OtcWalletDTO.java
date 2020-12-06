@@ -7,15 +7,15 @@ import java.math.BigDecimal;
 
 @Data
 @ToString(callSuper = true)
-public class OtcWalletDTO extends BaseMemberDTO{
+public class OtcWalletDTO extends BaseMemberDTO {
 
-    private Long id ;
+    private Long id;
 
-    private String unit ;
+    private String unit;
 
-    private BigDecimal balance ;
+    private BigDecimal balance;
 
-    private BigDecimal frozenBalance ;
+    private BigDecimal frozenBalance;
 
-    private BigDecimal allBalance ;
+    private BigDecimal allBalance;
 }

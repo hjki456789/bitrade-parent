@@ -48,7 +48,7 @@ public class AnnouncementService extends BaseService<Announcement> {
         }
     }
 
-    public int getMaxSort(){
+    public int getMaxSort() {
         return announcementDao.findMaxSort();
     }
 

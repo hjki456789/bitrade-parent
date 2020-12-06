@@ -21,7 +21,7 @@ public class LocalizationExtendService extends BaseService {
 
     @RedisCache(value = RedissonKeyConstant.CACHE_LOCALE_EXTEND, ignoreParam = false)
     public String getLocaleInfo(String tableName, String locale, String busiKey, String columnName) {
-        if(!Locale.locales.contains(locale)){
+        if (!Locale.locales.contains(locale)) {
             locale = Locale.ZH_CN;
         }
         LocalizationExtend localizationExtendEntity = localizationExtendDao.findOne(
@@ -36,9 +36,9 @@ public class LocalizationExtendService extends BaseService {
         Assert.state(Locale.locales.contains(locale), "illegal locale");
         LocalizationExtend localizationExtendEntity = localizationExtendDao.findOne(
                 QLocalizationExtend.localizationExtend.tableName.eq(tableName)
-                .and(QLocalizationExtend.localizationExtend.busiKey.eq(busiKey))
-                .and(QLocalizationExtend.localizationExtend.locale.eq(locale))
-                .and(QLocalizationExtend.localizationExtend.columnName.eq(columnName))).orElseGet(() -> {
+                        .and(QLocalizationExtend.localizationExtend.busiKey.eq(busiKey))
+                        .and(QLocalizationExtend.localizationExtend.locale.eq(locale))
+                        .and(QLocalizationExtend.localizationExtend.columnName.eq(columnName))).orElseGet(() -> {
             LocalizationExtend localizationExtend = new LocalizationExtend();
             localizationExtend.setTableName(tableName);
             localizationExtend.setBusiKey(busiKey);

@@ -40,6 +40,7 @@ public enum ExternalLinks implements BaseEnum {
 
     @Setter
     private String cnName;
+
     @Override
     @JsonValue
     public int getOrdinal() {

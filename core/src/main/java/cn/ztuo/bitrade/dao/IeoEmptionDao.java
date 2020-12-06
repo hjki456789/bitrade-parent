@@ -17,12 +17,12 @@ import java.math.BigDecimal;
 public interface IeoEmptionDao extends BaseDao<IeoEmption> {
 
 
-    @Query(value = "SELECT * from ieo_emption where id=:id and start_time<=:times AND end_time>:times",nativeQuery = true)
-    IeoEmption findbyCondition(@Param("id") Long id,@Param("times") String times);
+    @Query(value = "SELECT * from ieo_emption where id=:id and start_time<=:times AND end_time>:times", nativeQuery = true)
+    IeoEmption findbyCondition(@Param("id") Long id, @Param("times") String times);
 
     @Transactional(rollbackFor = Exception.class)
     @Modifying
     @Query(value = "UPDATE ieo_emption set surplus_amount=surplus_amount-:receAmount where id=:id AND " +
-            "surplus_amount>=:receAmount",nativeQuery = true)
+            "surplus_amount>=:receAmount", nativeQuery = true)
     int subAmount(@Param("id") Long id, @Param("receAmount") BigDecimal receAmount);
 }

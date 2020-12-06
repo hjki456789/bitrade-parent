@@ -8,6 +8,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+
 import javax.validation.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -30,7 +31,7 @@ public class Admin implements Serializable {
 
     @Excel(name = "用户登录名", orderNum = "1", width = 25)
     @NotBlank(message = "{Admin.username.blank}")
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @JsonIgnore
@@ -50,7 +51,7 @@ public class Admin implements Serializable {
     private Long roleId = 1L;
 
 
-    @NotFound(action= NotFoundAction.IGNORE)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "department_id")
     @ManyToOne(cascade = CascadeType.MERGE)
     private Department department;
@@ -79,13 +80,13 @@ public class Admin implements Serializable {
     private CommonStatus status = CommonStatus.NORMAL;
 
     @Transient
-    private String roleName ;
+    private String roleName;
 
     @Excel(name = "googleKey", orderNum = "1", width = 20)
     private String googleKey;
 
     @Excel(name = "googleState", orderNum = "1", width = 20)
-    private Integer googleState=0;
+    private Integer googleState = 0;
 
     @Excel(name = "googleDate", orderNum = "1", width = 20)
     @Temporal(TemporalType.TIMESTAMP)

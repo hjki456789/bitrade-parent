@@ -3,11 +3,12 @@ package cn.ztuo.bitrade.dao.contractdouble;
 import cn.ztuo.bitrade.dao.base.BaseDao;
 import cn.ztuo.bitrade.entity.contractdouble.*;
 import org.springframework.data.repository.query.*;
+
 import javax.transaction.*;
+
 import org.springframework.data.jpa.repository.*;
 
-public interface ContractDoubleMemberApiDao extends BaseDao<ContractDoubleMemberApi>
-{
+public interface ContractDoubleMemberApiDao extends BaseDao<ContractDoubleMemberApi> {
     @Transactional
     @Modifying
     @Query("UPDATE ContractDoubleMemberApi api SET api.ifDefault=:ifDefault WHERE api.memberId=:memberId")

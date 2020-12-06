@@ -24,7 +24,7 @@ public enum VerifyLevel implements BaseEnum {
 
     @Override
     @JsonValue
-    public int getOrdinal(){
+    public int getOrdinal() {
         return this.ordinal();
     }
 }

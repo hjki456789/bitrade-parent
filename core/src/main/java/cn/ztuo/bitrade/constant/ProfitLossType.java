@@ -10,8 +10,7 @@ import java.beans.*;
 
 @AllArgsConstructor
 @Getter
-public enum ProfitLossType implements BaseEnum
-{
+public enum ProfitLossType implements BaseEnum {
     MEMBER_WEEK("用户周盈亏"),
     TEAM_WEEK("团队周盈亏"),
     MEMBER_TOTAL("用户总体盈亏"),

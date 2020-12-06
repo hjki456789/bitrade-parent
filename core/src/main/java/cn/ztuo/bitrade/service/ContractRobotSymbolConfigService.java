@@ -8,34 +8,36 @@ import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.dao.*;
 import cn.ztuo.bitrade.entity.*;
 import org.springframework.data.jpa.domain.*;
+
 import java.io.*;
+
 import com.querydsl.core.types.*;
 import org.springframework.data.domain.*;
+
 import java.util.*;
 import javax.persistence.criteria.*;
 
 @Service
-public class ContractRobotSymbolConfigService extends BaseService
-{
+public class ContractRobotSymbolConfigService extends BaseService {
     @Autowired
     private ContractRobotSymbolConfigDao contractRobotSymbolConfigDao;
     @Autowired
     private MemberDao memberDao;
 
     public List<ContractRobotSymbolConfig> findAllEnabled() {
-        final Specification<ContractRobotSymbolConfig> specification = (Specification<ContractRobotSymbolConfig>)((root, criteriaQuery, criteriaBuilder) -> {
+        final Specification<ContractRobotSymbolConfig> specification = (Specification<ContractRobotSymbolConfig>) ((root, criteriaQuery, criteriaBuilder) -> {
             criteriaQuery.where(criteriaBuilder.equal(root.get("status"), 1));
             return null;
         });
-        return (List<ContractRobotSymbolConfig>)this.contractRobotSymbolConfigDao.findAll((Specification)specification);
+        return (List<ContractRobotSymbolConfig>) this.contractRobotSymbolConfigDao.findAll((Specification) specification);
     }
 
     public ContractRobotSymbolConfig findOne(final String symbol) {
-        return (ContractRobotSymbolConfig)this.contractRobotSymbolConfigDao.getOne(symbol);
+        return (ContractRobotSymbolConfig) this.contractRobotSymbolConfigDao.getOne(symbol);
     }
 
     public Page<ContractRobotSymbolConfig> findAll(final Predicate predicate, final Pageable pageable) {
-        final Page<ContractRobotSymbolConfig> page = (Page<ContractRobotSymbolConfig>)this.contractRobotSymbolConfigDao.findAll(predicate, pageable);
+        final Page<ContractRobotSymbolConfig> page = (Page<ContractRobotSymbolConfig>) this.contractRobotSymbolConfigDao.findAll(predicate, pageable);
         return page;
     }
 
@@ -45,7 +47,7 @@ public class ContractRobotSymbolConfigService extends BaseService
     }
 
     public ContractRobotSymbolConfig update(final ContractRobotSymbolConfig robotSymbolConfig) {
-        return (ContractRobotSymbolConfig)this.contractRobotSymbolConfigDao.save(robotSymbolConfig);
+        return (ContractRobotSymbolConfig) this.contractRobotSymbolConfigDao.save(robotSymbolConfig);
     }
 
     public int deleteRobotSymbolConfig(final String symbol) {

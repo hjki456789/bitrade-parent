@@ -53,8 +53,8 @@ public class WorkOrder {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date replyTime;
 
-    @Column(columnDefinition="TEXT")
-    @Basic(fetch=FetchType.LAZY)
+    @Column(columnDefinition = "TEXT")
+    @Basic(fetch = FetchType.LAZY)
     private String detail = "";
 
 }

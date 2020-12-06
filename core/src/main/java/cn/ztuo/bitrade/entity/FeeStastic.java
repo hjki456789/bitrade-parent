@@ -4,12 +4,12 @@ import java.io.*;
 import java.math.*;
 import java.util.*;
 import javax.persistence.*;
+
 import com.fasterxml.jackson.annotation.*;
 
 @Entity
 @Table
-public class FeeStastic implements Serializable
-{
+public class FeeStastic implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -21,63 +21,63 @@ public class FeeStastic implements Serializable
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date date;
     private Long sequence;
-    
+
     public Long getId() {
         return this.id;
     }
-    
+
     public BigDecimal getAmount() {
         return this.amount;
     }
-    
+
     public BigDecimal getBonusAmount() {
         return this.bonusAmount;
     }
-    
+
     public String getUnit() {
         return this.unit;
     }
-    
+
     public String getSymbol() {
         return this.symbol;
     }
-    
+
     public Date getDate() {
         return this.date;
     }
-    
+
     public Long getSequence() {
         return this.sequence;
     }
-    
+
     public void setId(final Long id) {
         this.id = id;
     }
-    
+
     public void setAmount(final BigDecimal amount) {
         this.amount = amount;
     }
-    
+
     public void setBonusAmount(final BigDecimal bonusAmount) {
         this.bonusAmount = bonusAmount;
     }
-    
+
     public void setUnit(final String unit) {
         this.unit = unit;
     }
-    
+
     public void setSymbol(final String symbol) {
         this.symbol = symbol;
     }
-    
+
     public void setDate(final Date date) {
         this.date = date;
     }
-    
+
     public void setSequence(final Long sequence) {
         this.sequence = sequence;
     }
-    
+
     @Override
     public boolean equals(final Object o) {
         if (o == this) {
@@ -86,84 +86,84 @@ public class FeeStastic implements Serializable
         if (!(o instanceof FeeStastic)) {
             return false;
         }
-        final FeeStastic other = (FeeStastic)o;
+        final FeeStastic other = (FeeStastic) o;
         if (!other.canEqual(this)) {
             return false;
         }
         final Object this$id = this.getId();
         final Object other$id = other.getId();
-        Label_0065: {
+        Label_0065:
+        {
             if (this$id == null) {
                 if (other$id == null) {
                     break Label_0065;
                 }
-            }
-            else if (this$id.equals(other$id)) {
+            } else if (this$id.equals(other$id)) {
                 break Label_0065;
             }
             return false;
         }
         final Object this$amount = this.getAmount();
         final Object other$amount = other.getAmount();
-        Label_0102: {
+        Label_0102:
+        {
             if (this$amount == null) {
                 if (other$amount == null) {
                     break Label_0102;
                 }
-            }
-            else if (this$amount.equals(other$amount)) {
+            } else if (this$amount.equals(other$amount)) {
                 break Label_0102;
             }
             return false;
         }
         final Object this$bonusAmount = this.getBonusAmount();
         final Object other$bonusAmount = other.getBonusAmount();
-        Label_0139: {
+        Label_0139:
+        {
             if (this$bonusAmount == null) {
                 if (other$bonusAmount == null) {
                     break Label_0139;
                 }
-            }
-            else if (this$bonusAmount.equals(other$bonusAmount)) {
+            } else if (this$bonusAmount.equals(other$bonusAmount)) {
                 break Label_0139;
             }
             return false;
         }
         final Object this$unit = this.getUnit();
         final Object other$unit = other.getUnit();
-        Label_0176: {
+        Label_0176:
+        {
             if (this$unit == null) {
                 if (other$unit == null) {
                     break Label_0176;
                 }
-            }
-            else if (this$unit.equals(other$unit)) {
+            } else if (this$unit.equals(other$unit)) {
                 break Label_0176;
             }
             return false;
         }
         final Object this$symbol = this.getSymbol();
         final Object other$symbol = other.getSymbol();
-        Label_0213: {
+        Label_0213:
+        {
             if (this$symbol == null) {
                 if (other$symbol == null) {
                     break Label_0213;
                 }
-            }
-            else if (this$symbol.equals(other$symbol)) {
+            } else if (this$symbol.equals(other$symbol)) {
                 break Label_0213;
             }
             return false;
         }
         final Object this$date = this.getDate();
         final Object other$date = other.getDate();
-        Label_0250: {
+        Label_0250:
+        {
             if (this$date == null) {
                 if (other$date == null) {
                     break Label_0250;
                 }
-            }
-            else if (this$date.equals(other$date)) {
+            } else if (this$date.equals(other$date)) {
                 break Label_0250;
             }
             return false;
@@ -174,17 +174,16 @@ public class FeeStastic implements Serializable
             if (other$sequence == null) {
                 return true;
             }
-        }
-        else if (this$sequence.equals(other$sequence)) {
+        } else if (this$sequence.equals(other$sequence)) {
             return true;
         }
         return false;
     }
-    
+
     protected boolean canEqual(final Object other) {
         return other instanceof FeeStastic;
     }
-    
+
     @Override
     public int hashCode() {
         final int PRIME = 59;
@@ -205,7 +204,7 @@ public class FeeStastic implements Serializable
         result = result * 59 + (($sequence == null) ? 43 : $sequence.hashCode());
         return result;
     }
-    
+
     @Override
     public String toString() {
         return "FeeStastic(id=" + this.getId() + ", amount=" + this.getAmount() + ", bonusAmount=" + this.getBonusAmount() + ", unit=" + this.getUnit() + ", symbol=" + this.getSymbol() + ", date=" + this.getDate() + ", sequence=" + this.getSequence() + ")";

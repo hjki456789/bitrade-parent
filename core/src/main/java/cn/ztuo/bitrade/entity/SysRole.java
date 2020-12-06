@@ -45,11 +45,11 @@ public class SysRole {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)//该fetch保证能通过id查到role，否则会报延迟加载异常
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)//该fetch保证能通过id查到role，否则会报延迟加载异常
     @JoinTable(name = "admin_role_permission",
-            uniqueConstraints = {@UniqueConstraint(columnNames={"role_id", "rule_id"})},
-            joinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "rule_id",referencedColumnName = "id")})
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "rule_id"})},
+            joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "rule_id", referencedColumnName = "id")})
     @JsonIgnore
     private List<SysPermission> permissions;
 
@@ -58,12 +58,13 @@ public class SysRole {
         this.role = role;
     }
 
-    public SysRole(Long id, String role,String description) {
+    public SysRole(Long id, String role, String description) {
         this.id = id;
         this.role = role;
-        this.description = description ;
+        this.description = description;
     }
 
-    public SysRole(){}
+    public SysRole() {
+    }
 
 }

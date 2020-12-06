@@ -50,6 +50,7 @@ public interface CoinDao extends JpaRepository<Coin, String>, JpaSpecificationEx
 
     /**
      * 查询指定币种的总额
+     *
      * @param coin
      * @return
      */
@@ -58,6 +59,7 @@ public interface CoinDao extends JpaRepository<Coin, String>, JpaSpecificationEx
 
     /**
      * 根据用户ID查询指定币种的总额
+     *
      * @param coin
      * @return
      */

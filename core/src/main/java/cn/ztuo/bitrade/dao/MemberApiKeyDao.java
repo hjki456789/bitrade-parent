@@ -30,5 +30,5 @@ public interface MemberApiKeyDao extends BaseDao<MemberApiKey> {
     @Transactional(rollbackFor = Exception.class)
     @Modifying
     @Query("delete from MemberApiKey where id=:id")
-    Integer del(@Param("id")Long id);
+    Integer del(@Param("id") Long id);
 }

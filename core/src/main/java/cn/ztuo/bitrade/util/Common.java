@@ -5,21 +5,24 @@ import java.lang.reflect.*;
 import java.io.*;
 import java.util.zip.*;
 import javax.xml.transform.dom.*;
+
 import org.w3c.dom.*;
+
 import javax.xml.transform.stream.*;
 import javax.xml.transform.*;
+
 import org.apache.commons.lang3.time.*;
+
 import java.text.*;
 import java.util.*;
 
-public class Common
-{
+public class Common {
     private static List<String> filePaths;
-    
+
     public static ArrayList<String> readFileByLine(final String path) {
         return readFileByLine(path, "UTF-8");
     }
-    
+
     public static ArrayList<String> readFileByLine(final String path, final String encoding) {
         final ArrayList<String> result = new ArrayList<String>();
         final File file = new File(path);
@@ -32,17 +35,15 @@ public class Common
             while ((line = br.readLine()) != null) {
                 result.add(line);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }
-        finally {
+        } finally {
             closeStream(fis, null, br, null);
         }
         return result;
     }
-    
+
     public static HashSet<String> readFileByLineForSet(final String path) {
         final HashSet<String> result = new HashSet<String>();
         final File file = new File(path);
@@ -61,17 +62,15 @@ public class Common
                     result.add(line);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }
-        finally {
+        } finally {
             closeStream(fis, null, br, null);
         }
         return result;
     }
-    
+
     public static void readFileByLineForSet(final String path, final Set<String> result) {
         final File file = new File(path);
         FileInputStream fis = null;
@@ -87,15 +86,13 @@ public class Common
                 }
                 result.add(line);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             closeStream(fis, null, br, null);
         }
     }
-    
+
     public static HashMap<String, Double> readFileByLineForMap(final String path) {
         final HashMap<String, Double> result = new HashMap<String, Double>();
         final File file = new File(path);
@@ -119,21 +116,19 @@ public class Common
                     result.put(array[0], Double.parseDouble(array[1]));
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }
-        finally {
+        } finally {
             closeStream(fis, null, br, null);
         }
         return result;
     }
-    
+
     public static void writeFile(final String filePath, final String content) {
         writeFile(filePath, content, "UTF-8");
     }
-    
+
     public static void writeFile(final String path, final String fileName, final String content, final String encoding) {
         if (path == null || path == null) {
             return;
@@ -144,7 +139,7 @@ public class Common
         }
         writeFile(path + "/" + fileName, content, encoding);
     }
-    
+
     public static void writeFile(final String filePath, String content, final String encoding) {
         FileOutputStream fos = null;
         OutputStreamWriter osw = null;
@@ -154,21 +149,17 @@ public class Common
             content += "\r\n";
             osw.write(content);
             osw.flush();
-        }
-        catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-        }
-        catch (FileNotFoundException e2) {
+        } catch (FileNotFoundException e2) {
             e2.printStackTrace();
-        }
-        catch (IOException e3) {
+        } catch (IOException e3) {
             e3.printStackTrace();
-        }
-        finally {
+        } finally {
             closeStream(null, fos, null, osw);
         }
     }
-    
+
     public static void writeFile(final String filePath, String content, final String encoding, final boolean cover) {
         FileOutputStream fos = null;
         OutputStreamWriter osw = null;
@@ -178,21 +169,17 @@ public class Common
             content += "\r\n";
             osw.write(content);
             osw.flush();
-        }
-        catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-        }
-        catch (FileNotFoundException e2) {
+        } catch (FileNotFoundException e2) {
             e2.printStackTrace();
-        }
-        catch (IOException e3) {
+        } catch (IOException e3) {
             e3.printStackTrace();
-        }
-        finally {
+        } finally {
             closeStream(null, fos, null, osw);
         }
     }
-    
+
     public static void closeStream(final InputStream is, final OutputStream os, final Reader reader, final Writer writer) {
         try {
             if (is != null) {
@@ -207,12 +194,11 @@ public class Common
             if (writer != null) {
                 writer.close();
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     public static String getContent(final String path) {
         if (path == null || "".equals(path)) {
             return null;
@@ -228,30 +214,27 @@ public class Common
                 builder.append(line);
             }
             return builder.toString();
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
-        catch (IOException e2) {
+        } catch (IOException e2) {
             e2.printStackTrace();
-        }
-        finally {
+        } finally {
             closeStream(is, null, reader, null);
         }
         return null;
     }
-    
+
     public static void cleanObj(final Object... objs) {
         for (int i = 0; i < objs.length; ++i) {
             objs[i] = null;
         }
     }
-    
+
     public static boolean isNumeric(final String str) {
         final Pattern pattern = Pattern.compile("[0-9]*");
         return pattern.matcher(str).matches();
     }
-    
+
     public static String decodeUnicode(final String theString) {
         if (theString == null) {
             return null;
@@ -304,31 +287,26 @@ public class Common
                             }
                         }
                     }
-                    outBuffer.append((char)value);
-                }
-                else {
+                    outBuffer.append((char) value);
+                } else {
                     if (aChar == 't') {
                         aChar = '\t';
-                    }
-                    else if (aChar == 'r') {
+                    } else if (aChar == 'r') {
                         aChar = '\r';
-                    }
-                    else if (aChar == 'n') {
+                    } else if (aChar == 'n') {
                         aChar = '\n';
-                    }
-                    else if (aChar == 'f') {
+                    } else if (aChar == 'f') {
                         aChar = '\f';
                     }
                     outBuffer.append(aChar);
                 }
-            }
-            else {
+            } else {
                 outBuffer.append(aChar);
             }
         }
         return outBuffer.toString();
     }
-    
+
     public static boolean deleteFile(final String filePath) {
         try {
             final File file = new File(filePath);
@@ -341,11 +319,11 @@ public class Common
                 }
                 return file.delete();
             }
+        } catch (Exception ex) {
         }
-        catch (Exception ex) {}
         return false;
     }
-    
+
     public static boolean existZH(final String str) {
         if (str == null) {
             return false;
@@ -355,7 +333,7 @@ public class Common
         final Matcher m = p.matcher(str);
         return m.find();
     }
-    
+
     public static List<String> getObjectFieldNames(final Object object) {
         if (object == null) {
             return null;
@@ -368,7 +346,7 @@ public class Common
         }
         return fieldNames;
     }
-    
+
     public static Field[] getObjectFields(final Object object) {
         if (object == null) {
             return null;
@@ -376,7 +354,7 @@ public class Common
         final Field[] fields = object.getClass().getDeclaredFields();
         return fields;
     }
-    
+
     public static void moveFile(final String sourcePath, final String targetPath) {
         if (sourcePath == null || targetPath == null) {
             return;
@@ -405,10 +383,10 @@ public class Common
             outputStream.close();
             inputStream.close();
             deleteFile(sourcePath);
+        } catch (Exception ex) {
         }
-        catch (Exception ex) {}
     }
-    
+
     public static List<String> getFilePaths(final String folder, final String fileName) {
         if (folder == null || fileName == null) {
             return null;
@@ -421,15 +399,14 @@ public class Common
                 for (final File childFile : listFiles) {
                     getFilePaths(childFile.getAbsolutePath(), fileName);
                 }
-            }
-            else if (file.getName().contains(fileName)) {
+            } else if (file.getName().contains(fileName)) {
                 Common.filePaths.add(file.getAbsolutePath());
             }
             return Common.filePaths;
         }
         return null;
     }
-    
+
     public static void zipFile(final String sourceFilePath, final String zipFilePath) {
         if (sourceFilePath == null || zipFilePath == null) {
             return;
@@ -444,10 +421,10 @@ public class Common
             zip(zipOutput, sourceFile, sourceFile.getName(), bufferedOutput);
             bufferedOutput.close();
             zipOutput.close();
+        } catch (Exception ex) {
         }
-        catch (Exception ex) {}
     }
-    
+
     private static void zip(final ZipOutputStream zipOutput, final File sourceFile, final String base, final BufferedOutputStream bufferedOutput) {
         try {
             if (sourceFile.isDirectory()) {
@@ -458,8 +435,7 @@ public class Common
                 for (int i = 0; i < childFiles.length; ++i) {
                     zip(zipOutput, childFiles[i], base + "/" + childFiles[i].getName(), bufferedOutput);
                 }
-            }
-            else {
+            } else {
                 zipOutput.putNextEntry(new ZipEntry(base));
                 final FileInputStream FileInput = new FileInputStream(sourceFile);
                 final BufferedInputStream bufferedInput = new BufferedInputStream(FileInput);
@@ -470,10 +446,10 @@ public class Common
                 bufferedInput.close();
                 FileInput.close();
             }
+        } catch (Exception ex) {
         }
-        catch (Exception ex) {}
     }
-    
+
     public static void zipFile(final List<String> sourceFilePaths, final String zipFilePath) {
         if (sourceFilePaths == null || zipFilePath == null) {
             return;
@@ -491,10 +467,10 @@ public class Common
             zip(zipOutput, sourceFiles, bufferedOutput);
             bufferedOutput.close();
             zipOutput.close();
+        } catch (Exception ex) {
         }
-        catch (Exception ex) {}
     }
-    
+
     private static void zip(final ZipOutputStream zipOutput, final List<File> sourceFiles, final BufferedOutputStream bufferedOutput) {
         try {
             if (sourceFiles.size() > 0) {
@@ -506,8 +482,7 @@ public class Common
                             files.add(childFile);
                         }
                         zip(zipOutput, files, bufferedOutput);
-                    }
-                    else {
+                    } else {
                         zipOutput.putNextEntry(new ZipEntry(sourceFile.getName()));
                         final FileInputStream FileInput = new FileInputStream(sourceFile);
                         final BufferedInputStream bufferedInput = new BufferedInputStream(FileInput);
@@ -521,10 +496,10 @@ public class Common
                     }
                 }
             }
+        } catch (Exception ex) {
         }
-        catch (Exception ex) {}
     }
-    
+
     public static boolean doc2XmlFile(final Document document, final String filename) {
         boolean flag = true;
         try {
@@ -534,28 +509,26 @@ public class Common
             final DOMSource source = new DOMSource(document);
             final StreamResult result = new StreamResult(new File(filename));
             transformer.transform(source, result);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             flag = false;
         }
         return flag;
     }
-    
+
     public static long getTodaySequence() {
         try {
             final String date = DateFormatUtils.format(System.currentTimeMillis(), "yyyyMMdd");
             final DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
             return parse(date, dateFormat).getTime();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return System.currentTimeMillis();
         }
     }
-    
+
     public static Date parse(final String source, final DateFormat formater) throws Exception {
         return formater.parse(source);
     }
-    
+
     static {
         Common.filePaths = new LinkedList<String>();
     }

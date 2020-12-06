@@ -14,15 +14,15 @@ public class AirdropService extends BaseService {
     @Autowired
     private AirdropDao airdropDao;
 
-    public Airdrop save(Airdrop airdrop){
+    public Airdrop save(Airdrop airdrop) {
         return airdropDao.save(airdrop);
     }
 
-    public Airdrop findById(Long id){
+    public Airdrop findById(Long id) {
         return airdropDao.findById(id);
     }
 
-    public Page<Airdrop> findAll(Predicate predicate, PageModel pageModel){
-        return airdropDao.findAll(predicate,pageModel.getPageable());
+    public Page<Airdrop> findAll(Predicate predicate, PageModel pageModel) {
+        return airdropDao.findAll(predicate, pageModel.getPageable());
     }
 }

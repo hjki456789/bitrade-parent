@@ -2,12 +2,13 @@ package cn.ztuo.bitrade.dao.contractstrategy;
 
 import cn.ztuo.bitrade.dao.base.BaseDao;
 import cn.ztuo.bitrade.entity.contractstrategy.*;
+
 import javax.transaction.*;
+
 import org.springframework.data.repository.query.*;
 import org.springframework.data.jpa.repository.*;
 
-public interface ContractStrategyConfigRepository extends BaseDao<ContractStrategyConfig>
-{
+public interface ContractStrategyConfigRepository extends BaseDao<ContractStrategyConfig> {
     @Transactional
     int deleteById(final Long p0);
 

@@ -9,13 +9,14 @@ import cn.ztuo.bitrade.enums.*;
 import org.springframework.transaction.annotation.*;
 import com.querydsl.core.types.*;
 import org.springframework.data.domain.*;
+
 import java.util.*;
+
 import cn.ztuo.bitrade.entity.*;
 import org.slf4j.*;
 
 @Service
-public class UnBlockLotteryDrawService
-{
+public class UnBlockLotteryDrawService {
     private static final Logger log;
     @Autowired
     UnBlockLotteryDrawRepository unBlockLotteryDrawRepository;
@@ -35,12 +36,12 @@ public class UnBlockLotteryDrawService
             unBlockLotteryDraw.setLotteryDrawCount(0L);
             unBlockLotteryDraw.setLotteryTransCount(0L);
             unBlockLotteryDraw.setTransCount(0L);
-            return (UnblockLotteryDraw)this.unBlockLotteryDrawRepository.save(unBlockLotteryDraw);
+            return (UnblockLotteryDraw) this.unBlockLotteryDrawRepository.save(unBlockLotteryDraw);
         }
         return unBlockLotteryDraw;
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public int updateLotterDrawByMemberId(final Long memberId, final Long lotteryDrawCount) {
         UnblockLotteryDraw draw = this.unBlockLotteryDrawRepository.findByMemberId(memberId);
         int num = 0;
@@ -51,9 +52,8 @@ public class UnBlockLotteryDrawService
             draw.setLotteryDrawCount(0L);
             draw.setLotteryTransCount(0L);
             draw.setTransCount(0L);
-            draw = (UnblockLotteryDraw)this.unBlockLotteryDrawRepository.saveAndFlush(draw);
-        }
-        else {
+            draw = (UnblockLotteryDraw) this.unBlockLotteryDrawRepository.saveAndFlush(draw);
+        } else {
             num = this.unBlockLotteryDrawRepository.updateCount(memberId, lotteryDrawCount, new Date());
         }
         if (null != draw || num > 0) {
@@ -76,7 +76,7 @@ public class UnBlockLotteryDrawService
     }
 
     public Page<UnblockLotteryDraw> findAll(final Predicate predicate, final Pageable pageable) {
-        final Page<UnblockLotteryDraw> page = (Page<UnblockLotteryDraw>)this.unBlockLotteryDrawRepository.findAll(predicate, pageable);
+        final Page<UnblockLotteryDraw> page = (Page<UnblockLotteryDraw>) this.unBlockLotteryDrawRepository.findAll(predicate, pageable);
         if (page != null) {
             for (final UnblockLotteryDraw data : page.getContent()) {
                 final Member member = this.memberService.findOne(data.getMemberId());
@@ -97,6 +97,6 @@ public class UnBlockLotteryDrawService
     }
 
     static {
-        log = LoggerFactory.getLogger((Class)UnBlockLotteryDrawService.class);
+        log = LoggerFactory.getLogger((Class) UnBlockLotteryDrawService.class);
     }
 }

@@ -9,8 +9,7 @@ import org.springframework.data.jpa.repository.*;
 import java.util.Optional;
 
 @Repository
-public interface ChainLastBlockDao extends BaseDao<ChainLastBlock>
-{
+public interface ChainLastBlockDao extends BaseDao<ChainLastBlock> {
     ChainLastBlock getOne(final Long id);
 
     @Query("select a from ChainLastBlock a where a.assetsName = :assetsName")

@@ -27,41 +27,41 @@ import java.util.ArrayList;
  */
 @Service
 public class GiftRecordService extends BaseService {
-    
+
     @Autowired
     private GiftRecordDao giftRecordDao;
 
 
-    public GiftRecord save(GiftRecord giftRecord){
+    public GiftRecord save(GiftRecord giftRecord) {
         return giftRecordDao.save(giftRecord);
     }
 
-    public GiftRecord findById(Long id){
+    public GiftRecord findById(Long id) {
         return giftRecordDao.findById(id).orElse(null);
     }
-    
-    public Page<GiftRecord> getByPage(GiftRecordVO giftRecordVO) throws Exception{
+
+    public Page<GiftRecord> getByPage(GiftRecordVO giftRecordVO) throws Exception {
         ArrayList<BooleanExpression> booleanExpressions = new ArrayList<>();
-        if (StringUtils.isNotEmpty(giftRecordVO.getStartTime())){
+        if (StringUtils.isNotEmpty(giftRecordVO.getStartTime())) {
             booleanExpressions.add(QGiftRecord.giftRecord.createTime.goe(DateUtil.stringToDate(giftRecordVO
                     .getStartTime())));
         }
-        if (StringUtils.isNotEmpty(giftRecordVO.getEndTime())){
+        if (StringUtils.isNotEmpty(giftRecordVO.getEndTime())) {
             booleanExpressions.add(QGiftRecord.giftRecord.createTime.loe(DateUtil.stringToDate(giftRecordVO
                     .getEndTime())));
         }
-        if (StringUtils.isNotEmpty(giftRecordVO.getUserName())){
-            booleanExpressions.add(QGiftRecord.giftRecord.userName.loe("%"+giftRecordVO.getUserName()+"%"));
+        if (StringUtils.isNotEmpty(giftRecordVO.getUserName())) {
+            booleanExpressions.add(QGiftRecord.giftRecord.userName.loe("%" + giftRecordVO.getUserName() + "%"));
         }
-        if (StringUtils.isNotEmpty(giftRecordVO.getMobile())){
+        if (StringUtils.isNotEmpty(giftRecordVO.getMobile())) {
             booleanExpressions.add(QGiftRecord.giftRecord.userMobile.loe(giftRecordVO.getMobile()));
         }
-        if (giftRecordVO.getUserId() != null){
+        if (giftRecordVO.getUserId() != null) {
             booleanExpressions.add(QGiftRecord.giftRecord.userId.eq(giftRecordVO.getUserId()));
         }
         Predicate predicate = PredicateUtils.getPredicate(booleanExpressions);
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(giftRecordVO.getPageNum() - 1, giftRecordVO.getPageSize(), sort);
-        return giftRecordDao.findAll(predicate,pageable);
+        return giftRecordDao.findAll(predicate, pageable);
     }
 }

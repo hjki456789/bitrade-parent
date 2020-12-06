@@ -75,7 +75,7 @@ public interface OrderDao extends BaseDao<Order> {
 
     @Modifying
     @Query("update Order a set a.payTime=:date,a.status=:status,a.payMode=:payMode where a.status=1 and a.orderSn=:orderSn")
-    int updatePayOrder(@Param("date") Date date, @Param("status") OrderStatus status, @Param("orderSn") String orderSn,@Param("payMode") String payMode);
+    int updatePayOrder(@Param("date") Date date, @Param("status") OrderStatus status, @Param("orderSn") String orderSn, @Param("payMode") String payMode);
 
     @Modifying
     @Query("update Order a set a.cancelTime=:date,a.status=:status where (a.status=1 or a.status=2 or a.status=4) and a.orderSn=:orderSn")
@@ -96,18 +96,20 @@ public interface OrderDao extends BaseDao<Order> {
     int updateAppealOrder(@Param("status") OrderStatus status, @Param("orderSn") String orderSn);
 
     int countByCreateTimeBetween(Date startTime, Date endTime);
+
     int countByStatusAndCreateTimeBetween(OrderStatus status, Date startTime, Date endTime);
+
     int countByStatus(OrderStatus status);
 
     @Query(value = "SELECT\n sum(number) " +
             "FROM Order WHERE advertiseId = :advertiseId AND status = :status")
-    String sumByAdvertiseIdAndStatus(Long advertiseId,OrderStatus status);
+    String sumByAdvertiseIdAndStatus(Long advertiseId, OrderStatus status);
 
     @Query(value = "select a.unit unit,date_format(b.release_time,'%Y-%m-%d'), sum(b.number) amount ,sum(b.commission) fee ,sum(money) from otc_order b ,otc_coin a where a.id = b.coin_id and b.status = 3 and date_format(b.release_time,'%Y-%m-%d') = :date group by a.unit,date_format(b.release_time,'%Y-%m-%d')", nativeQuery = true)
     List<Object[]> getOtcTurnoverAmount(@Param("date") String date);
 
     @Query(value = "select sum(b.commission) as fee,sum(b.money) as money from Order b  where  b.status = 3 and b.memberId = :memberId")
-    Map<String,Object> getBusinessStatistics(@Param("memberId") Long memberId);
+    Map<String, Object> getBusinessStatistics(@Param("memberId") Long memberId);
 
     @Modifying
     @Query("update Order a set a.cancelTime=:date,a.status=:status where a.status=1 and a.orderSn=:orderSn")

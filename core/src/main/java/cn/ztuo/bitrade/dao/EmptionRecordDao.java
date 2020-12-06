@@ -6,8 +6,7 @@ import cn.ztuo.bitrade.entity.EmptionRecord;
 /**
  * @author gs
  */
-public interface EmptionRecordDao extends BaseDao<EmptionRecord>{
-
+public interface EmptionRecordDao extends BaseDao<EmptionRecord> {
 
 
 }

@@ -19,13 +19,13 @@ public interface MemberGradeDao extends BaseDao<MemberGrade> {
 
     @Query("update MemberGrade set exchangeFeeRate = :exchangeFeeRate,exchangeMakerFeeRate = :exchangeMakerFeeRate ")
     @Modifying
-    int updateMemberGrade(@Param("exchangeFeeRate")BigDecimal exchangeFeeRate, @Param("exchangeMakerFeeRate")BigDecimal exchangeMakerFeeRate);
+    int updateMemberGrade(@Param("exchangeFeeRate") BigDecimal exchangeFeeRate, @Param("exchangeMakerFeeRate") BigDecimal exchangeMakerFeeRate);
 
     @Query("update MemberGrade set otcFeeRate = :otcFeeRate ")
     @Modifying
-    int updateOtcFee(@Param("otcFeeRate")BigDecimal otcFeeRate);
+    int updateOtcFee(@Param("otcFeeRate") BigDecimal otcFeeRate);
 
     @Query("update MemberGrade set getSeDiscountRate = :seDiscountRate ")
     @Modifying
-    int updateSeDiscountRate(@Param("seDiscountRate")BigDecimal seDiscountRate);
+    int updateSeDiscountRate(@Param("seDiscountRate") BigDecimal seDiscountRate);
 }

@@ -98,15 +98,15 @@ public class AdvertiseService extends BaseService {
 
     @Transactional(rollbackFor = Exception.class)
     public int turnOffBatch(AdvertiseControlStatus status, Long[] ids) {
-        for(Long advertiseId:ids){
+        for (Long advertiseId : ids) {
             Advertise advertise = this.findOne(advertiseId);
-            if(advertise == null){
+            if (advertise == null) {
                 return 0;
             }
-            if(!advertise.getStatus().equals(AdvertiseControlStatus.PUT_ON_SHELVES)){
+            if (!advertise.getStatus().equals(AdvertiseControlStatus.PUT_ON_SHELVES)) {
                 return 0;
             }
-            if(advertise.getDealAmount()!=null&&advertise.getDealAmount().compareTo(BigDecimal.ZERO)>0){
+            if (advertise.getDealAmount() != null && advertise.getDealAmount().compareTo(BigDecimal.ZERO) > 0) {
                 return -100;
             }
             OtcCoin otcCoin = advertise.getCoin();
@@ -321,7 +321,7 @@ public class AdvertiseService extends BaseService {
                     OtcCoin otcCoin = otcCoinDao.findOtcCoinByUnitAndStatus(x.get("name"), CommonStatus.NORMAL);
                     if (otcCoin != null) {
                         try {
-                            List<Map<String, String>> mapList = DB.query(sql, x.get("price"), x.get("price"), type.ordinal(),country.getZhName(), otcCoin.getId());
+                            List<Map<String, String>> mapList = DB.query(sql, x.get("price"), x.get("price"), type.ordinal(), country.getZhName(), otcCoin.getId());
                             if (mapList.size() > 0) {
                                 Advertise advertise = advertiseDao.findById(Long.valueOf(mapList.get(0).get("advertise_id"))).orElse(null);
                                 Member member = advertise.getMember();
@@ -381,7 +381,7 @@ public class AdvertiseService extends BaseService {
                 "LIMIT ?,\n" +
                 " ?";
         List<Map<String, String>> list = DB.query(sql, marketPrice, otcCoin.getId(), advertiseType.ordinal(), (pageNo - 1) * pageSize, pageSize);
-        if (list!=null&&list.size() > 0) {
+        if (list != null && list.size() > 0) {
             String sql1 = "SELECT\n" +
                     "\tCOUNT(a.id) total\n" +
                     "FROM\n" +
@@ -425,20 +425,21 @@ public class AdvertiseService extends BaseService {
         specialPage.setPageNumber(pageSize);
         return specialPage;
     }
-    public SpecialPage<ScanAdvertise> paginationAdvertise(int pageNo, int pageSize, OtcCoin otcCoin, AdvertiseType advertiseType, double marketPrice, int isCertified,String[] paymodes,String limit) throws SQLException, DataException {
+
+    public SpecialPage<ScanAdvertise> paginationAdvertise(int pageNo, int pageSize, OtcCoin otcCoin, AdvertiseType advertiseType, double marketPrice, int isCertified, String[] paymodes, String limit) throws SQLException, DataException {
         SpecialPage<ScanAdvertise> specialPage = new SpecialPage<>();
-        StringBuffer payConditon=new StringBuffer(" ");
-        if (paymodes!=null){
+        StringBuffer payConditon = new StringBuffer(" ");
+        if (paymodes != null) {
             payConditon.append("AND ( ");
-            for (String paymode:paymodes){
+            for (String paymode : paymodes) {
                 payConditon.append(" FIND_IN_SET('" + paymode + "',a.pay_mode) OR ");
             }
             payConditon.delete(payConditon.length() - 3, payConditon.length());
             payConditon.append(" ) ");
             //payConditon.append("AND a.pay_mode in ("+Arrays.toString(paymodes)+") ");
         }
-        if(!StringUtils.isEmpty(limit)){
-            payConditon.append(" \tAND "+limit+" BETWEEN min_limit AND max_limit \n");
+        if (!StringUtils.isEmpty(limit)) {
+            payConditon.append(" \tAND " + limit + " BETWEEN min_limit AND max_limit \n");
         }
         String sql = "SELECT\n" +
                 "\ta.*, (\n" +
@@ -460,11 +461,11 @@ public class AdvertiseService extends BaseService {
                 "\tadvertise a\n" +
                 "JOIN member b ON a.member_id = b.id\n" +
                 (isCertified == 1 ? "AND b.member_level = 2\n" : " ") +
-                "JOIN business_auth_apply baa on baa.member_id = b.id\n"+
+                "JOIN business_auth_apply baa on baa.member_id = b.id\n" +
                 "AND a.coin_id = ?\n" +
                 "AND a.advertise_type = ?\n" +
-               // "AND a.country = ?\n" +
-                payConditon.toString()+
+                // "AND a.country = ?\n" +
+                payConditon.toString() +
                 "AND a.`status` = 0\n" +
                 "ORDER BY a.top DESC,\n" +
                 (advertiseType.equals(AdvertiseType.SELL) ? "\tfinalPrice,\n" : "\tfinalPrice desc,\n") +
@@ -472,7 +473,7 @@ public class AdvertiseService extends BaseService {
                 "LIMIT ?,\n" +
                 " ?";
         List<Map<String, String>> list = DB.query(sql, marketPrice, otcCoin.getId(), advertiseType.ordinal(), (pageNo - 1) * pageSize, pageSize);
-        if (list!=null && list.size() > 0) {
+        if (list != null && list.size() > 0) {
             String sql1 = "SELECT\n" +
                     "\tCOUNT(a.id) total\n" +
                     "FROM\n" +
@@ -480,7 +481,7 @@ public class AdvertiseService extends BaseService {
                     "JOIN member b ON a.member_id = b.id\n" +
                     (isCertified == 1 ? "AND b.member_level = 2\n" : " ") +
                     "AND a.coin_id = ?\n" +
-                    payConditon.toString()+
+                    payConditon.toString() +
                     "AND a.advertise_type = ?\n" +
                     //"AND a.country = ?\n" +
                     "AND a.`status` = 0";
@@ -522,7 +523,7 @@ public class AdvertiseService extends BaseService {
         return specialPage;
     }
 
-    public Page<ScanAdvertise> paginationQuery(int pageNo, int pageSize, String country, String payMode, AdvertiseType advertiseType,OtcCoin coin,BigDecimal marketPrice) {
+    public Page<ScanAdvertise> paginationQuery(int pageNo, int pageSize, String country, String payMode, AdvertiseType advertiseType, OtcCoin coin, BigDecimal marketPrice) {
         Sort.Order order1 = new Sort.Order(Sort.Direction.ASC, "price");
         Sort.Order order2 = new Sort.Order(Sort.Direction.DESC, "id");
         Sort sort = Sort.by(order1, order2);
@@ -776,7 +777,7 @@ public class AdvertiseService extends BaseService {
             special.setContext(
                     list.stream().map((Map<String, String> x) ->
                                     ScanAdvertise.builder()
-                                            .premiseRate(Integer.parseInt(x.get("price_type")) == 0? null:BigDecimal.valueOf(Double.valueOf(x.get("premise_rate"))))
+                                            .premiseRate(Integer.parseInt(x.get("price_type")) == 0 ? null : BigDecimal.valueOf(Double.valueOf(x.get("premise_rate"))))
                                             .price(BigDecimalUtils.round(Double.valueOf(x.get("price")), 2))
                                             .transactions(Integer.parseInt(x.get("transactions")))
                                             .remainAmount(BigDecimal.valueOf(Double.valueOf(x.get("remain_amount"))))
@@ -801,11 +802,11 @@ public class AdvertiseService extends BaseService {
         return special;
     }
 
-    public int countByMemberAndStatus(Member member,AdvertiseControlStatus status){
-        return advertiseDao.countAllByMemberAndStatus(member,status);
+    public int countByMemberAndStatus(Member member, AdvertiseControlStatus status) {
+        return advertiseDao.countAllByMemberAndStatus(member, status);
     }
 
     public int alterTopBatch(Integer top, Long id) {
-        return advertiseDao.alterTopBatch(top,DateUtil.getCurrentDate(),id);
+        return advertiseDao.alterTopBatch(top, DateUtil.getCurrentDate(), id);
     }
 }

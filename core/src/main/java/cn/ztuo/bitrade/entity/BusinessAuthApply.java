@@ -13,6 +13,7 @@ import java.util.Date;
 
 /**
  * 商家认证申请信息
+ *
  * @author zhang yingxin
  * @date 2018/5/5
  */
@@ -41,7 +42,7 @@ public class BusinessAuthApply {
     /**
      * 申请时间
      */
-    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
@@ -49,11 +50,11 @@ public class BusinessAuthApply {
      */
     private Date auditingTime;
 
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition = "TEXT")
     private String authInfo;
 
     @ManyToOne
-    @JoinColumn(name="business_auth_deposit_id")
+    @JoinColumn(name = "business_auth_deposit_id")
     private BusinessAuthDeposit businessAuthDeposit;
 
     private String depositRecordId;
@@ -64,11 +65,11 @@ public class BusinessAuthApply {
     @Column(columnDefinition = "decimal(20,8) comment '保证金数额'")
     private BigDecimal amount;
 
-    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updateTime ;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
 
     @Transient
-    private JSONObject info ;
+    private JSONObject info;
 
     /**
      * 认证商家加V

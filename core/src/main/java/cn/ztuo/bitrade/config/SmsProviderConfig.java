@@ -37,13 +37,13 @@ public class SmsProviderConfig {
         } else if (driverName.equalsIgnoreCase(cn.ztuo.bitrade.vendor.provider.support.EmaySMSProvider.getName())) {
             return new cn.ztuo.bitrade.vendor.provider.support.EmaySMSProvider(gateway, username, password);
         } else if (driverName.equalsIgnoreCase(cn.ztuo.bitrade.vendor.provider.support.HuaXinSMSProvider.getName())) {
-            return new cn.ztuo.bitrade.vendor.provider.support.HuaXinSMSProvider(gateway, username, password,internationalGateway,internationalUsername,internationalPassword,sign);
-        } else if(driverName.equalsIgnoreCase(cn.ztuo.bitrade.vendor.provider.support.TwoFiveThreeProvider.getName())){
-            return new cn.ztuo.bitrade.vendor.provider.support.TwoFiveThreeProvider(gateway,username,password,sign);
-        } else if(driverName.equalsIgnoreCase(cn.ztuo.bitrade.vendor.provider.support.QinPengSMSProvider.getName())){
-            return new cn.ztuo.bitrade.vendor.provider.support.QinPengSMSProvider(gateway,username,password);
-        } else if(driverName.equalsIgnoreCase(cn.ztuo.bitrade.vendor.provider.support.YunpianSMSProvider.getName())){
-            return new cn.ztuo.bitrade.vendor.provider.support.YunpianSMSProvider(gateway,password);
+            return new cn.ztuo.bitrade.vendor.provider.support.HuaXinSMSProvider(gateway, username, password, internationalGateway, internationalUsername, internationalPassword, sign);
+        } else if (driverName.equalsIgnoreCase(cn.ztuo.bitrade.vendor.provider.support.TwoFiveThreeProvider.getName())) {
+            return new cn.ztuo.bitrade.vendor.provider.support.TwoFiveThreeProvider(gateway, username, password, sign);
+        } else if (driverName.equalsIgnoreCase(cn.ztuo.bitrade.vendor.provider.support.QinPengSMSProvider.getName())) {
+            return new cn.ztuo.bitrade.vendor.provider.support.QinPengSMSProvider(gateway, username, password);
+        } else if (driverName.equalsIgnoreCase(cn.ztuo.bitrade.vendor.provider.support.YunpianSMSProvider.getName())) {
+            return new cn.ztuo.bitrade.vendor.provider.support.YunpianSMSProvider(gateway, password);
         } else {
             return null;
         }

@@ -27,14 +27,14 @@ import java.util.Map;
 public class MemberDepositService extends BaseService<MemberDeposit> {
 
     @Autowired
-    private MemberDepositDao memberDepositDao ;
+    private MemberDepositDao memberDepositDao;
 
     @Autowired
     private MemberWalletDao memberWalletDao;
     @Autowired
     private MemberTransactionService memberTransactionService;
 
-    public Page<MemberDepositVO> page(List<BooleanExpression> predicates,PageModel pageModel){
+    public Page<MemberDepositVO> page(List<BooleanExpression> predicates, PageModel pageModel) {
         JPAQuery<MemberDepositVO> query = queryFactory.select(Projections.fields(MemberDepositVO.class,
                 QMemberDeposit.memberDeposit.id.as("id"),
                 QMember.member.username,
@@ -43,14 +43,14 @@ public class MemberDepositService extends BaseService<MemberDeposit> {
                 QMemberDeposit.memberDeposit.amount,
                 QMemberDeposit.memberDeposit.txid,
                 QMemberDeposit.memberDeposit.createTime.as("createTime"),
-                QMemberDeposit.memberDeposit.unit)).from(QMember.member,QMemberDeposit.memberDeposit)
+                QMemberDeposit.memberDeposit.unit)).from(QMember.member, QMemberDeposit.memberDeposit)
                 .where(predicates.toArray(new BooleanExpression[predicates.size()]));
         List<OrderSpecifier> orderSpecifiers = pageModel.getOrderSpecifiers();
-        query.orderBy(orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()])) ;
-        long total = query.fetchCount() ;
-        query.offset(pageModel.getPageSize()*(pageModel.getPageNo()-1)).limit(pageModel.getPageSize());
-        List<MemberDepositVO> list = query.fetch() ;
-        return new PageImpl<MemberDepositVO>(list,pageModel.getPageable(),total);
+        query.orderBy(orderSpecifiers.toArray(new OrderSpecifier[orderSpecifiers.size()]));
+        long total = query.fetchCount();
+        query.offset(pageModel.getPageSize() * (pageModel.getPageNo() - 1)).limit(pageModel.getPageSize());
+        List<MemberDepositVO> list = query.fetch();
+        return new PageImpl<MemberDepositVO>(list, pageModel.getPageable(), total);
     }
 
     public Map<String, BigDecimal> sumMemberDeposit(final Long memberId) {
@@ -79,7 +79,7 @@ public class MemberDepositService extends BaseService<MemberDeposit> {
                 memberWallet = new MemberWallet();
                 memberWallet.setMemberId(memberDeposit.getMemberId());
                 memberWallet.setCoin(coin);
-                memberWallet = (MemberWallet)this.memberWalletDao.saveAndFlush(memberWallet);
+                memberWallet = (MemberWallet) this.memberWalletDao.saveAndFlush(memberWallet);
             }
             memberWallet.setBalance(memberWallet.getBalance().add(memberDeposit.getAmount()));
             this.memberWalletDao.increaseBalance(memberWallet.getId(), memberDeposit.getAmount(), memberWallet.getVersion());

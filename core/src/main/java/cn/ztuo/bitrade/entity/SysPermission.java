@@ -2,6 +2,7 @@ package cn.ztuo.bitrade.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+
 import javax.validation.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -22,7 +23,7 @@ public class SysPermission {
     @Id
     private Long id;
 
-    @NotBlank(message="{SysPermission.title.blank}")
+    @NotBlank(message = "{SysPermission.title.blank}")
     private String title;
 
     private String description;
@@ -30,14 +31,14 @@ public class SysPermission {
     /**
      * 为0表示是菜单
      */
-    private Long parentId=0L;
+    private Long parentId = 0L;
 
     private Integer sort = 0;
 
-    @NotBlank(message="{SysPermission.name.blank}")
+    @NotBlank(message = "{SysPermission.name.blank}")
     private String name;
 
-   @ManyToMany(cascade = CascadeType.PERSIST,mappedBy = "permissions",fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "permissions", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<SysRole> roles ;
+    private List<SysRole> roles;
 }

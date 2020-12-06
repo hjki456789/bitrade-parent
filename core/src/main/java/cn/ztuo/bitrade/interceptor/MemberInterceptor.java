@@ -41,14 +41,14 @@ public class MemberInterceptor implements HandlerInterceptor {
             return true;
         } else {
             String host = request.getHeader("x-auth-host");
-            if(StringUtils.isEmpty(host)){
-                host =  RequestUtil.remoteWay(request);
+            if (StringUtils.isEmpty(host)) {
+                host = RequestUtil.remoteWay(request);
             }
             String token = request.getHeader("access-auth-token");
-            log.info("access-auth-token:{}",token);
-            if(StringUtils.isEmpty(token)){
+            log.info("access-auth-token:{}", token);
+            if (StringUtils.isEmpty(token)) {
                 token = request.getHeader("x-auth-token");
-                log.info("x-auth-token={}",token);
+                log.info("x-auth-token={}", token);
             }
 
             //解决service为null无法注入问题

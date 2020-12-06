@@ -33,7 +33,7 @@ public interface RewardStatisticsDao extends BaseDao<RewardStatistics> {
                     "GROUP BY rs.create_time,rs.order_member_id\n" +
                     ") A",
             nativeQuery = true)
-    Page<Object[]> findAll(@Param("memberId") long memberId,@Param("createTime") String month,Pageable pageable);
+    Page<Object[]> findAll(@Param("memberId") long memberId, @Param("createTime") String month, Pageable pageable);
 
     @Query(value = "SELECT\n" +
             "\trs.sum_date as create_time,SUM(rs.amount*c.usd_rate) as amount,rs.member_id\n" +

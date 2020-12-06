@@ -21,7 +21,7 @@ public class TransferRecordService extends BaseService {
     @Autowired
     private TransferRecordDao transferRecordDao;
 
-    public TransferRecord save(TransferRecord transferRecord){
+    public TransferRecord save(TransferRecord transferRecord) {
         return transferRecordDao.save(transferRecord);
     }
 

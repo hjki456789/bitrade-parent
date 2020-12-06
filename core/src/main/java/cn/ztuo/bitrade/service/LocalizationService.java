@@ -19,11 +19,11 @@ public class LocalizationService extends BaseService<SysLocalization> {
     SysLocalizationDao sysLocalizationDao;
 
     @RedisCache(RedissonKeyConstant.CACHE_LOCALE)
-    public LinkedHashMap<String, LinkedHashMap<String, String>> getAllMessage(){
+    public LinkedHashMap<String, LinkedHashMap<String, String>> getAllMessage() {
         return getAllMessageWithoutCache();
     }
 
-    public LinkedHashMap<String, LinkedHashMap<String, String>> getAllMessageWithoutCache(){
+    public LinkedHashMap<String, LinkedHashMap<String, String>> getAllMessageWithoutCache() {
         List<SysLocalization> all = sysLocalizationDao.findAll(Sort.by(Sort.Direction.ASC, "locale", "id"));
         return all.stream().collect(
                 Collectors.groupingBy(SysLocalization::getLocale, LinkedHashMap::new,
@@ -31,7 +31,7 @@ public class LocalizationService extends BaseService<SysLocalization> {
                                 Collectors.mapping(SysLocalization::getContent, Collectors.joining(";")))));
     }
 
-    public int updateMessage(SysLocalization sysLocalization){
+    public int updateMessage(SysLocalization sysLocalization) {
         return sysLocalizationDao.updateSysLocalization(sysLocalization.getContent(), sysLocalization.getId(), sysLocalization.getLocale());
     }
 }

@@ -8,7 +8,7 @@ import lombok.Data;
  * @Date: 2019/4/26 4:32 PM
  */
 @Data
-public class IeoEmptionVO extends BaseQueryVO{
+public class IeoEmptionVO extends BaseQueryVO {
 
 
     private String startTime;

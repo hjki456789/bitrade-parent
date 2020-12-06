@@ -7,6 +7,7 @@ import cn.ztuo.bitrade.constant.AdvertiseType;
 import cn.ztuo.bitrade.constant.OrderStatus;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+
 import javax.validation.constraints.NotBlank;
 
 import javax.persistence.*;

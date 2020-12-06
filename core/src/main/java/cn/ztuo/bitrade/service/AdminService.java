@@ -114,7 +114,7 @@ public class AdminService extends TopBaseService<Admin, AdminDao> {
         return dao.findAll(predicate, pageable);
     }
 
-    public List<Admin> findByMobilePhone(String mobilePhone){
+    public List<Admin> findByMobilePhone(String mobilePhone) {
         return dao.findByMobilePhone(mobilePhone);
     }
 }

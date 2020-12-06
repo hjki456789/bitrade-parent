@@ -16,7 +16,7 @@ import java.util.List;
  * @date 2019年02月27日
  */
 @Service
-public class TransferAddressService extends TopBaseService<TransferAddress,TransferAddressDao> {
+public class TransferAddressService extends TopBaseService<TransferAddress, TransferAddressDao> {
 
     @Autowired
     public void setDao(TransferAddressDao dao) {
@@ -26,15 +26,16 @@ public class TransferAddressService extends TopBaseService<TransferAddress,Trans
     @Autowired
     private CoinDao coinDao;
 
-    public List<TransferAddress> findByUnit(String unit){
+    public List<TransferAddress> findByUnit(String unit) {
         Coin coin = coinDao.findByUnit(unit);
         return dao.findAllByStatusAndCoin(CommonStatus.NORMAL, coin);
     }
-    public List<TransferAddress> findByCoin(Coin coin){
+
+    public List<TransferAddress> findByCoin(Coin coin) {
         return dao.findAllByStatusAndCoin(CommonStatus.NORMAL, coin);
     }
 
-    public TransferAddress findOnlyOne(Coin coin,String address){
+    public TransferAddress findOnlyOne(Coin coin, String address) {
         return dao.findByAddressAndCoin(address, coin);
     }
 

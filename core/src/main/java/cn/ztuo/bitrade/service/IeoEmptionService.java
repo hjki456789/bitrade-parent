@@ -69,7 +69,7 @@ public class IeoEmptionService extends BaseService {
                 booleanExpressions.add(QIeoEmption.ieoEmption.endTime.lt(date));
             }
         }
-        if (ieoEmptionVO.getId() != null){
+        if (ieoEmptionVO.getId() != null) {
             booleanExpressions.add(QIeoEmption.ieoEmption.id.eq(ieoEmptionVO.getId()));
         }
         Predicate predicate = PredicateUtils.getPredicate(booleanExpressions);
@@ -87,9 +87,10 @@ public class IeoEmptionService extends BaseService {
         return ieoEmptionDao.findById(id).orElse(null);
     }
 
-    public void del(Long id){
+    public void del(Long id) {
         ieoEmptionDao.deleteById(id);
     }
+
     /**
      * 查询正在进行中的活动
      *
@@ -123,21 +124,21 @@ public class IeoEmptionService extends BaseService {
             if (subWallet == 1) {
                 //增加用户认购币种
                 Coin saleCoin = coinService.findByUnit(ieoEmption.getSaleCoin());
-                MemberWallet saleWallet = memberWalletDao.findByCoinAndMemberId(saleCoin,userId);
-                if (saleWallet == null){
-                    int insertResult = memberService.saveWallet(ieoEmption.getSaleCoin(),userId,receAmount);
-                    if (insertResult == 1){
+                MemberWallet saleWallet = memberWalletDao.findByCoinAndMemberId(saleCoin, userId);
+                if (saleWallet == null) {
+                    int insertResult = memberService.saveWallet(ieoEmption.getSaleCoin(), userId, receAmount);
+                    if (insertResult == 1) {
                         return 1;
-                    }else {
-                        throw new Exception("增加用户余额异常："+userId+"，coin:"+ieoEmption.getSaleCoin());
+                    } else {
+                        throw new Exception("增加用户余额异常：" + userId + "，coin:" + ieoEmption.getSaleCoin());
                     }
 
-                }else {
-                    int addResult = memberWalletDao.increaseBalance(saleWallet.getId(),receAmount);
-                    if (addResult == 1){
+                } else {
+                    int addResult = memberWalletDao.increaseBalance(saleWallet.getId(), receAmount);
+                    if (addResult == 1) {
                         return 1;
-                    }else {
-                        throw new Exception("增加用户余额异常："+userId+"，coin:"+ieoEmption.getSaleCoin());
+                    } else {
+                        throw new Exception("增加用户余额异常：" + userId + "，coin:" + ieoEmption.getSaleCoin());
                     }
                 }
 

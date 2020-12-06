@@ -36,8 +36,8 @@ public class Model {
     public Object get(int index) {
         int i = 0;
 
-        for(Iterator var4 = this.row.entrySet().iterator(); var4.hasNext(); ++i) {
-            Map.Entry<String, Object> entry = (Map.Entry)var4.next();
+        for (Iterator var4 = this.row.entrySet().iterator(); var4.hasNext(); ++i) {
+            Map.Entry<String, Object> entry = (Map.Entry) var4.next();
             if (index == i) {
                 return entry.getValue();
             }
@@ -76,7 +76,7 @@ public class Model {
                 return 0;
             }
 
-            ret = Convert.strToInt((String)((Map)list.get(0)).get("count"), 0);
+            ret = Convert.strToInt((String) ((Map) list.get(0)).get("count"), 0);
         } catch (Exception var4) {
             var4.printStackTrace();
         }
@@ -191,8 +191,8 @@ public class Model {
         List<T> listBean = new ArrayList();
         Iterator var5 = list.iterator();
 
-        while(var5.hasNext()) {
-            Map<String, String> map = (Map)var5.next();
+        while (var5.hasNext()) {
+            Map<String, String> map = (Map) var5.next();
             T bean = beanClass.newInstance();
             BeanMapUtils.map2Bean(map, bean);
             listBean.add(bean);
@@ -215,7 +215,7 @@ public class Model {
             }
 
             if (list.size() > 0) {
-                map = (Map)list.get(0);
+                map = (Map) list.get(0);
             }
 
             return map;
@@ -325,9 +325,9 @@ public class Model {
 
                     var7 = this.dirtyData.entrySet().iterator();
 
-                    while(var7.hasNext()) {
-                        entry = (Map.Entry)var7.next();
-                        columnList.add("`" + (String)entry.getKey() + "`");
+                    while (var7.hasNext()) {
+                        entry = (Map.Entry) var7.next();
+                        columnList.add("`" + (String) entry.getKey() + "`");
                         valueList.add("?");
                         valueList.add(entry.getValue());
                     }
@@ -345,9 +345,9 @@ public class Model {
                     valueList = new ArrayList();
                     Iterator var10 = this.dirtyData.entrySet().iterator();
 
-                    while(var10.hasNext()) {
-                        entry = (Map.Entry)var10.next();
-                        columnList.add("`" + (String)entry.getKey() + "` = ?");
+                    while (var10.hasNext()) {
+                        entry = (Map.Entry) var10.next();
+                        columnList.add("`" + (String) entry.getKey() + "` = ?");
                         valueList.add(entry.getValue());
                     }
 
@@ -384,9 +384,9 @@ public class Model {
                     valueList = new ArrayList();
                     var7 = this.dirtyData.entrySet().iterator();
 
-                    while(var7.hasNext()) {
-                        entry = (Map.Entry)var7.next();
-                        valueList.add("`" + (String)entry.getKey() + "` = `" + (String)entry.getKey() + "` " + op + " ?");
+                    while (var7.hasNext()) {
+                        entry = (Map.Entry) var7.next();
+                        valueList.add("`" + (String) entry.getKey() + "` = `" + (String) entry.getKey() + "` " + op + " ?");
                         valueList.add(entry.getValue());
                     }
 

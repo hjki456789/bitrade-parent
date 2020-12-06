@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.Query;
  * @Modified:
  */
 public interface SmsDao extends BaseDao<SmsDTO> {
-    
-    @Query(value = "select * from tb_sms where sms_status = '0' ",nativeQuery = true)
+
+    @Query(value = "select * from tb_sms where sms_status = '0' ", nativeQuery = true)
     SmsDTO findBySmsStatus();
 }

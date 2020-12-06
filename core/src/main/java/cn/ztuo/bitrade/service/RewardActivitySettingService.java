@@ -13,19 +13,19 @@ import org.springframework.stereotype.Service;
  * @date 2019年03月08日
  */
 @Service
-public class RewardActivitySettingService extends TopBaseService<RewardActivitySetting,RewardActivitySettingDao> {
+public class RewardActivitySettingService extends TopBaseService<RewardActivitySetting, RewardActivitySettingDao> {
 
     @Autowired
     public void setDao(RewardActivitySettingDao dao) {
-        this.dao = dao ;
+        this.dao = dao;
     }
 
 
-    public RewardActivitySetting findByType(ActivityRewardType type){
+    public RewardActivitySetting findByType(ActivityRewardType type) {
         return dao.findByStatusAndType(BooleanEnum.IS_TRUE, type);
     }
 
-    public RewardActivitySetting save(RewardActivitySetting rewardActivitySetting){
+    public RewardActivitySetting save(RewardActivitySetting rewardActivitySetting) {
         return dao.save(rewardActivitySetting);
     }
 

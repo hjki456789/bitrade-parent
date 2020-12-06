@@ -38,7 +38,7 @@ public class MultiDataSourceAop implements Ordered {
     public Object around(ProceedingJoinPoint point) throws Throwable {
 
         Signature signature = point.getSignature();
-        MethodSignature methodSignature ;
+        MethodSignature methodSignature;
         if (!(signature instanceof MethodSignature)) {
             throw new IllegalArgumentException("该注解只能用于方法");
         }

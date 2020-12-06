@@ -3,12 +3,12 @@ package cn.ztuo.bitrade.entity.unblock;
 import java.io.*;
 import javax.persistence.*;
 import java.util.*;
+
 import com.fasterxml.jackson.annotation.*;
 
 @Entity
 @Table
-public class UnblockMemberRobot implements Serializable
-{
+public class UnblockMemberRobot implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -20,63 +20,63 @@ public class UnblockMemberRobot implements Serializable
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
     private Long version;
-    
+
     public Long getId() {
         return this.id;
     }
-    
+
     public Long getMemberId() {
         return this.memberId;
     }
-    
+
     public String getSymbol() {
         return this.symbol;
     }
-    
+
     public int getStatus() {
         return this.status;
     }
-    
+
     public Date getExpireTime() {
         return this.expireTime;
     }
-    
+
     public Date getUpdateTime() {
         return this.updateTime;
     }
-    
+
     public Long getVersion() {
         return this.version;
     }
-    
+
     public void setId(final Long id) {
         this.id = id;
     }
-    
+
     public void setMemberId(final Long memberId) {
         this.memberId = memberId;
     }
-    
+
     public void setSymbol(final String symbol) {
         this.symbol = symbol;
     }
-    
+
     public void setStatus(final int status) {
         this.status = status;
     }
-    
+
     public void setExpireTime(final Date expireTime) {
         this.expireTime = expireTime;
     }
-    
+
     public void setUpdateTime(final Date updateTime) {
         this.updateTime = updateTime;
     }
-    
+
     public void setVersion(final Long version) {
         this.version = version;
     }
-    
+
     @Override
     public boolean equals(final Object o) {
         if (o == this) {
@@ -85,45 +85,45 @@ public class UnblockMemberRobot implements Serializable
         if (!(o instanceof UnblockMemberRobot)) {
             return false;
         }
-        final UnblockMemberRobot other = (UnblockMemberRobot)o;
+        final UnblockMemberRobot other = (UnblockMemberRobot) o;
         if (!other.canEqual(this)) {
             return false;
         }
         final Object this$id = this.getId();
         final Object other$id = other.getId();
-        Label_0065: {
+        Label_0065:
+        {
             if (this$id == null) {
                 if (other$id == null) {
                     break Label_0065;
                 }
-            }
-            else if (this$id.equals(other$id)) {
+            } else if (this$id.equals(other$id)) {
                 break Label_0065;
             }
             return false;
         }
         final Object this$memberId = this.getMemberId();
         final Object other$memberId = other.getMemberId();
-        Label_0102: {
+        Label_0102:
+        {
             if (this$memberId == null) {
                 if (other$memberId == null) {
                     break Label_0102;
                 }
-            }
-            else if (this$memberId.equals(other$memberId)) {
+            } else if (this$memberId.equals(other$memberId)) {
                 break Label_0102;
             }
             return false;
         }
         final Object this$symbol = this.getSymbol();
         final Object other$symbol = other.getSymbol();
-        Label_0139: {
+        Label_0139:
+        {
             if (this$symbol == null) {
                 if (other$symbol == null) {
                     break Label_0139;
                 }
-            }
-            else if (this$symbol.equals(other$symbol)) {
+            } else if (this$symbol.equals(other$symbol)) {
                 break Label_0139;
             }
             return false;
@@ -133,26 +133,26 @@ public class UnblockMemberRobot implements Serializable
         }
         final Object this$expireTime = this.getExpireTime();
         final Object other$expireTime = other.getExpireTime();
-        Label_0189: {
+        Label_0189:
+        {
             if (this$expireTime == null) {
                 if (other$expireTime == null) {
                     break Label_0189;
                 }
-            }
-            else if (this$expireTime.equals(other$expireTime)) {
+            } else if (this$expireTime.equals(other$expireTime)) {
                 break Label_0189;
             }
             return false;
         }
         final Object this$updateTime = this.getUpdateTime();
         final Object other$updateTime = other.getUpdateTime();
-        Label_0226: {
+        Label_0226:
+        {
             if (this$updateTime == null) {
                 if (other$updateTime == null) {
                     break Label_0226;
                 }
-            }
-            else if (this$updateTime.equals(other$updateTime)) {
+            } else if (this$updateTime.equals(other$updateTime)) {
                 break Label_0226;
             }
             return false;
@@ -163,17 +163,16 @@ public class UnblockMemberRobot implements Serializable
             if (other$version == null) {
                 return true;
             }
-        }
-        else if (this$version.equals(other$version)) {
+        } else if (this$version.equals(other$version)) {
             return true;
         }
         return false;
     }
-    
+
     protected boolean canEqual(final Object other) {
         return other instanceof UnblockMemberRobot;
     }
-    
+
     @Override
     public int hashCode() {
         final int PRIME = 59;
@@ -193,7 +192,7 @@ public class UnblockMemberRobot implements Serializable
         result = result * 59 + (($version == null) ? 43 : $version.hashCode());
         return result;
     }
-    
+
     @Override
     public String toString() {
         return "UnblockMemberRobot(id=" + this.getId() + ", memberId=" + this.getMemberId() + ", symbol=" + this.getSymbol() + ", status=" + this.getStatus() + ", expireTime=" + this.getExpireTime() + ", updateTime=" + this.getUpdateTime() + ", version=" + this.getVersion() + ")";

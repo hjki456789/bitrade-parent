@@ -40,7 +40,7 @@ public class Navigation {
     @NotNull(message = "状态不能为空")
     private CommonStatus status = CommonStatus.NORMAL;
 
-    private int sort = 0 ;
+    private int sort = 0;
 
     /**
      * 语种（"en-US", "zh-CN", "ja-JP", "ko-KR", "ar-AE"）

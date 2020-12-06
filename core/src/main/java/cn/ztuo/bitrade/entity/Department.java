@@ -26,7 +26,7 @@ public class Department implements Serializable {
     private Long id;
     @Excel(name = "部门名称", orderNum = "1", width = 20)
     @NotNull(message = "{DEPARTMENT.NAME.NULL}")
-    @Column(unique = true,nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
 
     private String remark;

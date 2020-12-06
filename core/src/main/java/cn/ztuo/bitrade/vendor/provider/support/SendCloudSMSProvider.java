@@ -54,10 +54,9 @@ public class SendCloudSMSProvider implements SMSProvider {
 
     public MessageResult sendTemplateMessage(int templateId, String phone, boolean isInternational, Map<String, String> params) throws Exception {
         SendCloudSms sms = new SendCloudSms();
-        if(isInternational){
+        if (isInternational) {
             sms.setMsgType(2);
-        }
-        else {
+        } else {
             sms.setMsgType(0);
         }
         sms.setTemplateId(templateId);
@@ -75,9 +74,10 @@ public class SendCloudSMSProvider implements SMSProvider {
     public MessageResult sendLoginMessage(String ip, String phone) throws Exception {
         return null;
     }
+
     private MessageResult parseResult(ResponseData res) {
         MessageResult mr = new MessageResult(res.getStatusCode(), res.getMessage());
-        if(mr.getCode() == 200){
+        if (mr.getCode() == 200) {
             mr.setCode(0);
         }
         return mr;

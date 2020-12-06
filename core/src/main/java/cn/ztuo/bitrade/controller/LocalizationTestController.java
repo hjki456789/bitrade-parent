@@ -20,31 +20,34 @@ import java.util.Date;
 @RestController
 @Log4j
 public class LocalizationTestController extends BaseController {
-	@Autowired
-	private MessageSource messageSource;
-	@Autowired
-	private RedisUtil redisUtil;
-	/**
-	 * 请求测试用国际化文本
-	 */
-	@RequestMapping("/getTestMessage")
-	public MessageResult getMessage() throws IOException {
-		return success(messageSource.getMessage("TEST", null, LocaleContextHolder.getLocale()));
-	}
-	@RequestMapping("/getEnumTestMessage")
-	public MessageResult getEnumMessage() throws IOException {
-		return success(Arrays.asList(CredentialsType.CARDED, CredentialsType.PASSPORT, CredentialsType.DRIVING_LICENSE));
-	}
-	@RequestMapping("redisTest")
-	public String redisTest() {
-		RBucket<Date> test = RedissonUtil.getBucket("test");
-		test.set(new Date());
-		log.info(test.get());
-		redisUtil.set("bucket:test", new Date());
-		Object testData = redisUtil.get("bucket:test");
-		log.info(testData);
-		test.delete();
-		return "OK";
-	}
+    @Autowired
+    private MessageSource messageSource;
+    @Autowired
+    private RedisUtil redisUtil;
+
+    /**
+     * 请求测试用国际化文本
+     */
+    @RequestMapping("/getTestMessage")
+    public MessageResult getMessage() throws IOException {
+        return success(messageSource.getMessage("TEST", null, LocaleContextHolder.getLocale()));
+    }
+
+    @RequestMapping("/getEnumTestMessage")
+    public MessageResult getEnumMessage() throws IOException {
+        return success(Arrays.asList(CredentialsType.CARDED, CredentialsType.PASSPORT, CredentialsType.DRIVING_LICENSE));
+    }
+
+    @RequestMapping("redisTest")
+    public String redisTest() {
+        RBucket<Date> test = RedissonUtil.getBucket("test");
+        test.set(new Date());
+        log.info(test.get());
+        redisUtil.set("bucket:test", new Date());
+        Object testData = redisUtil.get("bucket:test");
+        log.info(testData);
+        test.delete();
+        return "OK";
+    }
 
 }

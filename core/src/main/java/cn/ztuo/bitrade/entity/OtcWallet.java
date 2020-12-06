@@ -12,9 +12,9 @@ import java.math.BigDecimal;
  */
 @Entity
 @Data
-public class OtcWallet implements Serializable{
+public class OtcWallet implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * This field corresponds to the database column otc_wallet.id
@@ -23,7 +23,7 @@ public class OtcWallet implements Serializable{
      */
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-	private Long id;
+    private Long id;
 
     /**
      * 可用余额
@@ -32,7 +32,7 @@ public class OtcWallet implements Serializable{
      * @date 2019-05-05 15:21:32
      */
     @Column(columnDefinition = "decimal(20,8) comment '可用余额'")
-	private BigDecimal balance;
+    private BigDecimal balance;
 
     /**
      * 冻结余额
@@ -41,7 +41,7 @@ public class OtcWallet implements Serializable{
      * @date 2019-05-05 15:21:32
      */
     @Column(columnDefinition = "decimal(20,8) comment '冻结余额'")
-	private BigDecimal frozenBalance;
+    private BigDecimal frozenBalance;
 
     /**
      * 待释放余额
@@ -50,7 +50,7 @@ public class OtcWallet implements Serializable{
      * @date 2019-05-05 15:21:32
      */
     @Column(columnDefinition = "decimal(20,8) comment '待释放余额'")
-	private BigDecimal releaseBalance;
+    private BigDecimal releaseBalance;
 
     /**
      * 钱包不是锁定（0-未锁定，1-已锁定）
@@ -58,21 +58,21 @@ public class OtcWallet implements Serializable{
      *
      * @date 2019-05-05 15:21:32
      */
-	private Integer isLock;
+    private Integer isLock;
 
     /**
      * This field corresponds to the database column otc_wallet.member_id
      *
      * @date 2019-05-05 15:21:32
      */
-	private Long memberId;
+    private Long memberId;
 
     /**
      * This field corresponds to the database column otc_wallet.version
      *
      * @date 2019-05-05 15:21:32
      */
-	private Integer version;
+    private Integer version;
 
     /**
      * This field corresponds to the database column otc_wallet.coin_id

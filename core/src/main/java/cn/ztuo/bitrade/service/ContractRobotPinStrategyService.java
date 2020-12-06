@@ -6,19 +6,21 @@ import cn.ztuo.bitrade.dao.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.*;
 import cn.ztuo.bitrade.enums.*;
+
 import javax.transaction.*;
+
 import org.springframework.data.domain.*;
 import org.apache.commons.lang3.*;
 import cn.ztuo.bitrade.pagination.*;
 import org.springframework.data.jpa.domain.*;
 import org.apache.commons.collections.*;
 import cn.ztuo.bitrade.util.*;
+
 import java.util.*;
 import java.io.*;
 
 @Service
-public class ContractRobotPinStrategyService extends BaseService
-{
+public class ContractRobotPinStrategyService extends BaseService {
     @Autowired
     private ContractRobotPinStrategyDao contractRobotPinStrategyDao;
 
@@ -33,7 +35,7 @@ public class ContractRobotPinStrategyService extends BaseService
 
     public Page<ContractRobotPinStrategy> findPage(final String symbol, final Integer status, final Integer side, final Pageable pageable) {
         final Criteria<ContractRobotPinStrategy> specification = new Criteria<ContractRobotPinStrategy>();
-        if (StringUtils.isNotEmpty((CharSequence)symbol)) {
+        if (StringUtils.isNotEmpty((CharSequence) symbol)) {
             specification.add(Restrictions.eq("symbol", symbol, true));
         }
         if (null != status) {
@@ -42,8 +44,8 @@ public class ContractRobotPinStrategyService extends BaseService
         if (null != side) {
             specification.add(Restrictions.eq("side", side, true));
         }
-        final Page<ContractRobotPinStrategy> page = (Page<ContractRobotPinStrategy>)this.contractRobotPinStrategyDao.findAll((Specification)specification, pageable);
-        if (CollectionUtils.isEmpty((Collection)page.getContent())) {
+        final Page<ContractRobotPinStrategy> page = (Page<ContractRobotPinStrategy>) this.contractRobotPinStrategyDao.findAll((Specification) specification, pageable);
+        if (CollectionUtils.isEmpty((Collection) page.getContent())) {
             return page;
         }
         for (final ContractRobotPinStrategy data : page.getContent()) {
@@ -53,10 +55,10 @@ public class ContractRobotPinStrategyService extends BaseService
     }
 
     public ContractRobotPinStrategy findById(final Long id) {
-        return (ContractRobotPinStrategy)this.contractRobotPinStrategyDao.getOne(id);
+        return (ContractRobotPinStrategy) this.contractRobotPinStrategyDao.getOne(id);
     }
 
     public ContractRobotPinStrategy save(final ContractRobotPinStrategy contractRobotPinStrategy) {
-        return (ContractRobotPinStrategy)this.contractRobotPinStrategyDao.save(contractRobotPinStrategy);
+        return (ContractRobotPinStrategy) this.contractRobotPinStrategyDao.save(contractRobotPinStrategy);
     }
 }

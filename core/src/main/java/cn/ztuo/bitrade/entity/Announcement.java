@@ -24,8 +24,8 @@ public class Announcement {
     @NotNull(message = "{TITLE.NULL}")
     private String title;
 
-    @Column(columnDefinition="TEXT")
-    @Basic(fetch=FetchType.LAZY)
+    @Column(columnDefinition = "TEXT")
+    @Basic(fetch = FetchType.LAZY)
     private String content;
 
     @CreationTimestamp
@@ -38,12 +38,12 @@ public class Announcement {
     @Column(nullable = true)
     private String imgUrl;
 
-    private int sort = 0 ;
+    private int sort = 0;
 
     /**
      * 是否置顶（0，置顶  1，不置顶（默认））
      */
-    private String isTop = "1" ;
+    private String isTop = "1";
 
     /**
      * 语种（"en-US", "zh-CN", "ja-JP", "ko-KR", "ar-AE"）

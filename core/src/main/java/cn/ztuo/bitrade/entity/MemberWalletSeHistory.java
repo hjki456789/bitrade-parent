@@ -13,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(uniqueConstraints ={@UniqueConstraint(columnNames={"memberId", "createTime"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"memberId", "createTime"})})
 public class MemberWalletSeHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

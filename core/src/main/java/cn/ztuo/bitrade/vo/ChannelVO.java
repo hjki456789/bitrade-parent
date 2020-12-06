@@ -15,20 +15,20 @@ public class ChannelVO {
      * 渠道累计奖励
      */
     @Column(name = "channelReward")
-    private BigDecimal channelReward=BigDecimal.ZERO;
+    private BigDecimal channelReward = BigDecimal.ZERO;
     /**
      * 推广人数
      */
     @Column(name = "channelCount")
-    private Integer channelCount=0;
+    private Integer channelCount = 0;
 
-    public ChannelVO(Long memberId,Integer channelCount,BigDecimal channelReward){
-        this.memberId=memberId;
-        this.channelCount=channelCount;
-        this.channelReward=channelReward;
+    public ChannelVO(Long memberId, Integer channelCount, BigDecimal channelReward) {
+        this.memberId = memberId;
+        this.channelCount = channelCount;
+        this.channelReward = channelReward;
     }
 
-    public ChannelVO(){
+    public ChannelVO() {
         super();
     }
 }

@@ -9,6 +9,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AccessLog {
     String operation();
+
     AdminModule module();
 }
 

@@ -10,8 +10,7 @@ import java.beans.*;
 
 @AllArgsConstructor
 @Getter
-public enum IfNodeType implements BaseEnum
-{
+public enum IfNodeType implements BaseEnum {
     COMMON("普通用户"),
     NODE("节点"),
     PROXY("代理"),

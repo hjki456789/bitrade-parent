@@ -19,52 +19,54 @@ import java.util.List;
 public class InitPlateService extends BaseService {
 
     @Autowired
-    private RedisUtil redisUtil ;
+    private RedisUtil redisUtil;
 
     @Autowired
-    private InitPlateDao initPlateDao ;
+    private InitPlateDao initPlateDao;
+
     public InitPlate findInitPlateBySymbol(String symbol) {
         return initPlateDao.findInitPlateBySymbol(symbol);
     }
 
-    public InitPlate save(InitPlate initPlate){
+    public InitPlate save(InitPlate initPlate) {
         return initPlateDao.save(initPlate);
     }
 
     public InitPlate saveAndFlush(InitPlate initPlate) {
-       return initPlateDao.saveAndFlush(initPlate);
+        return initPlateDao.saveAndFlush(initPlate);
     }
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(long id){
+    public void delete(long id) {
         initPlateDao.deleteById(id);
     }
 
     public Page<InitPlate> findAllByPage(Criteria<InitPlate> specification, PageRequest pageRequest) {
-        return initPlateDao.findAll(specification,pageRequest);
+        return initPlateDao.findAll(specification, pageRequest);
     }
-    public InitPlate findByInitPlateId(long id){
+
+    public InitPlate findByInitPlateId(long id) {
         return initPlateDao.findById(id).orElse(null);
     }
 
     @Override
-    public List<InitPlate> findAll(){
+    public List<InitPlate> findAll() {
         return initPlateDao.findAll();
     }
 
     public List<String> findAllSymbols() {
         Object object = redisUtil.get(SysConstant.EXCHANGE_INIT_PLATE_ALL_SYMBOLS);
-        if(object!=null){
+        if (object != null) {
             return (List<String>) object;
-        }else {
+        } else {
             List<InitPlate> initPlates = initPlateDao.findAll();
             List<String> symbols = new ArrayList<>();
-            for (InitPlate initPlate :initPlates){
+            for (InitPlate initPlate : initPlates) {
                 symbols.add(initPlate.getSymbol());
             }
-            redisUtil.set(SysConstant.EXCHANGE_INIT_PLATE_ALL_SYMBOLS,symbols);
+            redisUtil.set(SysConstant.EXCHANGE_INIT_PLATE_ALL_SYMBOLS, symbols);
             return symbols;
         }
     }

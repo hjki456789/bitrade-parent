@@ -102,17 +102,17 @@ public class MemberTransactionService extends BaseService {
                 .fetch();
     }
 
-    public Page<MemberTransaction> queryByMember(Long uid, Integer pageNo, Integer pageSize, TransactionType type,String unit) {
+    public Page<MemberTransaction> queryByMember(Long uid, Integer pageNo, Integer pageSize, TransactionType type, String unit) {
         //排序方式 (需要倒序 这样    Criteria.sort("id","createTime.desc") ) //参数实体类为字段名
         Sort orders = Criteria.sortStatic("createTime.desc");
         //分页参数
-        PageRequest pageRequest = PageRequest.of(pageNo-1, pageSize, orders);
+        PageRequest pageRequest = PageRequest.of(pageNo - 1, pageSize, orders);
         //查询条件
         Criteria<MemberTransaction> specification = new Criteria<MemberTransaction>();
         specification.add(Restrictions.eq("memberId", uid, false));
         specification.add(Restrictions.eq("type", type, false));
-        if(unit!=null){
-            specification.add(Restrictions.eq("symbol",unit,false));
+        if (unit != null) {
+            specification.add(Restrictions.eq("symbol", unit, false));
         }
         return transactionDao.findAll(specification, pageRequest);
     }
@@ -121,7 +121,7 @@ public class MemberTransactionService extends BaseService {
         //排序方式 (需要倒序 这样    Criteria.sort("id","createTime.desc") ) //参数实体类为字段名
         Sort orders = Criteria.sortStatic("createTime.desc");
         //分页参数
-        PageRequest pageRequest = PageRequest.of(pageNo-1, pageSize, orders);
+        PageRequest pageRequest = PageRequest.of(pageNo - 1, pageSize, orders);
         //查询条件
         Criteria<MemberTransaction> specification = new Criteria<MemberTransaction>();
         specification.add(Restrictions.eq("memberId", uid, false));
@@ -129,7 +129,7 @@ public class MemberTransactionService extends BaseService {
             specification.add(Restrictions.eq("type", type, false));
         }
         if (StringUtils.isNotBlank(startDate) && StringUtils.isNotBlank(endDate)) {
-            specification.add(Restrictions.gte("createTime", DateUtil.YYYY_MM_DD_MM_HH_SS.parse(startDate ), false));
+            specification.add(Restrictions.gte("createTime", DateUtil.YYYY_MM_DD_MM_HH_SS.parse(startDate), false));
             specification.add(Restrictions.lte("createTime", DateUtil.YYYY_MM_DD_MM_HH_SS.parse(endDate), false));
         }
         if (StringUtils.isNotBlank(symbol))
@@ -141,7 +141,7 @@ public class MemberTransactionService extends BaseService {
         //排序方式 (需要倒序 这样    Criteria.sort("id","createTime.desc") ) //参数实体类为字段名
         Sort orders = Criteria.sortStatic("createTime.desc");
         //分页参数
-        PageRequest pageRequest = PageRequest.of(pageNo-1, pageSize, orders);
+        PageRequest pageRequest = PageRequest.of(pageNo - 1, pageSize, orders);
         //查询条件
         Criteria<MemberTransaction> specification = new Criteria<MemberTransaction>();
         specification.add(Restrictions.eq("memberId", uid, false));
@@ -149,7 +149,7 @@ public class MemberTransactionService extends BaseService {
             specification.add(Restrictions.in("type", type, false));
         }
         if (StringUtils.isNotBlank(startDate) && StringUtils.isNotBlank(endDate)) {
-            specification.add(Restrictions.gte("createTime", DateUtil.YYYY_MM_DD_MM_HH_SS.parse(startDate ), false));
+            specification.add(Restrictions.gte("createTime", DateUtil.YYYY_MM_DD_MM_HH_SS.parse(startDate), false));
             specification.add(Restrictions.lte("createTime", DateUtil.YYYY_MM_DD_MM_HH_SS.parse(endDate), false));
         }
         if (StringUtils.isNotBlank(symbol))
@@ -157,7 +157,7 @@ public class MemberTransactionService extends BaseService {
         return transactionDao.findAll(specification, pageRequest);
     }
 
-    public List<Map<String, Object>> findTransactionSum(Long uid,TransactionType type) {
+    public List<Map<String, Object>> findTransactionSum(Long uid, TransactionType type) {
         List<TransactionType> types = new ArrayList<>();
         types.add(type);
         List<Map<String, Object>> results = transactionDao.findTransactionSum(uid, types);
@@ -263,18 +263,20 @@ public class MemberTransactionService extends BaseService {
     public void save(List<MemberTransaction> list) {
         transactionDao.saveAll(list);
     }
+
     /**
      * 查询币币交易分红记录
+     *
      * @param beginDate
      * @param endDate
      * @return
      */
-    public  List<MemberTransaction> findAllByCreateTime(String beginDate,String endDate){
-        return transactionDao.findAllByCreateTime(beginDate,endDate);
+    public List<MemberTransaction> findAllByCreateTime(String beginDate, String endDate) {
+        return transactionDao.findAllByCreateTime(beginDate, endDate);
     }
 
     public Page<MemberTransaction> findAll(final Predicate predicate, final Pageable pageable) {
-        final Page<MemberTransaction> page = (Page<MemberTransaction>)this.transactionDao.findAll(predicate, pageable);
+        final Page<MemberTransaction> page = (Page<MemberTransaction>) this.transactionDao.findAll(predicate, pageable);
         if (page != null && CollectionUtils.isNotEmpty(page.getContent())) {
             for (final MemberTransaction memberT : page.getContent()) {
                 this.getParam(memberT);
@@ -300,17 +302,16 @@ public class MemberTransactionService extends BaseService {
 
     @Transactional(readOnly = true)
     public PageResult<MemberTransaction> queryWhereOrPage(final List<BooleanExpression> booleanExpressionList, final Integer pageNo, final Integer pageSize) {
-        final JPAQuery<MemberTransaction> jpaQuery = (JPAQuery<MemberTransaction>)this.queryFactory.selectFrom((EntityPath)QMemberTransaction.memberTransaction);
-        final OrderSpecifier<Long> orderSpecifier = (OrderSpecifier<Long>)QMemberTransaction.memberTransaction.sequence.desc();
+        final JPAQuery<MemberTransaction> jpaQuery = (JPAQuery<MemberTransaction>) this.queryFactory.selectFrom((EntityPath) QMemberTransaction.memberTransaction);
+        final OrderSpecifier<Long> orderSpecifier = (OrderSpecifier<Long>) QMemberTransaction.memberTransaction.sequence.desc();
         if (booleanExpressionList != null) {
-            jpaQuery.where((Predicate[])booleanExpressionList.toArray((Predicate[])new BooleanExpression[booleanExpressionList.size()]));
+            jpaQuery.where((Predicate[]) booleanExpressionList.toArray((Predicate[]) new BooleanExpression[booleanExpressionList.size()]));
         }
         List<MemberTransaction> list;
         if (pageNo != null && pageSize != null) {
-            list = (List<MemberTransaction>)((JPAQuery)((JPAQuery)((JPAQuery)jpaQuery.orderBy((OrderSpecifier)orderSpecifier)).offset((long)((pageNo - 1) * pageSize))).limit((long)pageSize)).fetch();
-        }
-        else {
-            list = (List<MemberTransaction>)((JPAQuery)jpaQuery.orderBy((OrderSpecifier)orderSpecifier)).fetch();
+            list = (List<MemberTransaction>) ((JPAQuery) ((JPAQuery) ((JPAQuery) jpaQuery.orderBy((OrderSpecifier) orderSpecifier)).offset((long) ((pageNo - 1) * pageSize))).limit((long) pageSize)).fetch();
+        } else {
+            list = (List<MemberTransaction>) ((JPAQuery) jpaQuery.orderBy((OrderSpecifier) orderSpecifier)).fetch();
         }
         if (!CollectionUtils.isEmpty(list)) {
             for (final MemberTransaction m : list) {
@@ -324,17 +325,16 @@ public class MemberTransactionService extends BaseService {
     public List<MemberTransactionExcel> outExcel(final List<BooleanExpression> booleanExpressionList, final Integer pageNo, final Integer pageSize) {
         final List<MemberTransactionExcel> resultList = new ArrayList<MemberTransactionExcel>();
         try {
-            final JPAQuery<MemberTransaction> jpaQuery = (JPAQuery<MemberTransaction>)this.queryFactory.selectFrom((EntityPath)QMemberTransaction.memberTransaction);
-            final OrderSpecifier<Long> orderSpecifier = (OrderSpecifier<Long>)QMemberTransaction.memberTransaction.sequence.desc();
+            final JPAQuery<MemberTransaction> jpaQuery = (JPAQuery<MemberTransaction>) this.queryFactory.selectFrom((EntityPath) QMemberTransaction.memberTransaction);
+            final OrderSpecifier<Long> orderSpecifier = (OrderSpecifier<Long>) QMemberTransaction.memberTransaction.sequence.desc();
             if (booleanExpressionList != null) {
-                jpaQuery.where((Predicate[])booleanExpressionList.toArray((Predicate[])new BooleanExpression[booleanExpressionList.size()]));
+                jpaQuery.where((Predicate[]) booleanExpressionList.toArray((Predicate[]) new BooleanExpression[booleanExpressionList.size()]));
             }
             List<MemberTransaction> list;
             if (pageNo != null && pageSize != null) {
-                list = (List<MemberTransaction>)((JPAQuery)((JPAQuery)((JPAQuery)jpaQuery.orderBy((OrderSpecifier)orderSpecifier)).offset((long)((pageNo - 1) * pageSize))).limit((long)pageSize)).fetch();
-            }
-            else {
-                list = (List<MemberTransaction>)((JPAQuery)jpaQuery.orderBy((OrderSpecifier)orderSpecifier)).fetch();
+                list = (List<MemberTransaction>) ((JPAQuery) ((JPAQuery) ((JPAQuery) jpaQuery.orderBy((OrderSpecifier) orderSpecifier)).offset((long) ((pageNo - 1) * pageSize))).limit((long) pageSize)).fetch();
+            } else {
+                list = (List<MemberTransaction>) ((JPAQuery) jpaQuery.orderBy((OrderSpecifier) orderSpecifier)).fetch();
             }
             if (!CollectionUtils.isEmpty(list)) {
                 for (final MemberTransaction m : list) {
@@ -349,8 +349,7 @@ public class MemberTransactionService extends BaseService {
                     resultList.add(excelDto);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return resultList;

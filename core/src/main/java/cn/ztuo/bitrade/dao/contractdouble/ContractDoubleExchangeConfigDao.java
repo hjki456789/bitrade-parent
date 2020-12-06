@@ -7,6 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
-public interface ContractDoubleExchangeConfigDao extends JpaRepository<ContractDoubleExchangeConfig, Long>, JpaSpecificationExecutor<ContractDoubleExchangeConfig>, QuerydslPredicateExecutor<ContractStrategyConfig>
-{
+public interface ContractDoubleExchangeConfigDao extends JpaRepository<ContractDoubleExchangeConfig, Long>, JpaSpecificationExecutor<ContractDoubleExchangeConfig>, QuerydslPredicateExecutor<ContractStrategyConfig> {
 }

@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 创瑞短信接口实现类
+ *
  * @author huazhan
  */
 @Slf4j
@@ -47,9 +48,9 @@ public class ChuangRuiSMSProvider implements SMSProvider {
         return parseResult(response.getBody());
     }
 
-    public MessageResult sendLoginMessage(String ip,String phone) throws Exception {
-        String content=sendLoginMessage(ip);
-        return sendSingleMessage(content,phone);
+    public MessageResult sendLoginMessage(String ip, String phone) throws Exception {
+        String content = sendLoginMessage(ip);
+        return sendSingleMessage(content, phone);
     }
 
     private MessageResult parseResult(String result) {
@@ -64,10 +65,10 @@ public class ChuangRuiSMSProvider implements SMSProvider {
     @Override
     public MessageResult sendTemplateMessage(final String mobile, final String templateId) throws Exception {
         ChuangRuiSMSProvider.log.info("sms templateId={}", templateId);
-        final HttpResponse<String> response = (HttpResponse<String>)Unirest.post(this.gateway).field("accesskey", this.username).field("secret", this.password).field("mobile", mobile).field("content", "").field("sign", this.sign).field("templateId", templateId).asString();
+        final HttpResponse<String> response = (HttpResponse<String>) Unirest.post(this.gateway).field("accesskey", this.username).field("secret", this.password).field("mobile", mobile).field("content", "").field("sign", this.sign).field("templateId", templateId).asString();
         ChuangRuiSMSProvider.log.info(" mobile : " + mobile + "templateId : " + templateId);
         ChuangRuiSMSProvider.log.info("result = {}", response.getBody());
-        return this.parseResult((String)response.getBody());
+        return this.parseResult((String) response.getBody());
     }
 
     @Override
@@ -79,10 +80,10 @@ public class ChuangRuiSMSProvider implements SMSProvider {
         final String sms_gateway = "http://intlapi.1cloudsp.com/intl/api/v2/send";
         final String sms_sign = "2520";
         ChuangRuiSMSProvider.log.info("sms content={}", content);
-        final HttpResponse<String> response = (HttpResponse<String>)Unirest.post(sms_gateway).field("accesskey", this.username).field("secret", this.password).field("mobile", mobile).field("content", content).field("sign", sms_sign).field("templateId", templateId).asString();
+        final HttpResponse<String> response = (HttpResponse<String>) Unirest.post(sms_gateway).field("accesskey", this.username).field("secret", this.password).field("mobile", mobile).field("content", content).field("sign", sms_sign).field("templateId", templateId).asString();
         ChuangRuiSMSProvider.log.info(" mobile : " + mobile + "content : " + content);
         ChuangRuiSMSProvider.log.info("result = {}", response.getBody());
-        return this.parseResult((String)response.getBody());
+        return this.parseResult((String) response.getBody());
     }
 
     @Override

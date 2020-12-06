@@ -13,23 +13,23 @@ import org.springframework.stereotype.Service;
  * @date 2019年03月08日
  */
 @Service
-public class RewardPromotionSettingService  extends TopBaseService<RewardPromotionSetting,RewardPromotionSettingDao> {
+public class RewardPromotionSettingService extends TopBaseService<RewardPromotionSetting, RewardPromotionSettingDao> {
 
     @Autowired
     public void setDao(RewardPromotionSettingDao dao) {
         super.setDao(dao);
     }
 
-    public RewardPromotionSetting findByType(PromotionRewardType type){
+    public RewardPromotionSetting findByType(PromotionRewardType type) {
         return dao.findByStatusAndType(BooleanEnum.IS_TRUE, type);
     }
 
-    public RewardPromotionSetting save(RewardPromotionSetting setting){
+    public RewardPromotionSetting save(RewardPromotionSetting setting) {
         return dao.save(setting);
     }
 
-    public void deletes(long[] ids){
-        for(long id : ids){
+    public void deletes(long[] ids) {
+        for (long id : ids) {
             delete(id);
         }
     }

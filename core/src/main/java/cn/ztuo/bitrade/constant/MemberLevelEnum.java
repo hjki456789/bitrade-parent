@@ -13,8 +13,8 @@ import lombok.Setter;
  */
 @AllArgsConstructor
 @Getter
-public enum MemberLevelEnum implements BaseEnum{
-    GENERAL( "普通"),
+public enum MemberLevelEnum implements BaseEnum {
+    GENERAL("普通"),
     REALNAME("实名"),
     IDENTIFICATION("认证商家");
 
@@ -23,7 +23,7 @@ public enum MemberLevelEnum implements BaseEnum{
 
     @Override
     @JsonValue
-    public int getOrdinal(){
+    public int getOrdinal() {
         return this.ordinal();
     }
 

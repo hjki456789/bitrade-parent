@@ -11,16 +11,16 @@ import java.util.Map;
 
 public class EnumUtils {
     public static List<Map<String, String>> getEnumInfo(Class<? extends Enum> aClass) {
-        if(aClass.getName().startsWith("cn.ztuo.bitrade.")){
+        if (aClass.getName().startsWith("cn.ztuo.bitrade.")) {
             List<Map<String, String>> list = new ArrayList<>();
             LocalizationExtendService localizationExtendService = SpringContextUtil.getBean(LocalizationExtendService.class);
             String locale = LocaleContextHolder.getLocale().toLanguageTag();
-            for (Enum anEnum: aClass.getEnumConstants()) {
+            for (Enum anEnum : aClass.getEnumConstants()) {
                 String text = localizationExtendService.getLocaleInfo("ENUM", locale,
-                        aClass.getName().replace("cn.ztuo.bitrade.",""),anEnum.name());
+                        aClass.getName().replace("cn.ztuo.bitrade.", ""), anEnum.name());
                 Map<String, String> map = new HashMap<>();
-                map.put("id",String.valueOf(anEnum.ordinal()));
-                map.put("text",StringUtils.defaultString(text, anEnum.name()));
+                map.put("id", String.valueOf(anEnum.ordinal()));
+                map.put("text", StringUtils.defaultString(text, anEnum.name()));
                 list.add(map);
             }
             return list;

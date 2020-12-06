@@ -205,11 +205,11 @@ public class CoinService extends BaseService {
     }
 
     public List<Coin> findAllByStatusAndIsSettlement(CommonStatus status) {
-        return coinDao.findAllByStatusAndIsSettlement(status,true);
+        return coinDao.findAllByStatusAndIsSettlement(status, true);
     }
 
     public List<Coin> findAllByStatusAndIsSettlementNot(CommonStatus status) {
-        return coinDao.findAllByStatusAndIsSettlementNot(status,true);
+        return coinDao.findAllByStatusAndIsSettlementNot(status, true);
     }
 
     /**
@@ -245,7 +245,7 @@ public class CoinService extends BaseService {
     }
 
     public List<LocalizationExtend> findCoinInfo(String name) {
-        return localizationExtendService.getLocaleInfo("Coin",name);
+        return localizationExtendService.getLocaleInfo("Coin", name);
     }
 
     public CoinChainRelation findRelationByKey(String coinKey) {
@@ -267,7 +267,6 @@ public class CoinService extends BaseService {
     public int updateColdWallet(final String coinName, final String coldWalletAddress) {
         return this.coinDao.updateColdWallet(coinName, coldWalletAddress);
     }
-
 
 
 }

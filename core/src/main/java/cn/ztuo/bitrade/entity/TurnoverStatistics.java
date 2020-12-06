@@ -15,7 +15,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 
-
 @Data
 @Document(collection = "turnover_statistics")
 @ToString
@@ -23,21 +22,21 @@ public class TurnoverStatistics {
     /**
      * 成交日期:以天为最小单位统计
      */
-    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
-    private Date date ;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
+    private Date date;
 
-    private int year ;
+    private int year;
 
     @Max(value = 12)
     @Min(value = 1)
-    private int month ;
+    private int month;
 
     @Max(value = 31)
     @Min(value = 1)
-    private int day ;
+    private int day;
 
     @Enumerated(value = EnumType.STRING)
-    private TransactionTypeEnum type ;
+    private TransactionTypeEnum type;
 
     /**
      * 交易区:平台指定的合法币种
@@ -48,11 +47,11 @@ public class TurnoverStatistics {
      * 当天的交易量:币种（coinUnit）的数量
      */
     @Column(name = "Salary1", columnDefinition = "decimal(20,8)")
-    private BigDecimal amount ;
+    private BigDecimal amount;
     /**
      * 当天收取的币种手续费
      */
     @Column(name = "Salary1", columnDefinition = "decimal(20,8)")
-    private BigDecimal fee ;
+    private BigDecimal fee;
 
 }
