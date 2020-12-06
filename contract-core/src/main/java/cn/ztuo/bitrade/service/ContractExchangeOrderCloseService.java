@@ -4,21 +4,24 @@ import org.springframework.stereotype.*;
 import cn.ztuo.bitrade.dao.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.*;
+
 import java.math.*;
+
 import org.apache.commons.collections.*;
+
 import java.util.*;
 import java.io.*;
+
 import org.slf4j.*;
 
 @Service
-public class ContractExchangeOrderCloseService
-{
+public class ContractExchangeOrderCloseService {
     private static final Logger log;
     @Autowired
     private ContractExchangeOrderCloseRepository contractExchangeOrderCloseRepository;
 
     public ContractExchangeOrderClose save(final ContractExchangeOrderClose orderClose) {
-        return (ContractExchangeOrderClose)this.contractExchangeOrderCloseRepository.saveAndFlush(orderClose);
+        return (ContractExchangeOrderClose) this.contractExchangeOrderCloseRepository.saveAndFlush(orderClose);
     }
 
     public BigDecimal getMemberProfitLoss(final Long memberId, final Date startDate, final Date endDate) {
@@ -32,7 +35,7 @@ public class ContractExchangeOrderCloseService
     }
 
     public BigDecimal sumMembersProfitLoss(final List<Long> memberIds, final Date startDate, final Date endDate) {
-        if (CollectionUtils.isEmpty((Collection)memberIds)) {
+        if (CollectionUtils.isEmpty((Collection) memberIds)) {
             return BigDecimal.ZERO;
         }
         final BigDecimal membersTotalProfitLoss = this.contractExchangeOrderCloseRepository.sumMembersProfitLoss(memberIds, startDate, endDate);
@@ -45,7 +48,7 @@ public class ContractExchangeOrderCloseService
     }
 
     public BigDecimal sumMembersTotalProfitLoss(final List<Long> memberIds) {
-        if (CollectionUtils.isEmpty((Collection)memberIds)) {
+        if (CollectionUtils.isEmpty((Collection) memberIds)) {
             return BigDecimal.ZERO;
         }
         final BigDecimal membersTotalProfitLoss = this.contractExchangeOrderCloseRepository.sumMembersTotalProfitLoss(memberIds);
@@ -53,7 +56,7 @@ public class ContractExchangeOrderCloseService
     }
 
     public ContractExchangeOrderClose get(final Long id) {
-        return (ContractExchangeOrderClose)this.contractExchangeOrderCloseRepository.getOne(id);
+        return (ContractExchangeOrderClose) this.contractExchangeOrderCloseRepository.getOne(id);
     }
 
     public BigDecimal getMinProfitLossRate(final Long memberId, final Date startDate, final Date endDate) {
@@ -62,6 +65,6 @@ public class ContractExchangeOrderCloseService
     }
 
     static {
-        log = LoggerFactory.getLogger((Class)ContractExchangeOrderCloseService.class);
+        log = LoggerFactory.getLogger((Class) ContractExchangeOrderCloseService.class);
     }
 }

@@ -8,8 +8,7 @@ import org.springframework.data.domain.*;
 import cn.ztuo.bitrade.entity.*;
 
 @Service
-public class CoinCollectLogService
-{
+public class CoinCollectLogService {
     @Autowired
     private CoinCollectLogRepository coinCollectLogRepository;
 

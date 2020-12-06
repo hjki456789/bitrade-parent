@@ -38,7 +38,7 @@ public class ExchangeCoinService {
         return coinRepository.findAll(spec, sort);
     }
 
-    public ExchangeCoin findByDefault(String defaultSymbol){
+    public ExchangeCoin findByDefault(String defaultSymbol) {
         return coinRepository.findExchangeCoinByDefaultSymbol(defaultSymbol);
     }
 
@@ -109,11 +109,11 @@ public class ExchangeCoinService {
         return coinRepository.findExchangeSymbol(coinSymbol);
     }
 
-    public List<String> getAllCoin(){
+    public List<String> getAllCoin() {
         return coinRepository.findAllCoinSymbol();
     }
 
-    public List<String> getAllSymbol(){
+    public List<String> getAllSymbol() {
         return coinRepository.findAllSymbol();
     }
 
@@ -128,35 +128,35 @@ public class ExchangeCoinService {
     public List<ExchangeCoin> findByCoin(String coin) {
         Specification<ExchangeCoin> spec = (root, criteriaQuery, criteriaBuilder) -> {
             Path<String> enable = root.get("enable");
-            if(StringUtils.isNotEmpty(coin)){
+            if (StringUtils.isNotEmpty(coin)) {
                 Path<String> symbol = root.get("symbol");
-                criteriaQuery.where(criteriaBuilder.equal(enable, 1),criteriaBuilder.like(symbol, "%"+coin+"%"));
-            }else {
+                criteriaQuery.where(criteriaBuilder.equal(enable, 1), criteriaBuilder.like(symbol, "%" + coin + "%"));
+            } else {
                 criteriaQuery.where(criteriaBuilder.equal(enable, 1));
             }
             return null;
         };
         Sort.Order order1 = new Sort.Order(Sort.Direction.ASC, "sort");
         Sort.Order order2 = new Sort.Order(Sort.Direction.ASC, "symbol");
-        Sort sort = Sort.by(order1,order2);
+        Sort sort = Sort.by(order1, order2);
         return coinRepository.findAll(spec, sort);
     }
 
-    public List<ExchangeCoin> findByCoin(String coin,Integer areaId) {
+    public List<ExchangeCoin> findByCoin(String coin, Integer areaId) {
         Specification<ExchangeCoin> spec = (root, criteriaQuery, criteriaBuilder) -> {
             Path<String> enable = root.get("enable");
             Path<Integer> area = root.get("areaId");
-            if(StringUtils.isNotEmpty(coin)){
+            if (StringUtils.isNotEmpty(coin)) {
                 Path<String> symbol = root.get("symbol");
-                criteriaQuery.where(criteriaBuilder.equal(enable, 1),criteriaBuilder.like(symbol, "%"+coin+"%"),criteriaBuilder.equal(area,areaId));
-            }else {
-                criteriaQuery.where(criteriaBuilder.equal(enable, 1),criteriaBuilder.equal(area,areaId));
+                criteriaQuery.where(criteriaBuilder.equal(enable, 1), criteriaBuilder.like(symbol, "%" + coin + "%"), criteriaBuilder.equal(area, areaId));
+            } else {
+                criteriaQuery.where(criteriaBuilder.equal(enable, 1), criteriaBuilder.equal(area, areaId));
             }
             return null;
         };
         Sort.Order order1 = new Sort.Order(Sort.Direction.ASC, "sort");
         Sort.Order order2 = new Sort.Order(Sort.Direction.ASC, "symbol");
-        Sort sort = Sort.by(order1,order2);
+        Sort sort = Sort.by(order1, order2);
         return coinRepository.findAll(spec, sort);
     }
 

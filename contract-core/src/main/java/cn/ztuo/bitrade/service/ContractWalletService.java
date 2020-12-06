@@ -5,9 +5,13 @@ import cn.ztuo.bitrade.dao.*;
 import org.springframework.beans.factory.annotation.*;
 import com.querydsl.core.types.*;
 import org.springframework.data.domain.*;
+
 import java.math.*;
+
 import cn.ztuo.bitrade.entity.enumConstants.*;
+
 import java.util.*;
+
 import cn.ztuo.bitrade.util.*;
 import org.springframework.transaction.annotation.*;
 import cn.ztuo.bitrade.entity.*;
@@ -15,8 +19,7 @@ import cn.ztuo.bitrade.constant.*;
 import org.slf4j.*;
 
 @Service
-public class ContractWalletService
-{
+public class ContractWalletService {
     private static final Logger log;
     @Autowired
     private ContractWalletRepository contractWalletRepository;
@@ -30,7 +33,7 @@ public class ContractWalletService
     private MemberAccountOperateRecordService memberAccountOperateRecordService;
 
     public Page<ContractWallet> findAll(final Predicate predicate, final Pageable pageable) {
-        return (Page<ContractWallet>)this.contractWalletRepository.findAll(predicate, pageable);
+        return (Page<ContractWallet>) this.contractWalletRepository.findAll(predicate, pageable);
     }
 
     public int updateIsLock(final Long id, final Integer isLock) {
@@ -53,7 +56,7 @@ public class ContractWalletService
         return this.contractWalletRepository.updateContractWalletBalance(contractWallet.getBalance(), contractWallet.getFrozenBalance(), contractWallet.getVirtualRechargeFrozenBalance(), contractWallet.getId(), contractWallet.getVersion());
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public int changeBalance(final ContractWallet contractWallet, final BigDecimal changeBalance, final ContractWalletOperationType operationType, final String remark, final String adminId) {
         contractWallet.setBalance(contractWallet.getBalance().add(changeBalance));
         final Long memberId = contractWallet.getMember().getId();
@@ -99,10 +102,10 @@ public class ContractWalletService
     }
 
     public ContractWallet save(final ContractWallet contractWallet) {
-        return (ContractWallet)this.contractWalletRepository.saveAndFlush(contractWallet);
+        return (ContractWallet) this.contractWalletRepository.saveAndFlush(contractWallet);
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public Integer coin2Contract(final MemberWallet memberWallet, final ContractWallet contractWallet, final BigDecimal amount) {
         this.memberWalletService.decreaseBalance(memberWallet.getId(), amount, memberWallet.getVersion());
         contractWallet.setBalance(contractWallet.getBalance().add(amount));
@@ -124,7 +127,7 @@ public class ContractWalletService
         return 1;
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public Integer Contract2Coin(final MemberWallet memberWallet, final ContractWallet contractWallet, final BigDecimal amount) {
         this.memberWalletService.increaseBalance(memberWallet.getId(), amount, memberWallet.getVersion());
         contractWallet.setBalance(contractWallet.getBalance().subtract(amount));
@@ -147,6 +150,6 @@ public class ContractWalletService
     }
 
     static {
-        log = LoggerFactory.getLogger((Class)ContractWalletService.class);
+        log = LoggerFactory.getLogger((Class) ContractWalletService.class);
     }
 }

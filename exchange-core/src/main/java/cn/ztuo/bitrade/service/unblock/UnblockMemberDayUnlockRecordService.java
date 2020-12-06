@@ -4,17 +4,17 @@ import org.springframework.stereotype.*;
 import cn.ztuo.bitrade.dao.unblock.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.unbolck.*;
+
 import java.util.*;
 import java.io.*;
 
 @Service
-public class UnblockMemberDayUnlockRecordService
-{
+public class UnblockMemberDayUnlockRecordService {
     @Autowired
     private UnblockMemberDayUnlockRecordRepository unblockMemberDayUnlockRecordRepository;
 
     public UnblockMemberDayUnlockRecord save(final UnblockMemberDayUnlockRecord record) {
-        return (UnblockMemberDayUnlockRecord)this.unblockMemberDayUnlockRecordRepository.saveAndFlush(record);
+        return (UnblockMemberDayUnlockRecord) this.unblockMemberDayUnlockRecordRepository.saveAndFlush(record);
     }
 
     public List<UnblockMemberDayUnlockRecord> findListByTimeAndLimit(final Long sequence) {
@@ -26,6 +26,6 @@ public class UnblockMemberDayUnlockRecordService
     }
 
     public UnblockMemberDayUnlockRecord findOne(final Long unlockId) {
-        return (UnblockMemberDayUnlockRecord)this.unblockMemberDayUnlockRecordRepository.getOne(unlockId);
+        return (UnblockMemberDayUnlockRecord) this.unblockMemberDayUnlockRecordRepository.getOne(unlockId);
     }
 }

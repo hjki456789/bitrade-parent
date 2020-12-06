@@ -31,20 +31,20 @@ public class OrderDetailAggregationService extends MongoBaseService<OrderDetailA
         return orderDetailAggregationRepository.save(aggregation);
     }
 
-   /* public Pagenation<OrderDetailAggregation> getDetail(PageParam pageParam, Long memberId, String coinName, OrderTypeEnum orderType) {
+    /* public Pagenation<OrderDetailAggregation> getDetail(PageParam pageParam, Long memberId, String coinName, OrderTypeEnum orderType) {
 
-        Criteria criteria = new Criteria();
-        criteria.where("1").equals("1");
-        if (memberId != 0)
-            criteria.and("memberId").is(memberId);
-        if (orderType != null)
-            criteria.and("type").is(orderType);
-        if (!StringUtils.isEmpty(coinName))
-            criteria.and("coinName").is(coinName);
-        Query query = new Query(criteria);
-        return page(pageParam, query, OrderDetailAggregation.class, "order_detail_aggregation");
-    }
-*/
+         Criteria criteria = new Criteria();
+         criteria.where("1").equals("1");
+         if (memberId != 0)
+             criteria.and("memberId").is(memberId);
+         if (orderType != null)
+             criteria.and("type").is(orderType);
+         if (!StringUtils.isEmpty(coinName))
+             criteria.and("coinName").is(coinName);
+         Query query = new Query(criteria);
+         return page(pageParam, query, OrderDetailAggregation.class, "order_detail_aggregation");
+     }
+ */
     public List<Map> queryStatistics(long start, long end) {
         ProjectionOperation projectionOperation = Aggregation.project("unit", "fee", "time");
         Criteria operator = Criteria.where("unit").ne("").andOperator(
@@ -82,8 +82,8 @@ public class OrderDetailAggregationService extends MongoBaseService<OrderDetailA
         return list;
     }
 
-    public List<OrderDetailAggregation> queryStatisticsByUnit(long start, long end,String unit) {
-        List<OrderDetailAggregation> list=orderDetailAggregationRepository.findAllByTimeGreaterThanEqualAndTimeLessThanAndUnit(start, end, unit);
+    public List<OrderDetailAggregation> queryStatisticsByUnit(long start, long end, String unit) {
+        List<OrderDetailAggregation> list = orderDetailAggregationRepository.findAllByTimeGreaterThanEqualAndTimeLessThanAndUnit(start, end, unit);
         return list;
     }
 

@@ -3,13 +3,14 @@ package cn.ztuo.bitrade.service;
 import org.springframework.stereotype.*;
 import cn.ztuo.bitrade.dao.*;
 import org.springframework.beans.factory.annotation.*;
+
 import java.math.*;
+
 import cn.ztuo.bitrade.constant.*;
 import cn.ztuo.bitrade.entity.*;
 
 @Service
-public class ContractMemberProfitLossService
-{
+public class ContractMemberProfitLossService {
     @Autowired
     private ContractMemberProfitLossRepository contractMemberProfitLossRepository;
 
@@ -24,8 +25,7 @@ public class ContractMemberProfitLossService
                 info.setProfitLossAmount(profitLossAmount);
                 this.contractMemberProfitLossRepository.save(info);
             }
-        }
-        else {
+        } else {
             info = new ContractMemberProfitLoss(memberId, profitLossAmount, type, startTime, endTime);
             this.contractMemberProfitLossRepository.save(info);
         }
@@ -42,9 +42,8 @@ public class ContractMemberProfitLossService
                 info.setProfitLossAmount(profitLossAmount);
                 this.contractMemberProfitLossRepository.save(info);
             }
-        }
-        else {
-            info = new ContractMemberProfitLoss(memberId, profitLossAmount, type, (String)null, (String)null);
+        } else {
+            info = new ContractMemberProfitLoss(memberId, profitLossAmount, type, (String) null, (String) null);
             this.contractMemberProfitLossRepository.save(info);
         }
     }

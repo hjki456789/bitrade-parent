@@ -16,15 +16,16 @@ public class ExchangeOrderDetailService {
 
     /**
      * 查询某订单的成交详情
+     *
      * @param orderId
      * @return
      */
-    public List<ExchangeOrderDetail> findAllByOrderId(String orderId){
+    public List<ExchangeOrderDetail> findAllByOrderId(String orderId) {
         return orderDetailRepository.findAllByOrderId(orderId);
     }
 
-    public ExchangeOrderDetail save(ExchangeOrderDetail detail){
-       return orderDetailRepository.save(detail);
+    public ExchangeOrderDetail save(ExchangeOrderDetail detail) {
+        return orderDetailRepository.save(detail);
     }
 
     public List<ExchangeOrderDetail> findAllByOrderIdAndTime(final String orderId, final Long startTimestamp, final Long endTimestamp) {

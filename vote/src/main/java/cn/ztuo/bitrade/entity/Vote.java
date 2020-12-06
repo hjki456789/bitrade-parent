@@ -5,12 +5,14 @@ import lombok.Data;
 import org.hibernate.annotations.*;
 import com.fasterxml.jackson.annotation.*;
 import cn.ztuo.bitrade.constant.*;
+
 import java.math.*;
 import java.util.*;
 import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OrderBy;
+
 /**
  * @Description 投票
  * @Author wsy
@@ -19,8 +21,7 @@ import javax.persistence.OrderBy;
  **/
 @Entity
 @Data
-public class Vote
-{
+public class Vote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -33,7 +34,7 @@ public class Vote
     private BigDecimal amount;
     private int voteLimit;
     @OrderBy("id")
-    @OneToMany(targetEntity = PreCoin.class, cascade = { CascadeType.ALL })
+    @OneToMany(targetEntity = PreCoin.class, cascade = {CascadeType.ALL})
     @JoinColumn(name = "vote_id")
     private List<PreCoin> preCoins;
 }

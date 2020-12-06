@@ -3,11 +3,12 @@ package cn.ztuo.bitrade.dao.unblock;
 import cn.ztuo.bitrade.entity.unbolck.*;
 import org.springframework.data.querydsl.*;
 import org.springframework.data.repository.query.*;
+
 import java.util.*;
+
 import org.springframework.data.jpa.repository.*;
 
-public interface UnblockMemberDayUnlockRecordRepository extends JpaRepository<UnblockMemberDayUnlockRecord, Long>, JpaSpecificationExecutor<UnblockMemberDayUnlockRecord>, QuerydslPredicateExecutor<UnblockMemberDayUnlockRecord>
-{
+public interface UnblockMemberDayUnlockRecordRepository extends JpaRepository<UnblockMemberDayUnlockRecord, Long>, JpaSpecificationExecutor<UnblockMemberDayUnlockRecord>, QuerydslPredicateExecutor<UnblockMemberDayUnlockRecord> {
     @Query("select record from UnblockMemberDayUnlockRecord record where record.status=0 and record.sequence>=:sequence")
     List<UnblockMemberDayUnlockRecord> findListByTimeAndLimit(@Param("sequence") final Long p0);
 

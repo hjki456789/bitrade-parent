@@ -7,13 +7,12 @@ import cn.ztuo.bitrade.entity.*;
 import cn.ztuo.bitrade.util.*;
 
 @Service
-public class ContractWalletFlowRecordService
-{
+public class ContractWalletFlowRecordService {
     @Autowired
     private ContractWalletFlowRecordRepository contractWalletFlowRecordRepository;
 
     public MessageResult saveRecord(ContractWalletFlowRecord contractWalletFlowRecord) {
-        contractWalletFlowRecord = (ContractWalletFlowRecord)this.contractWalletFlowRecordRepository.saveAndFlush(contractWalletFlowRecord);
+        contractWalletFlowRecord = (ContractWalletFlowRecord) this.contractWalletFlowRecordRepository.saveAndFlush(contractWalletFlowRecord);
         if (contractWalletFlowRecord != null) {
             return MessageResult.success("success");
         }

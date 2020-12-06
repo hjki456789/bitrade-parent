@@ -6,13 +6,14 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.*;
+
 import java.util.*;
+
 import com.fasterxml.jackson.annotation.*;
 
 @Entity
 @Table
-public class ContractMemberTransferRecord implements Serializable
-{
+public class ContractMemberTransferRecord implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
@@ -88,58 +89,58 @@ public class ContractMemberTransferRecord implements Serializable
         if (!(o instanceof ContractMemberTransferRecord)) {
             return false;
         }
-        final ContractMemberTransferRecord other = (ContractMemberTransferRecord)o;
+        final ContractMemberTransferRecord other = (ContractMemberTransferRecord) o;
         if (!other.canEqual(this)) {
             return false;
         }
         final Object this$id = this.getId();
         final Object other$id = other.getId();
-        Label_0065: {
+        Label_0065:
+        {
             if (this$id == null) {
                 if (other$id == null) {
                     break Label_0065;
                 }
-            }
-            else if (this$id.equals(other$id)) {
+            } else if (this$id.equals(other$id)) {
                 break Label_0065;
             }
             return false;
         }
         final Object this$member = this.getMember();
         final Object other$member = other.getMember();
-        Label_0102: {
+        Label_0102:
+        {
             if (this$member == null) {
                 if (other$member == null) {
                     break Label_0102;
                 }
-            }
-            else if (this$member.equals(other$member)) {
+            } else if (this$member.equals(other$member)) {
                 break Label_0102;
             }
             return false;
         }
         final Object this$orginalProxyMember = this.getOrginalProxyMember();
         final Object other$orginalProxyMember = other.getOrginalProxyMember();
-        Label_0139: {
+        Label_0139:
+        {
             if (this$orginalProxyMember == null) {
                 if (other$orginalProxyMember == null) {
                     break Label_0139;
                 }
-            }
-            else if (this$orginalProxyMember.equals(other$orginalProxyMember)) {
+            } else if (this$orginalProxyMember.equals(other$orginalProxyMember)) {
                 break Label_0139;
             }
             return false;
         }
         final Object this$newProxyMember = this.getNewProxyMember();
         final Object other$newProxyMember = other.getNewProxyMember();
-        Label_0176: {
+        Label_0176:
+        {
             if (this$newProxyMember == null) {
                 if (other$newProxyMember == null) {
                     break Label_0176;
                 }
-            }
-            else if (this$newProxyMember.equals(other$newProxyMember)) {
+            } else if (this$newProxyMember.equals(other$newProxyMember)) {
                 break Label_0176;
             }
             return false;
@@ -150,8 +151,7 @@ public class ContractMemberTransferRecord implements Serializable
             if (other$createTime == null) {
                 return this.getSequence() == other.getSequence();
             }
-        }
-        else if (this$createTime.equals(other$createTime)) {
+        } else if (this$createTime.equals(other$createTime)) {
             return this.getSequence() == other.getSequence();
         }
         return false;
@@ -176,7 +176,7 @@ public class ContractMemberTransferRecord implements Serializable
         final Object $createTime = this.getCreateTime();
         result = result * 59 + (($createTime == null) ? 43 : $createTime.hashCode());
         final long $sequence = this.getSequence();
-        result = result * 59 + (int)($sequence >>> 32 ^ $sequence);
+        result = result * 59 + (int) ($sequence >>> 32 ^ $sequence);
         return result;
     }
 

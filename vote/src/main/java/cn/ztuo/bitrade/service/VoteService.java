@@ -4,14 +4,15 @@ import org.springframework.stereotype.*;
 import cn.ztuo.bitrade.dao.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.*;
+
 import java.io.*;
+
 import com.querydsl.core.types.*;
 import org.springframework.data.domain.*;
 import cn.ztuo.bitrade.constant.*;
 
 @Service
-public class VoteService
-{
+public class VoteService {
     @Autowired
     private VoteDao voteDao;
 

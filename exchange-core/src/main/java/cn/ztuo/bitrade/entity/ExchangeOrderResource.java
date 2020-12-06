@@ -5,7 +5,7 @@ package cn.ztuo.bitrade.entity;
  * @author: MrGao
  * @create: 2019/05/07 15:46
  */
-public enum  ExchangeOrderResource {
+public enum ExchangeOrderResource {
 
     /**
      * 机器人

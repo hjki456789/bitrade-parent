@@ -7,23 +7,24 @@ import java.math.BigDecimal;
 
 @Data
 public class KLine {
-    public KLine(){
+    public KLine() {
 
     }
 
-    public KLine(String period){
+    public KLine(String period) {
         this.period = period;
     }
+
     //交易对 ETH/USDT
-    private String symbol ;
+    private String symbol;
     //开盘价
     private BigDecimal openPrice = BigDecimal.ZERO;
     //最高价
-    private BigDecimal highestPrice  = BigDecimal.ZERO;
+    private BigDecimal highestPrice = BigDecimal.ZERO;
     //最低价
-    private BigDecimal lowestPrice  = BigDecimal.ZERO;
+    private BigDecimal lowestPrice = BigDecimal.ZERO;
     // 收盘价
-    private BigDecimal closePrice  = BigDecimal.ZERO;
+    private BigDecimal closePrice = BigDecimal.ZERO;
     //时间戳
     private long time;
     //单位 1min 5min

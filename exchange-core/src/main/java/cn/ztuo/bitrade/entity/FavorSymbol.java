@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name="exchange_favor_symbol")
+@Table(name = "exchange_favor_symbol")
 public class FavorSymbol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

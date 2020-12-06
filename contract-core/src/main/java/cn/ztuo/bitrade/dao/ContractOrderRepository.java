@@ -4,14 +4,16 @@ import cn.ztuo.bitrade.entity.*;
 import org.springframework.data.querydsl.*;
 import org.springframework.data.repository.query.*;
 import cn.ztuo.bitrade.entity.enumConstants.*;
+
 import javax.transaction.*;
+
 import org.springframework.data.jpa.repository.*;
 import cn.ztuo.bitrade.constant.*;
+
 import java.math.*;
 import java.util.*;
 
-public interface ContractOrderRepository extends JpaRepository<ContractExchangeOrder, Long>, JpaSpecificationExecutor<ContractExchangeOrder>, QuerydslPredicateExecutor<ContractExchangeOrder>
-{
+public interface ContractOrderRepository extends JpaRepository<ContractExchangeOrder, Long>, JpaSpecificationExecutor<ContractExchangeOrder>, QuerydslPredicateExecutor<ContractExchangeOrder> {
     @Transactional
     @Modifying
     @Query("update ContractExchangeOrder set status = :status,version=version+1 where id =:id and version=:version")

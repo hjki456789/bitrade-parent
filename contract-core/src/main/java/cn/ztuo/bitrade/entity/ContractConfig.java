@@ -5,37 +5,36 @@ import javax.persistence.*;
 
 @Entity
 @Table
-public class ContractConfig implements Serializable
-{
+public class ContractConfig implements Serializable {
     @Id
     private String configKey;
     private String configValue;
     private String description;
-    
+
     public String getConfigKey() {
         return this.configKey;
     }
-    
+
     public String getConfigValue() {
         return this.configValue;
     }
-    
+
     public String getDescription() {
         return this.description;
     }
-    
+
     public void setConfigKey(final String configKey) {
         this.configKey = configKey;
     }
-    
+
     public void setConfigValue(final String configValue) {
         this.configValue = configValue;
     }
-    
+
     public void setDescription(final String description) {
         this.description = description;
     }
-    
+
     @Override
     public boolean equals(final Object o) {
         if (o == this) {
@@ -44,32 +43,32 @@ public class ContractConfig implements Serializable
         if (!(o instanceof ContractConfig)) {
             return false;
         }
-        final ContractConfig other = (ContractConfig)o;
+        final ContractConfig other = (ContractConfig) o;
         if (!other.canEqual(this)) {
             return false;
         }
         final Object this$configKey = this.getConfigKey();
         final Object other$configKey = other.getConfigKey();
-        Label_0065: {
+        Label_0065:
+        {
             if (this$configKey == null) {
                 if (other$configKey == null) {
                     break Label_0065;
                 }
-            }
-            else if (this$configKey.equals(other$configKey)) {
+            } else if (this$configKey.equals(other$configKey)) {
                 break Label_0065;
             }
             return false;
         }
         final Object this$configValue = this.getConfigValue();
         final Object other$configValue = other.getConfigValue();
-        Label_0102: {
+        Label_0102:
+        {
             if (this$configValue == null) {
                 if (other$configValue == null) {
                     break Label_0102;
                 }
-            }
-            else if (this$configValue.equals(other$configValue)) {
+            } else if (this$configValue.equals(other$configValue)) {
                 break Label_0102;
             }
             return false;
@@ -80,17 +79,16 @@ public class ContractConfig implements Serializable
             if (other$description == null) {
                 return true;
             }
-        }
-        else if (this$description.equals(other$description)) {
+        } else if (this$description.equals(other$description)) {
             return true;
         }
         return false;
     }
-    
+
     protected boolean canEqual(final Object other) {
         return other instanceof ContractConfig;
     }
-    
+
     @Override
     public int hashCode() {
         final int PRIME = 59;
@@ -103,7 +101,7 @@ public class ContractConfig implements Serializable
         result = result * 59 + (($description == null) ? 43 : $description.hashCode());
         return result;
     }
-    
+
     @Override
     public String toString() {
         return "ContractConfig(configKey=" + this.getConfigKey() + ", configValue=" + this.getConfigValue() + ", description=" + this.getDescription() + ")";

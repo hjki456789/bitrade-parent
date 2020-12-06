@@ -6,12 +6,11 @@ import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.*;
 
 @Service
-public class ContractExchangeOrderCancelService
-{
+public class ContractExchangeOrderCancelService {
     @Autowired
     private ContractExchangeOrderCancelRepository contractExchangeOrderCancelRepository;
 
     public ContractExchangeOrderCancel saveContractExchangeOrderCancel(final ContractExchangeOrderCancel cancel) {
-        return (ContractExchangeOrderCancel)this.contractExchangeOrderCancelRepository.saveAndFlush(cancel);
+        return (ContractExchangeOrderCancel) this.contractExchangeOrderCancelRepository.saveAndFlush(cancel);
     }
 }

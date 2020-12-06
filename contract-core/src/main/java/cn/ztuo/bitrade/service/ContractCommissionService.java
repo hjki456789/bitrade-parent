@@ -10,17 +10,22 @@ import cn.ztuo.bitrade.pagination.*;
 import com.querydsl.jpa.impl.*;
 import com.querydsl.core.types.*;
 import org.apache.commons.collections.*;
+
 import java.util.*;
+
 import org.springframework.transaction.annotation.*;
+
 import java.io.*;
+
 import cn.ztuo.bitrade.util.*;
 import cn.ztuo.bitrade.entity.enumConstants.*;
+
 import java.math.*;
+
 import cn.ztuo.bitrade.entity.*;
 
 @Service
-public class ContractCommissionService
-{
+public class ContractCommissionService {
     @Autowired
     private ContractCommissionRepository contractCommissionRepository;
     @Autowired
@@ -31,25 +36,24 @@ public class ContractCommissionService
     protected JPAQueryFactory queryFactory;
 
     public Page<ContractCommissionInfo> findAll(final Predicate predicate, final Pageable pageable) {
-        return (Page<ContractCommissionInfo>)this.contractCommissionRepository.findAll(predicate, pageable);
+        return (Page<ContractCommissionInfo>) this.contractCommissionRepository.findAll(predicate, pageable);
     }
 
     @Transactional(readOnly = true)
     public PageResult<ContractCommissionExcel> queryWhereOrPage(final List<BooleanExpression> booleanExpressionList, final Integer pageNo, final Integer pageSize) {
         final List<ContractCommissionExcel> resultList = new ArrayList<ContractCommissionExcel>();
-        final JPAQuery<ContractCommissionInfo> jpaQuery = (JPAQuery<ContractCommissionInfo>)this.queryFactory.selectFrom((EntityPath)QContractCommissionInfo.contractCommissionInfo);
-        final OrderSpecifier<Long> orderSpecifier = (OrderSpecifier<Long>)QContractCommissionInfo.contractCommissionInfo.sequence.desc();
+        final JPAQuery<ContractCommissionInfo> jpaQuery = (JPAQuery<ContractCommissionInfo>) this.queryFactory.selectFrom((EntityPath) QContractCommissionInfo.contractCommissionInfo);
+        final OrderSpecifier<Long> orderSpecifier = (OrderSpecifier<Long>) QContractCommissionInfo.contractCommissionInfo.sequence.desc();
         if (booleanExpressionList != null) {
-            jpaQuery.where((Predicate[])booleanExpressionList.toArray((Predicate[])new BooleanExpression[booleanExpressionList.size()]));
+            jpaQuery.where((Predicate[]) booleanExpressionList.toArray((Predicate[]) new BooleanExpression[booleanExpressionList.size()]));
         }
         List<ContractCommissionInfo> list;
         if (pageNo != null && pageSize != null) {
-            list = (List<ContractCommissionInfo>)((JPAQuery)((JPAQuery)((JPAQuery)jpaQuery.orderBy((OrderSpecifier)orderSpecifier)).offset((long)((pageNo - 1) * pageSize))).limit((long)pageSize)).fetch();
+            list = (List<ContractCommissionInfo>) ((JPAQuery) ((JPAQuery) ((JPAQuery) jpaQuery.orderBy((OrderSpecifier) orderSpecifier)).offset((long) ((pageNo - 1) * pageSize))).limit((long) pageSize)).fetch();
+        } else {
+            list = (List<ContractCommissionInfo>) ((JPAQuery) jpaQuery.orderBy((OrderSpecifier) orderSpecifier)).fetch();
         }
-        else {
-            list = (List<ContractCommissionInfo>)((JPAQuery)jpaQuery.orderBy((OrderSpecifier)orderSpecifier)).fetch();
-        }
-        if (!CollectionUtils.isEmpty((Collection)list)) {
+        if (!CollectionUtils.isEmpty((Collection) list)) {
             for (final ContractCommissionInfo contractCommissionInfo : list) {
                 final ContractCommissionExcel result = this.getContractCommissionExcelParam(contractCommissionInfo);
                 if (result != null) {
@@ -57,7 +61,7 @@ public class ContractCommissionService
                 }
             }
         }
-        return (PageResult<ContractCommissionExcel>)new PageResult((List)resultList, Long.valueOf(jpaQuery.fetchCount()));
+        return (PageResult<ContractCommissionExcel>) new PageResult((List) resultList, Long.valueOf(jpaQuery.fetchCount()));
     }
 
     private ContractCommissionExcel getContractCommissionExcelParam(final ContractCommissionInfo contractCommissionInfo) {
@@ -78,7 +82,7 @@ public class ContractCommissionService
     }
 
     public ContractCommissionInfo findOne(final String id) {
-        return (ContractCommissionInfo)this.contractCommissionRepository.getOne(id);
+        return (ContractCommissionInfo) this.contractCommissionRepository.getOne(id);
     }
 
     public ContractCommissionInfo findByMemberId(final String memberId) {
@@ -93,7 +97,7 @@ public class ContractCommissionService
         this.contractCommissionRepository.save(contractCommissionInfo);
     }
 
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public MessageResult grantCommissionPass(final ContractCommissionInfo dto) {
         final Long proxyId = dto.getProxyId();
         final Long memberId = dto.getMember().getId();

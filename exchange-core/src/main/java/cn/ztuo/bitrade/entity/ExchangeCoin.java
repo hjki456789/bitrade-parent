@@ -37,17 +37,17 @@ public class ExchangeCoin {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(columnDefinition = "int(11) default 1 comment '是否启用市价卖'")
-    private BooleanEnum  enableMarketSell = BooleanEnum.IS_TRUE;
+    private BooleanEnum enableMarketSell = BooleanEnum.IS_TRUE;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(columnDefinition = "int(11) default 1 comment '是否启用市价买'")
-    private BooleanEnum  enableMarketBuy = BooleanEnum.IS_TRUE;
+    private BooleanEnum enableMarketBuy = BooleanEnum.IS_TRUE;
 
     /**
      * 最大交易时间
      */
     @Column(columnDefinition = "int(11) default 0 comment '委托超时自动下架时间，单位为秒，0表示不过期'")
-    private int maxTradingTime = 0 ;
+    private int maxTradingTime = 0;
 
     /**
      * 最大在交易中的委托数量
@@ -59,7 +59,7 @@ public class ExchangeCoin {
      * 标签位，用于推荐，排序等,默认为0，1表示推荐，
      */
     @Column(columnDefinition = "int(11) default 0 ")
-    private int flag = 0 ;
+    private int flag = 0;
 
     @Column(columnDefinition = "decimal(20,8) default 0 comment '最小成交额'")
     private BigDecimal minTurnover = BigDecimal.ZERO;
@@ -74,12 +74,12 @@ public class ExchangeCoin {
      * 最小下单量，0表示不限制
      */
     @Column(columnDefinition = "decimal(20,8) default 0 comment '最小下单量'")
-    private BigDecimal minVolume =BigDecimal.ZERO;
+    private BigDecimal minVolume = BigDecimal.ZERO;
     /**
      * 最大下单量，0表示不限制
      */
     @Column(columnDefinition = "decimal(20,8) default 0 comment '最大下单量'")
-    private BigDecimal maxVolume =BigDecimal.ZERO;
+    private BigDecimal maxVolume = BigDecimal.ZERO;
 
     /**
      * 默认交易对儿，0-非默认，1-默认，2-币种内默认

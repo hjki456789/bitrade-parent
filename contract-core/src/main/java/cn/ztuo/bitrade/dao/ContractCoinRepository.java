@@ -3,12 +3,14 @@ package cn.ztuo.bitrade.dao;
 import cn.ztuo.bitrade.entity.*;
 import org.springframework.data.querydsl.*;
 import org.springframework.data.repository.query.*;
+
 import javax.transaction.*;
+
 import org.springframework.data.jpa.repository.*;
+
 import java.util.*;
 
-public interface ContractCoinRepository extends JpaRepository<ContractCoin, String>, JpaSpecificationExecutor<ContractCoin>, QuerydslPredicateExecutor<ContractCoin>
-{
+public interface ContractCoinRepository extends JpaRepository<ContractCoin, String>, JpaSpecificationExecutor<ContractCoin>, QuerydslPredicateExecutor<ContractCoin> {
     @Transactional
     @Modifying
     @Query("update ContractCoin set enable = :enable where id =:id")

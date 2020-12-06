@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(indexes = {
-        @Index(name = "index_member_id_time",columnList = "memberId,time")
+        @Index(name = "index_member_id_time", columnList = "memberId,time")
 })
 public class ExchangeOrder implements Serializable {
     @Id
@@ -87,7 +87,7 @@ public class ExchangeOrder implements Serializable {
     /**
      * 是否来自杠杆交易
      */
-    private BooleanEnum marginTrade=BooleanEnum.IS_FALSE;
+    private BooleanEnum marginTrade = BooleanEnum.IS_FALSE;
     /**
      * 是否来自用户交易
      */
@@ -99,18 +99,18 @@ public class ExchangeOrder implements Serializable {
     private String amountStr;
     @Transient
     private String priceStr;
+
     @Override
     public String toString() {
         return JSON.toJSONString(this);
     }
 
-    public boolean isCompleted(){
-        if(status != ExchangeOrderStatus.TRADING)return true;
-        else{
-            if(type == ExchangeOrderType.MARKET_PRICE && direction == ExchangeOrderDirection.BUY){
+    public boolean isCompleted() {
+        if (status != ExchangeOrderStatus.TRADING) return true;
+        else {
+            if (type == ExchangeOrderType.MARKET_PRICE && direction == ExchangeOrderDirection.BUY) {
                 return amount.compareTo(turnover) <= 0;
-            }
-            else{
+            } else {
                 return amount.compareTo(tradedAmount) <= 0;
             }
         }

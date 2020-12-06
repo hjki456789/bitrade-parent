@@ -4,23 +4,25 @@ import org.springframework.stereotype.*;
 import cn.ztuo.bitrade.dao.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.*;
+
 import java.io.*;
 import java.math.*;
+
 import org.apache.commons.collections.*;
+
 import java.util.*;
 
 @Service
-public class ContractExchangeOrderCalculateService
-{
+public class ContractExchangeOrderCalculateService {
     @Autowired
     private ContractExchangeOrderCalculateRepository contractExchangeOrderCalculateRepository;
 
     public ContractExchangeOrderCalculate findByOrderId(final Long orderId) {
-        return (ContractExchangeOrderCalculate)this.contractExchangeOrderCalculateRepository.getOne(orderId);
+        return (ContractExchangeOrderCalculate) this.contractExchangeOrderCalculateRepository.getOne(orderId);
     }
 
     public ContractExchangeOrderCalculate save(final ContractExchangeOrderCalculate calculate) {
-        return (ContractExchangeOrderCalculate)this.contractExchangeOrderCalculateRepository.saveAndFlush(calculate);
+        return (ContractExchangeOrderCalculate) this.contractExchangeOrderCalculateRepository.saveAndFlush(calculate);
     }
 
     public Integer update(final ContractExchangeOrderCalculate calculate) {
@@ -33,7 +35,7 @@ public class ContractExchangeOrderCalculateService
     }
 
     public BigDecimal sumMembersCalculateProfit(final List<Long> memberIds, final Date startDate, final Date endDate) {
-        if (CollectionUtils.isEmpty((Collection)memberIds)) {
+        if (CollectionUtils.isEmpty((Collection) memberIds)) {
             return new BigDecimal(0);
         }
         final BigDecimal totalCalculateProfit = this.contractExchangeOrderCalculateRepository.sumMembersCalculateProfit(memberIds, startDate, endDate);

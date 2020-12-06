@@ -10,15 +10,16 @@ import com.querydsl.jpa.impl.*;
 import com.querydsl.core.types.*;
 import org.apache.commons.collections.*;
 import cn.ztuo.bitrade.util.*;
+
 import java.math.*;
 import java.util.*;
+
 import org.springframework.transaction.annotation.*;
 import cn.ztuo.bitrade.entity.*;
 import cn.ztuo.bitrade.constant.*;
 
 @Service
-public class ContractMemberService
-{
+public class ContractMemberService {
     @Autowired
     private ContractMemberRepository contractMemberRepository;
     @Autowired
@@ -44,7 +45,7 @@ public class ContractMemberService
 
     public Page<Member> findAllMemberPromotions(final Predicate predicate, PageModel pageable) {
         final List<Member> memberList = new ArrayList<Member>();
-        final Page<MemberPromotion> memberPromotionsPage = (Page<MemberPromotion>)this.memberPromotionService.findAll(predicate, pageable);
+        final Page<MemberPromotion> memberPromotionsPage = (Page<MemberPromotion>) this.memberPromotionService.findAll(predicate, pageable);
         if (memberPromotionsPage != null) {
             for (final MemberPromotion memberPromotion : memberPromotionsPage.getContent()) {
                 Member member = memberPromotion.getMember();
@@ -55,11 +56,11 @@ public class ContractMemberService
                 }
             }
         }
-        return (Page<Member>)new PageImpl((List)memberList);
+        return (Page<Member>) new PageImpl((List) memberList);
     }
 
     public Page<Member> findAllContractMember(final Predicate predicate, final Pageable pageable) {
-        final Page<Member> memberPage = (Page<Member>)this.memberService.findAll(predicate, pageable);
+        final Page<Member> memberPage = (Page<Member>) this.memberService.findAll(predicate, pageable);
         if (memberPage == null) {
             return null;
         }
@@ -72,19 +73,18 @@ public class ContractMemberService
     public List<ContractMemberExcel> contractMemberExcel(final List<BooleanExpression> booleanExpressionList, final Integer pageNo, final Integer pageSize) {
         final List<ContractMemberExcel> resultList = new ArrayList<ContractMemberExcel>();
         try {
-            final JPAQuery<Member> jpaQuery = (JPAQuery<Member>)this.queryFactory.selectFrom((EntityPath)QMember.member);
-            final OrderSpecifier<Long> orderSpecifier = (OrderSpecifier<Long>)QMember.member.id.desc();
+            final JPAQuery<Member> jpaQuery = (JPAQuery<Member>) this.queryFactory.selectFrom((EntityPath) QMember.member);
+            final OrderSpecifier<Long> orderSpecifier = (OrderSpecifier<Long>) QMember.member.id.desc();
             if (booleanExpressionList != null) {
-                jpaQuery.where((Predicate[])booleanExpressionList.toArray((Predicate[])new BooleanExpression[booleanExpressionList.size()]));
+                jpaQuery.where((Predicate[]) booleanExpressionList.toArray((Predicate[]) new BooleanExpression[booleanExpressionList.size()]));
             }
             List<Member> list;
             if (pageNo != null && pageSize != null) {
-                list = (List<Member>)((JPAQuery)((JPAQuery)((JPAQuery)jpaQuery.orderBy((OrderSpecifier)orderSpecifier)).offset((long)((pageNo - 1) * pageSize))).limit((long)pageSize)).fetch();
+                list = (List<Member>) ((JPAQuery) ((JPAQuery) ((JPAQuery) jpaQuery.orderBy((OrderSpecifier) orderSpecifier)).offset((long) ((pageNo - 1) * pageSize))).limit((long) pageSize)).fetch();
+            } else {
+                list = (List<Member>) ((JPAQuery) jpaQuery.orderBy((OrderSpecifier) orderSpecifier)).fetch();
             }
-            else {
-                list = (List<Member>)((JPAQuery)jpaQuery.orderBy((OrderSpecifier)orderSpecifier)).fetch();
-            }
-            if (!CollectionUtils.isEmpty((Collection)list)) {
+            if (!CollectionUtils.isEmpty((Collection) list)) {
                 for (final Member m : list) {
                     this.getMemberInfo(m);
                     final UserType userType = (m.getUserType() == null) ? UserType.COMMON : m.getUserType();
@@ -109,8 +109,7 @@ public class ContractMemberService
                     resultList.add(excelDto);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return resultList;
@@ -129,16 +128,13 @@ public class ContractMemberService
                 if (IfNodeType.NODE.getOrdinal() == memberStatus.getOrdinal() || IfNodeType.PROXY.getOrdinal() == memberStatus.getOrdinal()) {
                     if (IfNodeType.COMMON.getOrdinal() == ifNode.getOrdinal()) {
                         member.setOperate(OperateType.ADD_PROXY);
-                    }
-                    else if (IfNodeType.PROXY.getOrdinal() == ifNode.getOrdinal()) {
+                    } else if (IfNodeType.PROXY.getOrdinal() == ifNode.getOrdinal()) {
                         member.setOperate(OperateType.CANCEL_PROXY);
                     }
-                }
-                else if (IfNodeType.MARKET.getOrdinal() == memberStatus.getOrdinal()) {
+                } else if (IfNodeType.MARKET.getOrdinal() == memberStatus.getOrdinal()) {
                     if (IfNodeType.COMMON.getOrdinal() == ifNode.getOrdinal()) {
                         member.setOperate(OperateType.ADD_NODE);
-                    }
-                    else if (IfNodeType.NODE.getOrdinal() == ifNode.getOrdinal()) {
+                    } else if (IfNodeType.NODE.getOrdinal() == ifNode.getOrdinal()) {
                         member.setOperate(OperateType.CANCEL_NODE);
                     }
                 }
@@ -153,30 +149,26 @@ public class ContractMemberService
             final Date zeroDate = DateUtil.getZeroDate(new Date());
             final Date thisWeekMondayDate = DateUtil.getThisWeekMonday(zeroDate);
             thisWeekMondayTime = DateUtil.getFormatTime(DateUtil.YYYY_MM_DD, thisWeekMondayDate);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         List<ContractMemberProfitLoss> profitLossList = this.contractMemberProfitLossRepository.getWeekProfitLossAmount(member.getId(), thisWeekMondayTime);
-        profitLossList = (CollectionUtils.isEmpty((Collection)profitLossList) ? new ArrayList<ContractMemberProfitLoss>() : profitLossList);
+        profitLossList = (CollectionUtils.isEmpty((Collection) profitLossList) ? new ArrayList<ContractMemberProfitLoss>() : profitLossList);
         final List<ContractMemberProfitLoss> teamProfitLossList = this.contractMemberProfitLossRepository.getTotalProfitLossAmount(member.getId());
-        if (!CollectionUtils.isEmpty((Collection)teamProfitLossList)) {
+        if (!CollectionUtils.isEmpty((Collection) teamProfitLossList)) {
             profitLossList.addAll(teamProfitLossList);
         }
-        if (!CollectionUtils.isEmpty((Collection)profitLossList)) {
+        if (!CollectionUtils.isEmpty((Collection) profitLossList)) {
             for (final ContractMemberProfitLoss profitLoss : profitLossList) {
                 final ProfitLossType type = profitLoss.getType();
                 final BigDecimal profitLossAmount = profitLoss.getProfitLossAmount();
                 if (ProfitLossType.MEMBER_WEEK.getOrdinal() == type.getOrdinal()) {
                     member.setMemberWeekProfitLossAmount(profitLossAmount);
-                }
-                else if (ProfitLossType.TEAM_WEEK.getOrdinal() == type.getOrdinal()) {
+                } else if (ProfitLossType.TEAM_WEEK.getOrdinal() == type.getOrdinal()) {
                     member.setTeamWeekProfitLossAmount(profitLossAmount);
-                }
-                else if (ProfitLossType.MEMBER_TOTAL.getOrdinal() == type.getOrdinal()) {
+                } else if (ProfitLossType.MEMBER_TOTAL.getOrdinal() == type.getOrdinal()) {
                     member.setMemberTotalProfitLossAmount(profitLossAmount);
-                }
-                else {
+                } else {
                     if (ProfitLossType.TEAM_TOTAL.getOrdinal() != type.getOrdinal()) {
                         continue;
                     }
@@ -199,7 +191,7 @@ public class ContractMemberService
             member.setYesterdayFee(yesterdayFee);
             member.setTotalFee(totalFee);
         }
-        final List<Long> teamMemberList = (List<Long>)this.memberPromotionService.findAllTeamMember((List)null, member.getId(), true, false);
+        final List<Long> teamMemberList = (List<Long>) this.memberPromotionService.findAllTeamMember((List) null, member.getId(), true, false);
         final BigDecimal teamYesterdayProfitLossAmount = this.contractExchangeOrderCloseService.sumMembersProfitLoss(teamMemberList, yesterdayZeroDate, todayZeroDate);
         final BigDecimal teamTotalProfitLossAmount = this.contractExchangeOrderCloseService.sumMembersTotalProfitLoss(teamMemberList);
         final BigDecimal teamYesterdayFee = this.contractExchangeOrderFeeService.sumMembersFee(teamMemberList, yesterdayZeroDate, todayZeroDate);
@@ -208,7 +200,7 @@ public class ContractMemberService
         member.setTeamTotalProfitLossAmount(teamTotalProfitLossAmount);
         member.setTeamYesterdayFee(teamYesterdayFee);
         member.setTeamTotalFee(teamTotalFee);
-        final Map<String, BigDecimal> chargeAmountMap = (Map<String, BigDecimal>)this.memberDepositService.sumMemberDeposit(member.getId());
+        final Map<String, BigDecimal> chargeAmountMap = (Map<String, BigDecimal>) this.memberDepositService.sumMemberDeposit(member.getId());
         if (chargeAmountMap != null) {
             member.setEthChargeAmount((chargeAmountMap.get("ETH") == null) ? BigDecimal.ZERO : chargeAmountMap.get("ETH"));
             member.setBtcChargeAmount((chargeAmountMap.get("BTC") == null) ? BigDecimal.ZERO : chargeAmountMap.get("BTC"));
@@ -218,7 +210,7 @@ public class ContractMemberService
     }
 
     public Page<ContractMember> findAll(final Predicate predicate, final Pageable pageable) {
-        return (Page<ContractMember>)this.contractMemberRepository.findAll(predicate, pageable);
+        return (Page<ContractMember>) this.contractMemberRepository.findAll(predicate, pageable);
     }
 
     public ContractMember findByMemberId(final String memberId) {
@@ -257,7 +249,7 @@ public class ContractMemberService
     }
 
     public ContractMember insert(final ContractMember contractMember) {
-        return (ContractMember)this.contractMemberRepository.saveAndFlush(contractMember);
+        return (ContractMember) this.contractMemberRepository.saveAndFlush(contractMember);
     }
 
     public void updateStatuses(final Long nodeMemberId, final List<Long> memberIds, final Integer status) {
@@ -276,8 +268,7 @@ public class ContractMemberService
                 record.setSequence(System.currentTimeMillis());
                 record.setTime(new Date());
                 this.contractMemberStatusRecordRepository.saveAndFlush(record);
-            }
-            else {
+            } else {
                 contractMember = new ContractMember();
                 final MemberPromotion memberPromotion = this.memberPromotionService.findByInviteesId(memberId);
                 if (null != memberPromotion) {

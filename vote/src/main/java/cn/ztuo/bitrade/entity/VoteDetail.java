@@ -5,9 +5,11 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import java.math.*;
 import java.util.*;
+
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 import org.hibernate.annotations.*;
+
 /**
  * @Description 投票详情
  * @Author wsy
@@ -16,8 +18,7 @@ import org.hibernate.annotations.*;
  **/
 @Entity
 @Data
-public class VoteDetail
-{
+public class VoteDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;

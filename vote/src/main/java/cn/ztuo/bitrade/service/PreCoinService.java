@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.*;
 
 @Service
-public class PreCoinService
-{
+public class PreCoinService {
     @Autowired
     private PreCoinDao preCoinDao;
 

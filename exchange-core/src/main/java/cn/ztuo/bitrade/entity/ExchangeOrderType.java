@@ -23,6 +23,7 @@ public enum ExchangeOrderType implements BaseEnum {
     CHECK_FULL_STOP("止盈止损");
     @Setter
     private String cnName;
+
     @Override
     @JsonValue
     public int getOrdinal() {

@@ -6,12 +6,11 @@ import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.*;
 
 @Service
-public class ContractExchangeOrderConditionRecordService
-{
+public class ContractExchangeOrderConditionRecordService {
     @Autowired
     private ContractExchangeOrderConditionRecordRepository recordRepository;
 
     public ContractExchangeOrderConditionRecord save(final ContractExchangeOrderConditionRecord record) {
-        return (ContractExchangeOrderConditionRecord)this.recordRepository.saveAndFlush(record);
+        return (ContractExchangeOrderConditionRecord) this.recordRepository.saveAndFlush(record);
     }
 }

@@ -7,6 +7,7 @@ import java.util.UUID;
 public class GeneratorUtil {
     /**
      * 得到from到to的随机数，包括to
+     *
      * @param from
      * @param to
      * @return
@@ -17,22 +18,22 @@ public class GeneratorUtil {
         return ((a - b) > 0.5 ? 1 : 0) + b;
     }
 
-    public static String getNonceString(int len){
+    public static String getNonceString(int len) {
         String seed = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         StringBuffer tmp = new StringBuffer();
         for (int i = 0; i < len; i++) {
-            tmp.append(seed.charAt(getRandomNumber(0,61)));
+            tmp.append(seed.charAt(getRandomNumber(0, 61)));
         }
         return tmp.toString();
     }
 
-    public static String getUUID(){
+    public static String getUUID() {
         UUID uuid = UUID.randomUUID();
         return uuid.toString();
     }
 
-    public static String getOrderId(String prefix){
+    public static String getOrderId(String prefix) {
         String body = String.valueOf(System.currentTimeMillis());
-        return prefix + body + getRandomNumber(10,99);
+        return prefix + body + getRandomNumber(10, 99);
     }
 }

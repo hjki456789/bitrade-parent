@@ -26,12 +26,12 @@ public enum ExchangeOrderStatus implements BaseEnum {
      */
     OVERTIMED("超时"),
     /**
-     *等待触发
+     * 等待触发
      */
-    WAITING_TRIGGER("等待触发")
-    ;
+    WAITING_TRIGGER("等待触发");
     @Setter
     private String cnName;
+
     @Override
     @JsonValue
     public int getOrdinal() {

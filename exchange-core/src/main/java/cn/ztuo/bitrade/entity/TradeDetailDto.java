@@ -8,6 +8,6 @@ import java.util.Map;
 
 @Data
 public class TradeDetailDto {
-    private Map<BigDecimal,MergeOrder> limitPriceQueue;
+    private Map<BigDecimal, MergeOrder> limitPriceQueue;
     private List<ExchangeOrder> marketPriceQueue;
 }

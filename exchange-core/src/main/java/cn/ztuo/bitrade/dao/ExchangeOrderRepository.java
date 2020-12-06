@@ -26,22 +26,24 @@ public interface ExchangeOrderRepository extends JpaRepository<ExchangeOrder, St
     @Query("update ExchangeOrder  exchange set exchange.status = :status where exchange.orderId = :orderId")
     int updateStatus(@Param("orderId") String orderId, @Param("status") ExchangeOrderStatus status);
 
-    @Query(value="select coin_symbol unit,FROM_UNIXTIME(completed_time/1000, '%Y-%m-%d'),sum(traded_amount) amount from exchange_order where FROM_UNIXTIME(completed_time/1000, '%Y-%m-%d') = :date and direction = 1 and status = 1 group by unit,completed_time",nativeQuery = true)
+    @Query(value = "select coin_symbol unit,FROM_UNIXTIME(completed_time/1000, '%Y-%m-%d'),sum(traded_amount) amount from exchange_order where FROM_UNIXTIME(completed_time/1000, '%Y-%m-%d') = :date and direction = 1 and status = 1 group by unit,completed_time", nativeQuery = true)
     List<Object[]> getExchangeTurnoverCoin(@Param("date") String date);
 
-    @Query(value="select base_symbol unit,FROM_UNIXTIME(completed_time/1000, '%Y-%m-%d'),sum(turnover) amount from exchange_order where FROM_UNIXTIME(completed_time/1000, '%Y-%m-%d') = :date and direction = 1 and status = 1 group by unit,completed_time",nativeQuery = true)
+    @Query(value = "select base_symbol unit,FROM_UNIXTIME(completed_time/1000, '%Y-%m-%d'),sum(turnover) amount from exchange_order where FROM_UNIXTIME(completed_time/1000, '%Y-%m-%d') = :date and direction = 1 and status = 1 group by unit,completed_time", nativeQuery = true)
     List<Object[]> getExchangeTurnoverBase(@Param("date") String date);
 
-    @Query(value="select base_symbol , coin_symbol,FROM_UNIXTIME(completed_time/1000, '%Y-%m-%d'),sum(traded_amount),sum(turnover) from exchange_order where FROM_UNIXTIME(completed_time/1000, '%Y-%m-%d') = :date and direction = 1 and status = 1 group by base_symbol,coin_symbol,completed_time",nativeQuery = true)
-    List<Object[]> getExchangeTurnoverSymbol(@Param("date") String date) ;
+    @Query(value = "select base_symbol , coin_symbol,FROM_UNIXTIME(completed_time/1000, '%Y-%m-%d'),sum(traded_amount),sum(turnover) from exchange_order where FROM_UNIXTIME(completed_time/1000, '%Y-%m-%d') = :date and direction = 1 and status = 1 group by base_symbol,coin_symbol,completed_time", nativeQuery = true)
+    List<Object[]> getExchangeTurnoverSymbol(@Param("date") String date);
 
     /**
      * 查询该用户近30天的交易量
+     *
      * @param memberId
      * @return
      */
     @Query("SELECT count(a.orderId) FROM ExchangeOrder a WHERE  a.memberId = :memberId AND a.completedTime BETWEEN :beginDate AND :endDate")
     int countExchangeOrderByMemberId(@Param("memberId") Long memberId, @Param("beginDate") Long beginDate, @Param("endDate") Long endDate);
+
     List<ExchangeOrder> findAllByMemberIdAndMarginTradeAndStatus(Long memberId, BooleanEnum marginTrade, ExchangeOrderStatus status);
 
     @Query(value = "select o.memberId,count(o.memberId) as c from ExchangeOrder o where o.time between :startTime and :endTime GROUP BY o.memberId")
@@ -53,7 +55,7 @@ public interface ExchangeOrderRepository extends JpaRepository<ExchangeOrder, St
 
     @Transactional
     @Modifying
-    @Query(value = "update exchange_order set status=0 where order_id=:orderId and status=4",nativeQuery = true)
+    @Query(value = "update exchange_order set status=0 where order_id=:orderId and status=4", nativeQuery = true)
     int pushWaitingOrderByOrderId(@Param("orderId") String orderId);
 
     @Query(value = "select * from exchange_order where order_id = :orderId for update", nativeQuery = true)

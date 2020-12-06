@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum OrderTypeEnum {
-    OTC("法币交易"),EXCHANGE("币币交易");
+    OTC("法币交易"), EXCHANGE("币币交易");
     @Setter
     private String cnName;
 

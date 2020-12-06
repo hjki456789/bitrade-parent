@@ -4,16 +4,16 @@ import org.springframework.stereotype.*;
 import cn.ztuo.bitrade.dao.unblock.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.unbolck.*;
+
 import java.math.*;
 
 @Service
-public class UnblockExchangeOperateRecordService
-{
+public class UnblockExchangeOperateRecordService {
     @Autowired
     private UnblockExchangeOperateRecordRepository unblockExchangeOperateRecordRepository;
 
     public UnblockMemberOperateRecord save(final UnblockMemberOperateRecord record) {
-        return (UnblockMemberOperateRecord)this.unblockExchangeOperateRecordRepository.saveAndFlush(record);
+        return (UnblockMemberOperateRecord) this.unblockExchangeOperateRecordRepository.saveAndFlush(record);
     }
 
     public int countMemberRound(final Long memberId, final String symbol) {

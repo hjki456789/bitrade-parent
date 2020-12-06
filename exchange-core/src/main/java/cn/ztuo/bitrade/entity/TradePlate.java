@@ -22,18 +22,19 @@ public class TradePlate {
     //方向
     private ExchangeOrderDirection direction;
     private String symbol;
-    public TradePlate(){
+
+    public TradePlate() {
 
     }
 
-    public TradePlate(String symbol,ExchangeOrderDirection direction) {
+    public TradePlate(String symbol, ExchangeOrderDirection direction) {
         this.direction = direction;
         this.symbol = symbol;
         items = new LinkedList<>();
     }
 
     public boolean add(ExchangeOrder exchangeOrder) {
-        log.info("add TradePlate order={}",exchangeOrder);
+        log.info("add TradePlate order={}", exchangeOrder);
         synchronized (items) {
             int index = 0;
             if (exchangeOrder.getType() == ExchangeOrderType.MARKET_PRICE) {
@@ -51,17 +52,17 @@ public class TradePlate {
                     } else if (item.getPrice().compareTo(exchangeOrder.getPrice()) == 0) {
                         BigDecimal deltaAmount = exchangeOrder.getAmount().subtract(exchangeOrder.getTradedAmount());
                         item.setAmount(item.getAmount().add(deltaAmount));
-                        item.setAmountStr(item.getAmount().setScale(coinScale,RoundingMode.DOWN).toPlainString());
+                        item.setAmountStr(item.getAmount().setScale(coinScale, RoundingMode.DOWN).toPlainString());
                         return true;
                     } else {
                         break;
                     }
                 }
             }
-            if(index < maxDepth) {
+            if (index < maxDepth) {
                 TradePlateItem newItem = new TradePlateItem();
                 newItem.setAmount(exchangeOrder.getAmount().subtract(exchangeOrder.getTradedAmount()));
-                newItem.setAmountStr(newItem.getAmount().setScale(coinScale,RoundingMode.DOWN).toPlainString());
+                newItem.setAmountStr(newItem.getAmount().setScale(coinScale, RoundingMode.DOWN).toPlainString());
                 newItem.setPrice(exchangeOrder.getPrice());
                 newItem.setPriceStr(exchangeOrder.getPrice().setScale(baseCoinScale, RoundingMode.DOWN).toPlainString());
                 items.add(index, newItem);
@@ -70,13 +71,13 @@ public class TradePlate {
         return true;
     }
 
-    public void remove(ExchangeOrder order,BigDecimal amount) {
+    public void remove(ExchangeOrder order, BigDecimal amount) {
         synchronized (items) {
             for (int index = 0; index < items.size(); index++) {
                 TradePlateItem item = items.get(index);
                 if (item.getPrice().compareTo(order.getPrice()) == 0) {
                     item.setAmount(item.getAmount().subtract(amount));
-                    item.setAmountStr(item.getAmount().setScale(coinScale,RoundingMode.DOWN).toPlainString());
+                    item.setAmountStr(item.getAmount().setScale(coinScale, RoundingMode.DOWN).toPlainString());
                     if (item.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
                         items.remove(index);
                     }
@@ -86,48 +87,47 @@ public class TradePlate {
         }
     }
 
-    public void remove(ExchangeOrder order){
-        remove(order,order.getAmount().subtract(order.getTradedAmount()));
+    public void remove(ExchangeOrder order) {
+        remove(order, order.getAmount().subtract(order.getTradedAmount()));
     }
 
-    public void setItems(LinkedList<TradePlateItem> items){
+    public void setItems(LinkedList<TradePlateItem> items) {
         this.items = items;
     }
 
-    public BigDecimal getHighestPrice(){
-        if(items.size() == 0)return BigDecimal.ZERO;
-        if(direction == ExchangeOrderDirection.BUY){
+    public BigDecimal getHighestPrice() {
+        if (items.size() == 0) return BigDecimal.ZERO;
+        if (direction == ExchangeOrderDirection.BUY) {
             return items.getFirst().getPrice();
-        }
-        else{
+        } else {
             return items.getLast().getPrice();
         }
     }
 
-    public int getDepth(){
+    public int getDepth() {
         return items.size();
     }
 
 
-    public BigDecimal getLowestPrice(){
-        if(items.size() == 0)return BigDecimal.ZERO;
-        if(direction == ExchangeOrderDirection.BUY){
+    public BigDecimal getLowestPrice() {
+        if (items.size() == 0) return BigDecimal.ZERO;
+        if (direction == ExchangeOrderDirection.BUY) {
             return items.getLast().getPrice();
-        }
-        else{
+        } else {
             return items.getFirst().getPrice();
         }
     }
 
     /**
      * 获取委托量最大的档位
+     *
      * @return
      */
-    public BigDecimal getMaxAmount(){
-        if(items.size() == 0)return BigDecimal.ZERO;
+    public BigDecimal getMaxAmount() {
+        if (items.size() == 0) return BigDecimal.ZERO;
         BigDecimal amount = BigDecimal.ZERO;
-        for(TradePlateItem item:items){
-            if(item.getAmount().compareTo(amount)>0){
+        for (TradePlateItem item : items) {
+            if (item.getAmount().compareTo(amount) > 0) {
                 amount = item.getAmount();
             }
         }
@@ -136,20 +136,21 @@ public class TradePlate {
 
     /**
      * 获取委托量最小的档位
+     *
      * @return
      */
-    public BigDecimal getMinAmount(){
-        if(items.size() == 0)return BigDecimal.ZERO;
+    public BigDecimal getMinAmount() {
+        if (items.size() == 0) return BigDecimal.ZERO;
         BigDecimal amount = items.getFirst().getAmount();
-        for(TradePlateItem item:items){
-            if(item.getAmount().compareTo(amount) < 0){
+        for (TradePlateItem item : items) {
+            if (item.getAmount().compareTo(amount) < 0) {
                 amount = item.getAmount();
             }
         }
         return amount;
     }
 
-    public TradePlateDto toTradePlateDto(){
+    public TradePlateDto toTradePlateDto() {
         TradePlateDto dto = new TradePlateDto();
         dto.setDirection(direction.ordinal());
         dto.setDirection(direction.ordinal());
@@ -162,7 +163,7 @@ public class TradePlate {
         return dto;
     }
 
-    public TradePlateDto toTradePlateDto(int limit){
+    public TradePlateDto toTradePlateDto(int limit) {
         TradePlateDto dto = new TradePlateDto();
         dto.setDirection(direction.ordinal());
         dto.setDirection(direction.ordinal());
@@ -171,7 +172,7 @@ public class TradePlate {
         dto.setHighestPrice(getHighestPrice());
         dto.setLowestPrice(getLowestPrice());
         dto.setSymbol(getSymbol());
-        dto.setItems(items.size() > limit ? items.subList(0,limit) : items);
+        dto.setItems(items.size() > limit ? items.subList(0, limit) : items);
         return dto;
     }
 }

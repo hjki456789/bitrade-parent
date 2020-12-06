@@ -3,13 +3,15 @@ package cn.ztuo.bitrade.dao;
 import cn.ztuo.bitrade.entity.*;
 import org.springframework.data.querydsl.*;
 import org.springframework.data.repository.query.*;
+
 import java.math.*;
 import javax.transaction.*;
+
 import org.springframework.data.jpa.repository.*;
+
 import java.util.*;
 
-public interface ContractExchangeOrderCalculateRepository extends JpaRepository<ContractExchangeOrderCalculate, Long>, JpaSpecificationExecutor<ContractExchangeOrderCalculate>, QuerydslPredicateExecutor<ContractExchangeOrderCalculate>
-{
+public interface ContractExchangeOrderCalculateRepository extends JpaRepository<ContractExchangeOrderCalculate, Long>, JpaSpecificationExecutor<ContractExchangeOrderCalculate>, QuerydslPredicateExecutor<ContractExchangeOrderCalculate> {
     @Transactional
     @Modifying
     @Query("update ContractExchangeOrderCalculate set symbolPrice=:symbolPrice,profit=:profit,rate=:rate,version=version+1 where orderId =:orderId and version=:version")

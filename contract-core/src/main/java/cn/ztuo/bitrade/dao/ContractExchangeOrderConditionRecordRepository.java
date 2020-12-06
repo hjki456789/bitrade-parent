@@ -4,6 +4,5 @@ import cn.ztuo.bitrade.entity.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.querydsl.*;
 
-public interface ContractExchangeOrderConditionRecordRepository extends JpaRepository<ContractExchangeOrderConditionRecord, Long>, JpaSpecificationExecutor<ContractExchangeOrderConditionRecord>, QuerydslPredicateExecutor<ContractExchangeOrderConditionRecord>
-{
+public interface ContractExchangeOrderConditionRecordRepository extends JpaRepository<ContractExchangeOrderConditionRecord, Long>, JpaSpecificationExecutor<ContractExchangeOrderConditionRecord>, QuerydslPredicateExecutor<ContractExchangeOrderConditionRecord> {
 }

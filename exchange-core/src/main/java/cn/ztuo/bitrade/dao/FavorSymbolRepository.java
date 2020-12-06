@@ -7,9 +7,11 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface FavorSymbolRepository extends JpaRepository<FavorSymbol,Long>{
+public interface FavorSymbolRepository extends JpaRepository<FavorSymbol, Long> {
     FavorSymbol findByMemberIdAndSymbol(Long memberId, String symbol);
+
     List<FavorSymbol> findAllByMemberId(Long memberId);
+
     @Query(value = "select favorSymbol from FavorSymbol favorSymbol where favorSymbol.memberId = :memberId and favorSymbol.symbol like  CONCAT('%',:symbol,'%')")
     List<FavorSymbol> findByMemberIdAndCoinName(@Param("memberId") Long memberId, @Param("symbol") String symbol);
 }

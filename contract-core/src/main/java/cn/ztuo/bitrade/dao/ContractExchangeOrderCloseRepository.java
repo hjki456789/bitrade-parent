@@ -3,12 +3,14 @@ package cn.ztuo.bitrade.dao;
 import cn.ztuo.bitrade.entity.*;
 import org.springframework.data.querydsl.*;
 import org.springframework.data.repository.query.*;
+
 import java.math.*;
+
 import org.springframework.data.jpa.repository.*;
+
 import java.util.*;
 
-public interface ContractExchangeOrderCloseRepository extends JpaRepository<ContractExchangeOrderClose, Long>, JpaSpecificationExecutor<ContractExchangeOrderClose>, QuerydslPredicateExecutor<ContractExchangeOrderClose>
-{
+public interface ContractExchangeOrderCloseRepository extends JpaRepository<ContractExchangeOrderClose, Long>, JpaSpecificationExecutor<ContractExchangeOrderClose>, QuerydslPredicateExecutor<ContractExchangeOrderClose> {
     @Query(value = "select sum(a.close_profit_or_loss) from contract_exchange_order_close a left join contract_exchange_order b on a.order_id = b.id where b.member_id =:memberId and a.create_time between :startDate and :endDate", nativeQuery = true)
     BigDecimal getMemberProfitLoss(@Param("memberId") final Long p0, @Param("startDate") final Date p1, @Param("endDate") final Date p2);
 

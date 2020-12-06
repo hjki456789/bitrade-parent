@@ -7,15 +7,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.util.*;
 import cn.ztuo.bitrade.util.*;
 import cn.ztuo.bitrade.constant.*;
+
 import java.math.*;
+
 import org.springframework.transaction.annotation.*;
 import cn.ztuo.bitrade.entity.*;
 import org.slf4j.*;
 
 @RestController
-@RequestMapping(method = { RequestMethod.POST })
-public class VoteController
-{
+@RequestMapping(method = {RequestMethod.POST})
+public class VoteController {
     private static final Logger log;
     @Autowired
     private VoteService voteService;
@@ -30,8 +31,8 @@ public class VoteController
     @Autowired
     private VoteDetailService voteDetailService;
 
-    @RequestMapping(value = { "/vote" }, method = { RequestMethod.POST })
-    @Transactional(rollbackFor = { Exception.class })
+    @RequestMapping(value = {"/vote"}, method = {RequestMethod.POST})
+    @Transactional(rollbackFor = {Exception.class})
     public MessageResult vote(final long preCoinId, final int amount, @SessionAttribute("API_MEMBER") final AuthMember user) {
         final PreCoin preCoin = this.preCoinService.findById(preCoinId);
         if (preCoin.getVote().getStatus().equals(BooleanEnum.IS_FALSE)) {
@@ -44,7 +45,7 @@ public class VoteController
         Assert.isTrue(amount > 0, "The number of votes must be greater than 0");
         final MemberWallet memberWallet = this.memberWalletService.findByCoinAndMemberId(coin, Long.valueOf(user.getId()));
         Assert.isTrue(memberWallet != null, "wallet is null");
-        final BigDecimal consume = BigDecimalUtils.mul(preCoin.getVote().getAmount(), (double)amount);
+        final BigDecimal consume = BigDecimalUtils.mul(preCoin.getVote().getAmount(), (double) amount);
         Assert.isTrue(memberWallet.getBalance().compareTo(consume) >= 0, "Insufficient closeBalance");
         final int voted = this.voteDetailService.queryVoted(user.getId(), preCoin.getVote());
         Assert.isTrue(preCoin.getVote().getVoteLimit() - voted >= amount, "You can vote up to " + (preCoin.getVote().getVoteLimit() - voted) + " votes");
@@ -69,7 +70,7 @@ public class VoteController
         return MessageResult.error("Insufficient closeBalance");
     }
 
-    @RequestMapping(value = { "/vote/info" }, method = { RequestMethod.POST })
+    @RequestMapping(value = {"/vote/info"}, method = {RequestMethod.POST})
     public MessageResult voteInfo() {
         final MessageResult result = MessageResult.success();
         final Vote vote = this.voteService.findVote();
@@ -78,6 +79,6 @@ public class VoteController
     }
 
     static {
-        log = LoggerFactory.getLogger((Class)VoteController.class);
+        log = LoggerFactory.getLogger((Class) VoteController.class);
     }
 }

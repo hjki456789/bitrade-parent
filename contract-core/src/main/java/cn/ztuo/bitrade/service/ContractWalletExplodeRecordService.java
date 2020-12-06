@@ -6,12 +6,11 @@ import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.*;
 
 @Service
-public class ContractWalletExplodeRecordService
-{
+public class ContractWalletExplodeRecordService {
     @Autowired
     private ContractWalletExplodeRecordRepository contractWalletExplodeRecordRepository;
 
     public ContractWalletExplodeRecord saveRecord(final ContractWalletExplodeRecord explodeRecord) {
-        return (ContractWalletExplodeRecord)this.contractWalletExplodeRecordRepository.saveAndFlush(explodeRecord);
+        return (ContractWalletExplodeRecord) this.contractWalletExplodeRecordRepository.saveAndFlush(explodeRecord);
     }
 }

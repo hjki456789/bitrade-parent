@@ -4,14 +4,14 @@ import java.io.*;
 import java.math.*;
 import java.util.*;
 import javax.persistence.*;
+
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 
 @Entity
 @Table
 @Data
-public class UnblockMemberOperateRecord implements Serializable
-{
+public class UnblockMemberOperateRecord implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

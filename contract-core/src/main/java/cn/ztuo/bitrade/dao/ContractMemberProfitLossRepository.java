@@ -4,11 +4,11 @@ import cn.ztuo.bitrade.entity.*;
 import org.springframework.data.querydsl.*;
 import org.springframework.data.repository.query.*;
 import org.springframework.data.jpa.repository.*;
+
 import java.math.*;
 import java.util.*;
 
-public interface ContractMemberProfitLossRepository extends JpaRepository<ContractMemberProfitLoss, Long>, JpaSpecificationExecutor<ContractMemberProfitLoss>, QuerydslPredicateExecutor<ContractMemberProfitLoss>
-{
+public interface ContractMemberProfitLossRepository extends JpaRepository<ContractMemberProfitLoss, Long>, JpaSpecificationExecutor<ContractMemberProfitLoss>, QuerydslPredicateExecutor<ContractMemberProfitLoss> {
     @Query(value = "select * from contract_member_profit_loss where member_id = :memberId and type = :type and week_start_time = :weekStartTime and week_end_time = :weekEndTime limit 1", nativeQuery = true)
     ContractMemberProfitLoss getByMemberIdAndTypeAndStartTimeAndEndTime(@Param("memberId") final Long p0, @Param("type") final Integer p1, @Param("weekStartTime") final String p2, @Param("weekEndTime") final String p3);
 

@@ -3,12 +3,13 @@ package cn.ztuo.bitrade.dao;
 import cn.ztuo.bitrade.entity.*;
 import org.springframework.data.querydsl.*;
 import org.springframework.data.repository.query.*;
+
 import java.math.*;
 import javax.transaction.*;
+
 import org.springframework.data.jpa.repository.*;
 
-public interface ContractWalletRepository extends JpaRepository<ContractWallet, String>, JpaSpecificationExecutor<ContractWallet>, QuerydslPredicateExecutor<ContractWallet>
-{
+public interface ContractWalletRepository extends JpaRepository<ContractWallet, String>, JpaSpecificationExecutor<ContractWallet>, QuerydslPredicateExecutor<ContractWallet> {
     @Query(value = "select * from contract_wallet where id = :id limit 1", nativeQuery = true)
     ContractWallet findById(@Param("id") final Long p0);
 

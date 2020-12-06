@@ -3,12 +3,14 @@ package cn.ztuo.bitrade.dao;
 import cn.ztuo.bitrade.entity.*;
 import org.springframework.data.querydsl.*;
 import org.springframework.data.repository.query.*;
+
 import javax.transaction.*;
+
 import org.springframework.data.jpa.repository.*;
+
 import java.math.*;
 
-public interface ContractMemberRepository extends JpaRepository<ContractMember, String>, JpaSpecificationExecutor<ContractMember>, QuerydslPredicateExecutor<ContractMember>
-{
+public interface ContractMemberRepository extends JpaRepository<ContractMember, String>, JpaSpecificationExecutor<ContractMember>, QuerydslPredicateExecutor<ContractMember> {
     @Query(value = "select * from contract_member where member_id =:memberId", nativeQuery = true)
     ContractMember findByMemberId(@Param("memberId") final String p0);
 

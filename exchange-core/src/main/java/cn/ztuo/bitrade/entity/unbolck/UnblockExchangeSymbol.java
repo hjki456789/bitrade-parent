@@ -4,14 +4,14 @@ import java.io.*;
 import java.math.*;
 import java.util.*;
 import javax.persistence.*;
+
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 
 @Entity
 @Table
 @Data
-public class UnblockExchangeSymbol implements Serializable
-{
+public class UnblockExchangeSymbol implements Serializable {
     @Id
     private String symbol;
     private BigDecimal singleRoundReleaseRate;

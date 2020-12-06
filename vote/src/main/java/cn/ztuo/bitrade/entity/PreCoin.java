@@ -14,8 +14,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-public class PreCoin
-{
+public class PreCoin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;

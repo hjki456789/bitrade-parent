@@ -1,21 +1,26 @@
 package cn.ztuo.bitrade.entity;
 
 import java.io.*;
+
 import org.hibernate.annotations.*;
 import cn.afterturn.easypoi.excel.annotation.*;
+
 import java.math.*;
+
 import cn.ztuo.bitrade.constant.*;
 import cn.ztuo.bitrade.entity.enumConstants.*;
+
 import java.util.*;
+
 import com.fasterxml.jackson.annotation.*;
+
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table
-public class ContractExchangeOrder implements Serializable
-{
+public class ContractExchangeOrder implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private long id;
@@ -24,7 +29,7 @@ public class ContractExchangeOrder implements Serializable
     private Member member;
     @JoinColumn(name = "member_id", insertable = false, updatable = false)
     @ManyToOne
-    @JsonIgnoreProperties({ "member", "contractWalletList" })
+    @JsonIgnoreProperties({"member", "contractWalletList"})
     @NotFound(action = NotFoundAction.IGNORE)
     private ContractMember contractMember;
     private String symbol;
@@ -421,7 +426,7 @@ public class ContractExchangeOrder implements Serializable
         if (!(o instanceof ContractExchangeOrder)) {
             return false;
         }
-        final ContractExchangeOrder other = (ContractExchangeOrder)o;
+        final ContractExchangeOrder other = (ContractExchangeOrder) o;
         if (!other.canEqual(this)) {
             return false;
         }
@@ -430,273 +435,273 @@ public class ContractExchangeOrder implements Serializable
         }
         final Object this$member = this.getMember();
         final Object other$member = other.getMember();
-        Label_0079: {
+        Label_0079:
+        {
             if (this$member == null) {
                 if (other$member == null) {
                     break Label_0079;
                 }
-            }
-            else if (this$member.equals(other$member)) {
+            } else if (this$member.equals(other$member)) {
                 break Label_0079;
             }
             return false;
         }
         final Object this$contractMember = this.getContractMember();
         final Object other$contractMember = other.getContractMember();
-        Label_0116: {
+        Label_0116:
+        {
             if (this$contractMember == null) {
                 if (other$contractMember == null) {
                     break Label_0116;
                 }
-            }
-            else if (this$contractMember.equals(other$contractMember)) {
+            } else if (this$contractMember.equals(other$contractMember)) {
                 break Label_0116;
             }
             return false;
         }
         final Object this$symbol = this.getSymbol();
         final Object other$symbol = other.getSymbol();
-        Label_0153: {
+        Label_0153:
+        {
             if (this$symbol == null) {
                 if (other$symbol == null) {
                     break Label_0153;
                 }
-            }
-            else if (this$symbol.equals(other$symbol)) {
+            } else if (this$symbol.equals(other$symbol)) {
                 break Label_0153;
             }
             return false;
         }
         final Object this$side = this.getSide();
         final Object other$side = other.getSide();
-        Label_0190: {
+        Label_0190:
+        {
             if (this$side == null) {
                 if (other$side == null) {
                     break Label_0190;
                 }
-            }
-            else if (this$side.equals(other$side)) {
+            } else if (this$side.equals(other$side)) {
                 break Label_0190;
             }
             return false;
         }
         final Object this$type = this.getType();
         final Object other$type = other.getType();
-        Label_0227: {
+        Label_0227:
+        {
             if (this$type == null) {
                 if (other$type == null) {
                     break Label_0227;
                 }
-            }
-            else if (this$type.equals(other$type)) {
+            } else if (this$type.equals(other$type)) {
                 break Label_0227;
             }
             return false;
         }
         final Object this$openPrice = this.getOpenPrice();
         final Object other$openPrice = other.getOpenPrice();
-        Label_0264: {
+        Label_0264:
+        {
             if (this$openPrice == null) {
                 if (other$openPrice == null) {
                     break Label_0264;
                 }
-            }
-            else if (this$openPrice.equals(other$openPrice)) {
+            } else if (this$openPrice.equals(other$openPrice)) {
                 break Label_0264;
             }
             return false;
         }
         final Object this$price = this.getPrice();
         final Object other$price = other.getPrice();
-        Label_0301: {
+        Label_0301:
+        {
             if (this$price == null) {
                 if (other$price == null) {
                     break Label_0301;
                 }
-            }
-            else if (this$price.equals(other$price)) {
+            } else if (this$price.equals(other$price)) {
                 break Label_0301;
             }
             return false;
         }
         final Object this$limitTriggerPrice = this.getLimitTriggerPrice();
         final Object other$limitTriggerPrice = other.getLimitTriggerPrice();
-        Label_0338: {
+        Label_0338:
+        {
             if (this$limitTriggerPrice == null) {
                 if (other$limitTriggerPrice == null) {
                     break Label_0338;
                 }
-            }
-            else if (this$limitTriggerPrice.equals(other$limitTriggerPrice)) {
+            } else if (this$limitTriggerPrice.equals(other$limitTriggerPrice)) {
                 break Label_0338;
             }
             return false;
         }
         final Object this$limitPrice = this.getLimitPrice();
         final Object other$limitPrice = other.getLimitPrice();
-        Label_0375: {
+        Label_0375:
+        {
             if (this$limitPrice == null) {
                 if (other$limitPrice == null) {
                     break Label_0375;
                 }
-            }
-            else if (this$limitPrice.equals(other$limitPrice)) {
+            } else if (this$limitPrice.equals(other$limitPrice)) {
                 break Label_0375;
             }
             return false;
         }
         final Object this$capitalAmount = this.getCapitalAmount();
         final Object other$capitalAmount = other.getCapitalAmount();
-        Label_0412: {
+        Label_0412:
+        {
             if (this$capitalAmount == null) {
                 if (other$capitalAmount == null) {
                     break Label_0412;
                 }
-            }
-            else if (this$capitalAmount.equals(other$capitalAmount)) {
+            } else if (this$capitalAmount.equals(other$capitalAmount)) {
                 break Label_0412;
             }
             return false;
         }
         final Object this$amount = this.getAmount();
         final Object other$amount = other.getAmount();
-        Label_0449: {
+        Label_0449:
+        {
             if (this$amount == null) {
                 if (other$amount == null) {
                     break Label_0449;
                 }
-            }
-            else if (this$amount.equals(other$amount)) {
+            } else if (this$amount.equals(other$amount)) {
                 break Label_0449;
             }
             return false;
         }
         final Object this$coinId = this.getCoinId();
         final Object other$coinId = other.getCoinId();
-        Label_0486: {
+        Label_0486:
+        {
             if (this$coinId == null) {
                 if (other$coinId == null) {
                     break Label_0486;
                 }
-            }
-            else if (this$coinId.equals(other$coinId)) {
+            } else if (this$coinId.equals(other$coinId)) {
                 break Label_0486;
             }
             return false;
         }
         final Object this$leverMultiple = this.getLeverMultiple();
         final Object other$leverMultiple = other.getLeverMultiple();
-        Label_0523: {
+        Label_0523:
+        {
             if (this$leverMultiple == null) {
                 if (other$leverMultiple == null) {
                     break Label_0523;
                 }
-            }
-            else if (this$leverMultiple.equals(other$leverMultiple)) {
+            } else if (this$leverMultiple.equals(other$leverMultiple)) {
                 break Label_0523;
             }
             return false;
         }
         final Object this$ifStopLoss = this.getIfStopLoss();
         final Object other$ifStopLoss = other.getIfStopLoss();
-        Label_0560: {
+        Label_0560:
+        {
             if (this$ifStopLoss == null) {
                 if (other$ifStopLoss == null) {
                     break Label_0560;
                 }
-            }
-            else if (this$ifStopLoss.equals(other$ifStopLoss)) {
+            } else if (this$ifStopLoss.equals(other$ifStopLoss)) {
                 break Label_0560;
             }
             return false;
         }
         final Object this$stopLossPrice = this.getStopLossPrice();
         final Object other$stopLossPrice = other.getStopLossPrice();
-        Label_0597: {
+        Label_0597:
+        {
             if (this$stopLossPrice == null) {
                 if (other$stopLossPrice == null) {
                     break Label_0597;
                 }
-            }
-            else if (this$stopLossPrice.equals(other$stopLossPrice)) {
+            } else if (this$stopLossPrice.equals(other$stopLossPrice)) {
                 break Label_0597;
             }
             return false;
         }
         final Object this$ifStopProfit = this.getIfStopProfit();
         final Object other$ifStopProfit = other.getIfStopProfit();
-        Label_0634: {
+        Label_0634:
+        {
             if (this$ifStopProfit == null) {
                 if (other$ifStopProfit == null) {
                     break Label_0634;
                 }
-            }
-            else if (this$ifStopProfit.equals(other$ifStopProfit)) {
+            } else if (this$ifStopProfit.equals(other$ifStopProfit)) {
                 break Label_0634;
             }
             return false;
         }
         final Object this$stopProfitPrice = this.getStopProfitPrice();
         final Object other$stopProfitPrice = other.getStopProfitPrice();
-        Label_0671: {
+        Label_0671:
+        {
             if (this$stopProfitPrice == null) {
                 if (other$stopProfitPrice == null) {
                     break Label_0671;
                 }
-            }
-            else if (this$stopProfitPrice.equals(other$stopProfitPrice)) {
+            } else if (this$stopProfitPrice.equals(other$stopProfitPrice)) {
                 break Label_0671;
             }
             return false;
         }
         final Object this$status = this.getStatus();
         final Object other$status = other.getStatus();
-        Label_0708: {
+        Label_0708:
+        {
             if (this$status == null) {
                 if (other$status == null) {
                     break Label_0708;
                 }
-            }
-            else if (this$status.equals(other$status)) {
+            } else if (this$status.equals(other$status)) {
                 break Label_0708;
             }
             return false;
         }
         final Object this$originIp = this.getOriginIp();
         final Object other$originIp = other.getOriginIp();
-        Label_0745: {
+        Label_0745:
+        {
             if (this$originIp == null) {
                 if (other$originIp == null) {
                     break Label_0745;
                 }
-            }
-            else if (this$originIp.equals(other$originIp)) {
+            } else if (this$originIp.equals(other$originIp)) {
                 break Label_0745;
             }
             return false;
         }
         final Object this$leaderMemberId = this.getLeaderMemberId();
         final Object other$leaderMemberId = other.getLeaderMemberId();
-        Label_0782: {
+        Label_0782:
+        {
             if (this$leaderMemberId == null) {
                 if (other$leaderMemberId == null) {
                     break Label_0782;
                 }
-            }
-            else if (this$leaderMemberId.equals(other$leaderMemberId)) {
+            } else if (this$leaderMemberId.equals(other$leaderMemberId)) {
                 break Label_0782;
             }
             return false;
         }
         final Object this$origin = this.getOrigin();
         final Object other$origin = other.getOrigin();
-        Label_0819: {
+        Label_0819:
+        {
             if (this$origin == null) {
                 if (other$origin == null) {
                     break Label_0819;
                 }
-            }
-            else if (this$origin.equals(other$origin)) {
+            } else if (this$origin.equals(other$origin)) {
                 break Label_0819;
             }
             return false;
@@ -706,13 +711,13 @@ public class ContractExchangeOrder implements Serializable
         }
         final Object this$createTime = this.getCreateTime();
         final Object other$createTime = other.getCreateTime();
-        Label_0870: {
+        Label_0870:
+        {
             if (this$createTime == null) {
                 if (other$createTime == null) {
                     break Label_0870;
                 }
-            }
-            else if (this$createTime.equals(other$createTime)) {
+            } else if (this$createTime.equals(other$createTime)) {
                 break Label_0870;
             }
             return false;
@@ -722,156 +727,156 @@ public class ContractExchangeOrder implements Serializable
         }
         final Object this$orderClose = this.getOrderClose();
         final Object other$orderClose = other.getOrderClose();
-        Label_0921: {
+        Label_0921:
+        {
             if (this$orderClose == null) {
                 if (other$orderClose == null) {
                     break Label_0921;
                 }
-            }
-            else if (this$orderClose.equals(other$orderClose)) {
+            } else if (this$orderClose.equals(other$orderClose)) {
                 break Label_0921;
             }
             return false;
         }
         final Object this$orderFee = this.getOrderFee();
         final Object other$orderFee = other.getOrderFee();
-        Label_0958: {
+        Label_0958:
+        {
             if (this$orderFee == null) {
                 if (other$orderFee == null) {
                     break Label_0958;
                 }
-            }
-            else if (this$orderFee.equals(other$orderFee)) {
+            } else if (this$orderFee.equals(other$orderFee)) {
                 break Label_0958;
             }
             return false;
         }
         final Object this$orderCancel = this.getOrderCancel();
         final Object other$orderCancel = other.getOrderCancel();
-        Label_0995: {
+        Label_0995:
+        {
             if (this$orderCancel == null) {
                 if (other$orderCancel == null) {
                     break Label_0995;
                 }
-            }
-            else if (this$orderCancel.equals(other$orderCancel)) {
+            } else if (this$orderCancel.equals(other$orderCancel)) {
                 break Label_0995;
             }
             return false;
         }
         final Object this$orderTigger = this.getOrderTigger();
         final Object other$orderTigger = other.getOrderTigger();
-        Label_1032: {
+        Label_1032:
+        {
             if (this$orderTigger == null) {
                 if (other$orderTigger == null) {
                     break Label_1032;
                 }
-            }
-            else if (this$orderTigger.equals(other$orderTigger)) {
+            } else if (this$orderTigger.equals(other$orderTigger)) {
                 break Label_1032;
             }
             return false;
         }
         final Object this$symbolCurrentPrice = this.getSymbolCurrentPrice();
         final Object other$symbolCurrentPrice = other.getSymbolCurrentPrice();
-        Label_1069: {
+        Label_1069:
+        {
             if (this$symbolCurrentPrice == null) {
                 if (other$symbolCurrentPrice == null) {
                     break Label_1069;
                 }
-            }
-            else if (this$symbolCurrentPrice.equals(other$symbolCurrentPrice)) {
+            } else if (this$symbolCurrentPrice.equals(other$symbolCurrentPrice)) {
                 break Label_1069;
             }
             return false;
         }
         final Object this$holdInterest = this.getHoldInterest();
         final Object other$holdInterest = other.getHoldInterest();
-        Label_1106: {
+        Label_1106:
+        {
             if (this$holdInterest == null) {
                 if (other$holdInterest == null) {
                     break Label_1106;
                 }
-            }
-            else if (this$holdInterest.equals(other$holdInterest)) {
+            } else if (this$holdInterest.equals(other$holdInterest)) {
                 break Label_1106;
             }
             return false;
         }
         final Object this$fee = this.getFee();
         final Object other$fee = other.getFee();
-        Label_1143: {
+        Label_1143:
+        {
             if (this$fee == null) {
                 if (other$fee == null) {
                     break Label_1143;
                 }
-            }
-            else if (this$fee.equals(other$fee)) {
+            } else if (this$fee.equals(other$fee)) {
                 break Label_1143;
             }
             return false;
         }
         final Object this$calculateProfit = this.getCalculateProfit();
         final Object other$calculateProfit = other.getCalculateProfit();
-        Label_1180: {
+        Label_1180:
+        {
             if (this$calculateProfit == null) {
                 if (other$calculateProfit == null) {
                     break Label_1180;
                 }
-            }
-            else if (this$calculateProfit.equals(other$calculateProfit)) {
+            } else if (this$calculateProfit.equals(other$calculateProfit)) {
                 break Label_1180;
             }
             return false;
         }
         final Object this$nodeName = this.getNodeName();
         final Object other$nodeName = other.getNodeName();
-        Label_1217: {
+        Label_1217:
+        {
             if (this$nodeName == null) {
                 if (other$nodeName == null) {
                     break Label_1217;
                 }
-            }
-            else if (this$nodeName.equals(other$nodeName)) {
+            } else if (this$nodeName.equals(other$nodeName)) {
                 break Label_1217;
             }
             return false;
         }
         final Object this$buyTime = this.getBuyTime();
         final Object other$buyTime = other.getBuyTime();
-        Label_1254: {
+        Label_1254:
+        {
             if (this$buyTime == null) {
                 if (other$buyTime == null) {
                     break Label_1254;
                 }
-            }
-            else if (this$buyTime.equals(other$buyTime)) {
+            } else if (this$buyTime.equals(other$buyTime)) {
                 break Label_1254;
             }
             return false;
         }
         final Object this$contractType = this.getContractType();
         final Object other$contractType = other.getContractType();
-        Label_1291: {
+        Label_1291:
+        {
             if (this$contractType == null) {
                 if (other$contractType == null) {
                     break Label_1291;
                 }
-            }
-            else if (this$contractType.equals(other$contractType)) {
+            } else if (this$contractType.equals(other$contractType)) {
                 break Label_1291;
             }
             return false;
         }
         final Object this$walletType = this.getWalletType();
         final Object other$walletType = other.getWalletType();
-        Label_1328: {
+        Label_1328:
+        {
             if (this$walletType == null) {
                 if (other$walletType == null) {
                     break Label_1328;
                 }
-            }
-            else if (this$walletType.equals(other$walletType)) {
+            } else if (this$walletType.equals(other$walletType)) {
                 break Label_1328;
             }
             return false;
@@ -882,8 +887,7 @@ public class ContractExchangeOrder implements Serializable
             if (other$isOneClickOrder == null) {
                 return true;
             }
-        }
-        else if (this$isOneClickOrder.equals(other$isOneClickOrder)) {
+        } else if (this$isOneClickOrder.equals(other$isOneClickOrder)) {
             return true;
         }
         return false;
@@ -898,7 +902,7 @@ public class ContractExchangeOrder implements Serializable
         final int PRIME = 59;
         int result = 1;
         final long $id = this.getId();
-        result = result * 59 + (int)($id >>> 32 ^ $id);
+        result = result * 59 + (int) ($id >>> 32 ^ $id);
         final Object $member = this.getMember();
         result = result * 59 + (($member == null) ? 43 : $member.hashCode());
         final Object $contractMember = this.getContractMember();
@@ -942,11 +946,11 @@ public class ContractExchangeOrder implements Serializable
         final Object $origin = this.getOrigin();
         result = result * 59 + (($origin == null) ? 43 : $origin.hashCode());
         final long $version = this.getVersion();
-        result = result * 59 + (int)($version >>> 32 ^ $version);
+        result = result * 59 + (int) ($version >>> 32 ^ $version);
         final Object $createTime = this.getCreateTime();
         result = result * 59 + (($createTime == null) ? 43 : $createTime.hashCode());
         final long $sequence = this.getSequence();
-        result = result * 59 + (int)($sequence >>> 32 ^ $sequence);
+        result = result * 59 + (int) ($sequence >>> 32 ^ $sequence);
         final Object $orderClose = this.getOrderClose();
         result = result * 59 + (($orderClose == null) ? 43 : $orderClose.hashCode());
         final Object $orderFee = this.getOrderFee();

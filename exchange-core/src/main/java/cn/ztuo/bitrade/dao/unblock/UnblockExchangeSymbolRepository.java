@@ -3,13 +3,14 @@ package cn.ztuo.bitrade.dao.unblock;
 import cn.ztuo.bitrade.entity.unbolck.*;
 import org.springframework.data.querydsl.*;
 import org.springframework.data.repository.query.*;
+
 import java.math.*;
 import java.util.*;
 import javax.transaction.*;
+
 import org.springframework.data.jpa.repository.*;
 
-public interface UnblockExchangeSymbolRepository extends JpaRepository<UnblockExchangeSymbol, String>, JpaSpecificationExecutor<UnblockExchangeSymbol>, QuerydslPredicateExecutor<UnblockExchangeSymbol>
-{
+public interface UnblockExchangeSymbolRepository extends JpaRepository<UnblockExchangeSymbol, String>, JpaSpecificationExecutor<UnblockExchangeSymbol>, QuerydslPredicateExecutor<UnblockExchangeSymbol> {
     @Transactional
     @Modifying
     @Query(value = "insert into unblock_exchange_symbol(symbol,single_round_release_rate,day_max_release_rate,day_max_release_amount,start_price,price_rise_rule,round_interval_price,single_day_round_max,round_limit_key,round_limit_value,price_limit,whitelist_member_id,update_time,create_time,version) values(:symbol,:singleRoundReleaseRate,:dayMaxReleaseRate,:dayMaxReleaseAmount,:startPrice,:priceRiseRule,:roundIntervalPrice,:singleDayRoundMax,:roundLimitKey,:roundLimitValue,:priceLimit,:whitelistMemberId,:updateTime,:createTime,:version)", nativeQuery = true)

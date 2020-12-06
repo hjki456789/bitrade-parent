@@ -3,8 +3,7 @@ package cn.ztuo.bitrade.util;
 import org.springframework.data.domain.*;
 import cn.ztuo.bitrade.pagenation.*;
 
-public class PageUtil
-{
+public class PageUtil {
     public static EntityPage page(final Page page, final int pageNo, final int pageSize) {
         final EntityPage entityPage = new EntityPage();
         entityPage.setCount(page.getTotalElements());

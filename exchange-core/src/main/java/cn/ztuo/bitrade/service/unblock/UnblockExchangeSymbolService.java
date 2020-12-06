@@ -4,23 +4,25 @@ import org.springframework.stereotype.*;
 import cn.ztuo.bitrade.dao.unblock.*;
 import org.springframework.beans.factory.annotation.*;
 import cn.ztuo.bitrade.entity.unbolck.*;
+
 import java.io.*;
+
 import com.querydsl.core.types.*;
 import org.springframework.data.domain.*;
+
 import java.util.*;
 
 @Service
-public class UnblockExchangeSymbolService
-{
+public class UnblockExchangeSymbolService {
     @Autowired
     private UnblockExchangeSymbolRepository unblockExchangeSymbolRepository;
 
     public UnblockExchangeSymbol findBySymbol(final String symbol) {
-        return (UnblockExchangeSymbol)this.unblockExchangeSymbolRepository.getOne(symbol);
+        return (UnblockExchangeSymbol) this.unblockExchangeSymbolRepository.getOne(symbol);
     }
 
     public Page<UnblockExchangeSymbol> findAll(final Predicate predicate, final Pageable pageable) {
-        return (Page<UnblockExchangeSymbol>)this.unblockExchangeSymbolRepository.findAll(predicate, pageable);
+        return (Page<UnblockExchangeSymbol>) this.unblockExchangeSymbolRepository.findAll(predicate, pageable);
     }
 
     public int insert(final UnblockExchangeSymbol unblockExchangeSymbol) {
@@ -38,6 +40,6 @@ public class UnblockExchangeSymbolService
     }
 
     public List<UnblockExchangeSymbol> findAll() {
-        return (List<UnblockExchangeSymbol>)this.unblockExchangeSymbolRepository.findAll();
+        return (List<UnblockExchangeSymbol>) this.unblockExchangeSymbolRepository.findAll();
     }
 }
