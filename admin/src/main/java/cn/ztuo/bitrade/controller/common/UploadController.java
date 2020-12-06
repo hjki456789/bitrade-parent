@@ -92,7 +92,7 @@ public class UploadController extends BaseController {
             log.info("Error Message: " + ce.getMessage());
             return MessageResult.error(500, ce.getErrorMessage()).toString();
         } catch (Throwable e) {
-            e.printStackTrace();
+            log.error("Error Message: ",e);
             return MessageResult.error(500, sourceService.getMessage("REQUEST_FAILED")).toString();
         } finally {
             ossClient.shutdown();
@@ -128,6 +128,7 @@ public class UploadController extends BaseController {
     }
 
     @RequestMapping(value = "/oss/base64", method = RequestMethod.POST)
+    //@RequiresPermissions({ "common:upload:oss:base64" })
     @ResponseBody
    // @AccessLog(module = AdminModule.COMMON, operation = "base64上传oss")
     public MessageResult base64UpLoad(@RequestParam String base64Data) {
@@ -216,7 +217,7 @@ public class UploadController extends BaseController {
             mr.setData(uri);
             return mr.toString();
         } catch (Throwable e) {
-            e.printStackTrace();
+            logger.error("上传失败！",e);
             return MessageResult.error(500, sourceService.getMessage("SYSTEM_ERROR")).toString();
         }
     }

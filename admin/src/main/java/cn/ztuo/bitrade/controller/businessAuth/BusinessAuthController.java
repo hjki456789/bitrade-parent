@@ -226,6 +226,23 @@ public class BusinessAuthController extends BaseAdminController {
 
     }
 
+    @PostMapping("apply/page-query2")
+    @RequiresPermissions({ "business-auth:apply:page-query" })
+    public MessageResult page(final PageModel pageModel, @RequestParam(value = "status", required = false) final CertifiedBusinessStatus status, @RequestParam(value = "account", defaultValue = "") final String account) {
+        final List<BooleanExpression> lists = new ArrayList<BooleanExpression>();
+        lists.add(QBusinessAuthApply.businessAuthApply.member.certifiedBusinessStatus.ne(CertifiedBusinessStatus.NOT_CERTIFIED));
+        if (!"".equals(account)) {
+            lists.add(QBusinessAuthApply.businessAuthApply.member.username.like("%" + account + "%").or((Predicate)QBusinessAuthApply.businessAuthApply.member.mobilePhone.like(account + "%")).or((Predicate)QBusinessAuthApply.businessAuthApply.member.email.like(account + "%")).or((Predicate)QBusinessAuthApply.businessAuthApply.member.realName.like("%" + account + "%")));
+        }
+        if (status != null) {
+            lists.add(QBusinessAuthApply.businessAuthApply.certifiedBusinessStatus.eq(status));
+        }
+        final Page<BusinessAuthApply> page = (Page<BusinessAuthApply>)this.businessAuthApplyService.page(PredicateUtils.getPredicate((List)lists), pageModel.getPageable());
+        return this.success((Object)page);
+    }
+
+
+
     @PostMapping("get-search-status")
     @ApiOperation(value = "获取认证状态列表")
     @MultiDataSource(name = "second")

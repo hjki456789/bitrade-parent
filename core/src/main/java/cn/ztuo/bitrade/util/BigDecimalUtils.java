@@ -293,6 +293,11 @@ public class BigDecimalUtils {
         return compare(add(v1, v2), v3);
     }
 
+
+    public static boolean compareGt(final BigDecimal v1, final BigDecimal v2) {
+        return v1.compareTo(v2) > 0;
+    }
+
     /**
      * 判断两值是否相等
      *
