@@ -271,7 +271,7 @@ public class CoinController extends BaseAdminController {
     @PostMapping({"update-status"})
     @AccessLog(module = AdminModule.CONTRACT, operation = "修改禁用状态")
     public MessageResult updateStatus(@RequestParam("name") final String name, @RequestParam("status") final Integer status) {
-        if (status == null || StringUtils.isEmpty((Object) name)) {
+        if (status == null || StringUtils.isEmpty( name)) {
             return MessageResult.error("参数错误!");
         }
         CommonStatus statu = null;
@@ -452,7 +452,7 @@ public class CoinController extends BaseAdminController {
         if (coin == null) {
             return MessageResult.error("币种配置不存在");
         }
-        if (!StringUtils.isEmpty((Object) coin.getColdWalletAddress())) {
+        if (!StringUtils.isEmpty( coin.getColdWalletAddress())) {
             return MessageResult.error("该币种配置冷钱包地址已存在");
         }
         this.coinService.updateColdWallet(coinName, coldWalletAddress);

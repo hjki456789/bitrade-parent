@@ -34,7 +34,7 @@ public class AdminVoteController extends BaseAdminController {
     @AccessLog(module = AdminModule.SYSTEM, operation = "新增投票")
     @Transactional(rollbackFor = {Exception.class})
     public MessageResult merge(@RequestBody Vote vote) {
-        Assert.notNull((Object) vote, "vote null");
+        Assert.notNull( vote, "vote null");
         for (final PreCoin preCoin : vote.getPreCoins()) {
             final Coin coin = this.coinService.findByUnit(preCoin.getUnit());
             if (coin != null) {
@@ -55,7 +55,7 @@ public class AdminVoteController extends BaseAdminController {
             this.voteService.turnOffAllVote();
         }
         vote = this.voteService.save(vote);
-        return MessageResult.getSuccessInstance(this.messageSource.getMessage("SUCCESS"), (Object) vote);
+        return MessageResult.getSuccessInstance(this.messageSource.getMessage("SUCCESS"),  vote);
     }
 
     @RequiresPermissions({"system:vote:detail"})
@@ -63,13 +63,13 @@ public class AdminVoteController extends BaseAdminController {
     @AccessLog(module = AdminModule.SYSTEM, operation = "投票详情")
     public MessageResult detail(final Long id) {
         final Vote vote = this.voteService.findById(id);
-        return MessageResult.getSuccessInstance(this.messageSource.getMessage("SUCCESS"), (Object) vote);
+        return MessageResult.getSuccessInstance(this.messageSource.getMessage("SUCCESS"),  vote);
     }
 
     @RequiresPermissions({"system:vote:page-query"})
     @PostMapping({"page-query"})
     public MessageResult pageQuery(final PageModel pageModel) {
         final Page<Vote> all = (Page<Vote>) this.voteService.findAll((Predicate) null, pageModel.getPageable());
-        return this.success((Object) all);
+        return this.success( all);
     }
 }
