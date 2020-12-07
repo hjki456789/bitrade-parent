@@ -21,6 +21,7 @@ public class ContractDoubleMemberApi implements Serializable {
     private int ifDefault;
     private int deleteFlag;
     private Long sequence;
+    private String passphrase;
     @Transient
     private String fromExchangeName;
     @Transient

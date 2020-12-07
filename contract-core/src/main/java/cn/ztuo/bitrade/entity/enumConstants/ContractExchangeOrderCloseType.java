@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.*;
 import java.beans.*;
 
 public enum ContractExchangeOrderCloseType implements BaseEnum {
-    CLOSE_SELF("\u624b\u52a8\u5e73\u4ed3"),
-    CLOSE_AUTO("\u81ea\u52a8\u5e73\u4ed3"),
-    CLOSE_FOLLOW("\u8ddf\u968f\u5e73\u4ed3");
+    CLOSE_SELF("手动平仓"),
+    CLOSE_AUTO("自动平仓"),
+    CLOSE_FOLLOW("跟随平仓");
 
     private String cnName;
 

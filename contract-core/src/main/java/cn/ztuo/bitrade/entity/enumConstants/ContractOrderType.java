@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.*;
 import java.beans.*;
 
 public enum ContractOrderType implements BaseEnum {
-    MARKET_PRICE("\u5e02\u4ef7"),
-    LIMIT_PRICE("\u9650\u4ef7");
+    MARKET_PRICE("市价"),
+    LIMIT_PRICE("限价");
 
     private String cnName;
 

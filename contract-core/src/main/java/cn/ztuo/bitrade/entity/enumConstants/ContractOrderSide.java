@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.*;
 import java.beans.*;
 
 public enum ContractOrderSide implements BaseEnum {
-    BUY_UP("\u4e70\u6da8"),
-    BUY_DOWN("\u4e70\u8dcc");
+    BUY_UP("买涨"),
+    BUY_DOWN("买跌");
 
     private String cnName;
 

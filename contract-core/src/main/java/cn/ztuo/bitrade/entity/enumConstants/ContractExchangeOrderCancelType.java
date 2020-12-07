@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.*;
 import java.beans.*;
 
 public enum ContractExchangeOrderCancelType implements BaseEnum {
-    SELF_OPERATION("\u624b\u52a8\u64a4\u9500"),
-    SYSTEM_OPERATION("\u7cfb\u7edf\u64a4\u9500");
+    SELF_OPERATION("手动撤销"),
+    SYSTEM_OPERATION("系统撤销");
 
     private String cnName;
 

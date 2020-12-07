@@ -6,10 +6,10 @@ import com.fasterxml.jackson.annotation.*;
 import java.beans.*;
 
 public enum ContractWalletFrozenOperationType implements BaseEnum {
-    BE_NODE("\u6210\u4e3a\u8282\u70b9"),
-    ADD_DEPOSITAMOUNT("\u8282\u70b9\u7528\u6237\u589e\u52a0\u4fdd\u8bc1\u91d1"),
-    PLAT_LOSS("\u5e73\u53f0\u4e8f\u635f\uff0c\u51cf\u5c11\u8282\u70b9\u7528\u7684\u51bb\u7ed3\u8d44\u4ea7"),
-    CANCEL_NODE("\u53d6\u6d88\u8282\u70b9");
+    BE_NODE("成为节点"),
+    ADD_DEPOSITAMOUNT("节点用户增加保证金"),
+    PLAT_LOSS("平台亏损，减少节点用的冻结资产"),
+    CANCEL_NODE("取消节点");
 
     private String cnName;
 

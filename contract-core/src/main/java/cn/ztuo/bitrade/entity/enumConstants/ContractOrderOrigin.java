@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.*;
 import java.beans.*;
 
 public enum ContractOrderOrigin implements BaseEnum {
-    ORIGIN_PC("PC\u7aef"),
-    ORIGIN_APP("\u79fb\u52a8\u7aef"),
-    ORIGIN_FOLLOW("\u8ddf\u968f\u4e0b\u5355");
+    ORIGIN_PC("PC端"),
+    ORIGIN_APP("移动端"),
+    ORIGIN_FOLLOW("跟随下单");
 
     private String cnName;
 
