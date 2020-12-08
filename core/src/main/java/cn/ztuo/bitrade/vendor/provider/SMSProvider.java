@@ -57,6 +57,19 @@ public interface SMSProvider {
      */
     MessageResult sendTemplateMessage(String phone, String templateId) throws Exception;
 
+    /**
+     * 发送模板短信
+     *
+     * @param templateId 模板ID
+     * @param phone      手机号
+     * @return
+     */
+
+    default MessageResult sendTemplateMessage(Integer templateId,String phone,Boolean isDomestic,Map param ) throws Exception{
+        //待完善
+        return new MessageResult();
+    }
+
     MessageResult sendNationalMessage(String content, String nationCode, String phone) throws Exception;
 
 

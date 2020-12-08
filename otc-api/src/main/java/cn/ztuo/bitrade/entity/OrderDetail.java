@@ -36,4 +36,7 @@ public class OrderDetail {
     private Appeal appeal;
     private String payMode;
     private Long serverTime;
+
+    private int platType;
+    private String payUrl;
 }

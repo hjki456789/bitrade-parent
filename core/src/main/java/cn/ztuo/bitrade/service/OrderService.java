@@ -331,4 +331,11 @@ public class OrderService extends BaseService {
     public String sumByAdvertiseIdAndStatus(Long advertiseId, OrderStatus status) {
         return orderDao.sumByAdvertiseIdAndStatus(advertiseId, status);
     }
+    public List<Order> getPlatOrderList() {
+        return this.orderDao.findAllPlatOrder();
+    }
+
+    public int payForOrder(String orderSn) {
+        return this.orderDao.updatePayOrder(new Date(), OrderStatus.PAID, orderSn);
+    }
 }

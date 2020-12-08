@@ -141,4 +141,7 @@ public interface OrderDao extends BaseDao<Order> {
     OtcOrderCount countOtcOrder(@Param("startTime") Date startTime, @Param("memberId") Long memberId);
 
     int countByCustomerIdAndStatusAndAdvertiseTypeAndCancelTimeBetween(Long customerId, OrderStatus status, AdvertiseType type, Date startTime, Date endTime);
+
+    @Query("select a from Order a where a.platType=1 and (a.status=1 or a.status=2)")
+    List<Order> findAllPlatOrder();
 }
