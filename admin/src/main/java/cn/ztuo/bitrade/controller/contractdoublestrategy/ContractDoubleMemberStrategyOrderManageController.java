@@ -39,19 +39,19 @@ public class ContractDoubleMemberStrategyOrderManageController extends BaseAdmin
             Map<Long, ContractDoubleExchangeConfig> exchangeMap = new HashMap();
             List<ContractDoubleExchangeConfig> exchangeList = this.contractDoubleExchangeConfigService.findAll();
             exchangeList.forEach(model -> exchangeMap.put(model.getId(), model));
-            Map<K, ContractDoubleExchangeConfig> map=new HashMap<>();;
-            Map<K, Member> map2=new HashMap<>();;
+            Map<Long, Member> map=new HashMap<>();
             page.getContent().forEach(model -> {
                 Member member;
-                model.setFromExchangeName(map.containsKey(model.getFromExchangeId()) ? map.get(model.getFromExchangeId()).getName() : "");
-                if (map2.containsKey(model.getMemberId())) {
-                    member = map2.get(model.getMemberId());
+                model.setFromExchangeName(exchangeMap.containsKey(model.getFromExchangeId()) ? exchangeMap.get(model.getFromExchangeId()).getName() : "");
+                if (map.containsKey(model.getMemberId())) {
+                    member = map.get(model.getMemberId());
                 }
                 else {
                     member = this.memberService.findOne(model.getMemberId());
                 }
                 if (null != member) {
                     model.setMember(member);
+                    map.put(member.getId(),member);
                 }
                 return;
             });

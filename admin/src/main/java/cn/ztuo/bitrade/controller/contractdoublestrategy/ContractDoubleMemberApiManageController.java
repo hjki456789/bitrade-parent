@@ -38,19 +38,19 @@ public class ContractDoubleMemberApiManageController extends BaseAdminController
             final Map<Long, ContractDoubleExchangeConfig> exchangeMap = new HashMap<>();
             final List<ContractDoubleExchangeConfig> exchangeList = this.contractDoubleExchangeConfigService.findAll();
             exchangeList.forEach(model -> exchangeMap.put(model.getId(), model));
-            final Map<K, ContractDoubleExchangeConfig> map=new HashMap<>();
-            final Map<K, Member> map2=new HashMap<>();;
+            Map<Long, Member> map=new HashMap<>();
             page.getContent().forEach(model -> {
                 Member member=null;
-                model.setFromExchangeName(map.containsKey(model.getFromExchangeId()) ? map.get(model.getFromExchangeId()).getName() : "");
-                if (map2.containsKey(model.getMemberId())) {
-                    member = map2.get(model.getMemberId());
+                model.setFromExchangeName(exchangeMap.containsKey(model.getFromExchangeId()) ? exchangeMap.get(model.getFromExchangeId()).getName() : "");
+                if (map.containsKey(model.getMemberId())) {
+                    member = map.get(model.getMemberId());
                 }
                 else {
                     member = memberService.findOne(model.getMemberId());
                 }
                 if (null != member) {
                     model.setMember(member);
+                    map.put(member.getId(),member);
                 }
                 return;
             });

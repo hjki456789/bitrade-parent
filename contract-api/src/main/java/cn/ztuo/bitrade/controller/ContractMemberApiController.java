@@ -39,8 +39,7 @@ public class ContractMemberApiController extends BaseController {
         final Map<Long, ContractDoubleExchangeConfig> exchangeMap = new HashMap<Long, ContractDoubleExchangeConfig>();
         final List<ContractDoubleExchangeConfig> exchangeList = this.contractDoubleExchangeConfigService.findAll();
         exchangeList.forEach(model -> exchangeMap.put(model.getId(), model));
-        final Map<K, ContractDoubleExchangeConfig> map2 = new HashMap<>();
-        page.getContent().forEach(model -> model.setFromExchangeName(map2.containsKey(model.getFromExchangeId()) ? map2.get(model.getFromExchangeId()).getName() : ""));
+        page.getContent().forEach(model -> model.setFromExchangeName(exchangeMap.containsKey(model.getFromExchangeId()) ? exchangeMap.get(model.getFromExchangeId()).getName() : ""));
         final Map<String, Object> map = new HashMap<String, Object>();
         map.put("pageInfo", page);
         if (pageNo <= 1) {
