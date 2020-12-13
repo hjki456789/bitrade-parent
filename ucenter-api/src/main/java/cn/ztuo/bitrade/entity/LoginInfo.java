@@ -64,6 +64,8 @@ public class LoginInfo {
 
     private String smsRemind;
 
+    private String memberGradeName;
+
     /**
      *
      * @param member

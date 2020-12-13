@@ -8,10 +8,7 @@ import cn.ztuo.bitrade.entity.transform.AuthMember;
 import cn.ztuo.bitrade.exception.InformationExpiredException;
 import cn.ztuo.bitrade.service.*;
 import cn.ztuo.bitrade.system.CoinExchangeFactory;
-import cn.ztuo.bitrade.util.DateUtil;
-import cn.ztuo.bitrade.util.MessageResult;
-import cn.ztuo.bitrade.util.PredicateUtils;
-import cn.ztuo.bitrade.util.RedisUtil;
+import cn.ztuo.bitrade.util.*;
 import com.alibaba.fastjson.JSONObject;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -90,13 +87,40 @@ public class WithdrawController extends BaseController {
     @Transactional(rollbackFor = Exception.class)
     @SecurityVerification(value = SysConstant.TOKEN_ADD_ADDRESS)
     @ApiOperation("增加提现地址")
-    public MessageResult addAddress(String address, String unit, String remark, @ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember user) {
+    public MessageResult addAddress(String address, String unit, String remark,
+                                    String code, final String aims,
+                                    @ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember user) {
         hasText(address, sourceService.getMessage("MISSING_COIN_ADDRESS"));
         hasText(unit, sourceService.getMessage("MISSING_COIN_TYPE"));
+        hasText(code, this.sourceService.getMessage("MISSING_VERIFICATION_CODE"));
+        hasText(aims, this.sourceService.getMessage("MISSING_PHONE_OR_EMAIL"));
         Coin coin = coinService.findByUnit(unit);
         List<MemberAddress> memberAddress = memberAddressService.findByMemberIdAndCoinAndAddress(user.getId(), coin, address, CommonStatus.NORMAL);
         if (memberAddress != null && memberAddress.size() > 0) {
             return error(sourceService.getMessage("ADDRESS_EXITS_ERROR"));
+        }
+        Member member = this.memberService.findOne(user.getId());
+        if (member.getMobilePhone() != null && aims.equals(member.getMobilePhone())) {
+            final Object info = this.redisUtil.get("PHONE_ADD_ADDRESS_" + member.getMobilePhone());
+            if (info == null) {
+                return MessageResult.error(this.sourceService.getMessage("VERIFICATION_CODE_NOT_EXISTS"));
+            }
+            if (!info.toString().equals(code)) {
+                return MessageResult.error(this.sourceService.getMessage("VERIFICATION_CODE_INCORRECT"));
+            }
+            this.redisUtil.delete(new String[] { "PHONE_ADD_ADDRESS_" + member.getMobilePhone() });
+        } else {
+            if (member.getEmail() == null || !aims.equals(member.getEmail())) {
+                return MessageResult.error(this.sourceService.getMessage("ADD_ADDRESS_FAILED"));
+            }
+            final Object info = this.redisUtil.get("ADD_ADDRESS_CODE_" + member.getEmail());
+            if (info == null) {
+                return MessageResult.error(this.sourceService.getMessage("VERIFICATION_CODE_NOT_EXISTS"));
+            }
+            if (!info.toString().equals(code)) {
+                return MessageResult.error(this.sourceService.getMessage("VERIFICATION_CODE_INCORRECT"));
+            }
+            this.redisUtil.delete(new String[] { "ADD_ADDRESS_CODE_" + member.getEmail() });
         }
         MessageResult result = memberAddressService.addMemberAddress(user.getId(), address, unit, remark);
         if (result.getCode() == 0) {
@@ -233,13 +257,17 @@ public class WithdrawController extends BaseController {
     @Transactional(rollbackFor = Exception.class)
     @SecurityVerification(SysConstant.TOKEN_WITHDRAW_AUTH)
     public MessageResult withdraw(@ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember user, String unit, String coinKey, String address,
-                                  BigDecimal amount,  String remark) throws Exception {
+                                  BigDecimal amount,  String remark,
+                                  BigDecimal fee, final String jyPassword,
+                                  @RequestParam("code") final String code,
+                                  @RequestParam(value = "googleCode", required = false) final String googleCode) throws Exception {
+        hasText(jyPassword, this.sourceService.getMessage("MISSING_JYPASSWORD"));
+        hasText(unit, this.sourceService.getMessage("MISSING_COIN_TYPE"));
         DataDictionary seFeeScaleDict = dictionaryService.findByBond(SysConstant.CAN_WITHDRAW);
         if(seFeeScaleDict.getValue().equals("0")){
             return error(sourceService.getMessage("WITHDRAW_SCALE_ERROR"));
         }
         if(redisUtil.get(SysConstant.WITHDRAW_LOCK+user.getId())!=null&&(Boolean)redisUtil.get(SysConstant.WITHDRAW_LOCK+user.getId())){ return error(sourceService.getMessage("WITHCRAW_LOCK"));}
-        hasText(unit, sourceService.getMessage("MISSING_COIN_TYPE"));
         Coin coin = coinService.findByUnit(unit);
         notNull(coin, sourceService.getMessage("COIN_ILLEGAL"));
         if (StringUtils.isNotEmpty(coinKey)) {
@@ -252,10 +280,10 @@ public class WithdrawController extends BaseController {
             return error(sourceService.getMessage("WITHDRAW_SCALE_ERROR"));
         }
         amount = amount.setScale(coin.getWithdrawScale(), BigDecimal.ROUND_DOWN);
-        BigDecimal fee = coin.getMinTxFee();
+        //BigDecimal fee = coin.getMinTxFee();
         isTrue(coin.getStatus().equals(CommonStatus.NORMAL) && coin.getCanWithdraw().equals(BooleanEnum.IS_TRUE), sourceService.getMessage("COIN_NOT_SUPPORT"));
-        //isTrue(compare(fee, new BigDecimal(String.valueOf(coin.getMinTxFee()))), sourceService.getMessage("CHARGE_MIN") + coin.getMinTxFee());
-        //isTrue(compare(new BigDecimal(String.valueOf(coin.getMaxTxFee())), fee), sourceService.getMessage("CHARGE_MAX") + coin.getMaxTxFee());
+        isTrue(compare(fee, new BigDecimal(String.valueOf(coin.getMinTxFee()))), sourceService.getMessage("CHARGE_MIN") + coin.getMinTxFee());
+        isTrue(compare(new BigDecimal(String.valueOf(coin.getMaxTxFee())), fee), sourceService.getMessage("CHARGE_MAX") + coin.getMaxTxFee());
         isTrue(compare(coin.getMaxWithdrawAmount(), amount), sourceService.getMessage("WITHDRAW_MAX") + coin.getMaxWithdrawAmount().stripTrailingZeros().toPlainString());
         isTrue(compare(amount, coin.getMinWithdrawAmount()), sourceService.getMessage("WITHDRAW_MIN") + coin.getMinWithdrawAmount().stripTrailingZeros().toPlainString());
         if (sub(amount, fee).compareTo(BigDecimal.ZERO) < 0) {
@@ -264,7 +292,7 @@ public class WithdrawController extends BaseController {
         memberWalletService.findWalletForUpdate(user.getId(), coin);
         MemberWallet memberWallet = memberWalletService.findByCoinAndMemberId(coin, user.getId());
         isTrue(compare(memberWallet.getBalance(), amount), sourceService.getMessage("INSUFFICIENT_BALANCE"));
-//        isTrue(memberAddressService.findByMemberIdAndAddress(user.getId(), address).size() > 0, sourceService.getMessage("WRONG_ADDRESS"));
+        isTrue(memberAddressService.findByMemberIdAndAddress(user.getId(), address).size() > 0, sourceService.getMessage("WRONG_ADDRESS"));
         isTrue(memberWallet.getIsLock() == BooleanEnum.IS_FALSE, sourceService.getMessage("WALLET_LOCKED"));
         Member member = memberService.findOne(user.getId());
         // 判断用户是否禁止提现
@@ -272,6 +300,27 @@ public class WithdrawController extends BaseController {
         //是否完成kyc二级认证
         isTrue(member.getKycStatus() == 4, sourceService.getMessage("VIDEO_CHECK"));
         isTrue(member.getMemberLevel() != MemberLevelEnum.GENERAL, sourceService.getMessage("NO_REAL_NAME"));
+        //支付密码校验
+        String mbPassword = member.getJyPassword();
+        isTrue(member.getMemberLevel() != MemberLevelEnum.GENERAL, "\u8bf7\u5148\u8fdb\u884c\u5b9e\u540d\u8ba4\u8bc1!");
+        hasText(mbPassword, this.sourceService.getMessage("NO_SET_JYPASSWORD"));
+        if (member.getGoogleState() == 1) {
+            if (!StringUtils.isNotEmpty(googleCode)) {
+                return MessageResult.error("\u8bf7\u8f93\u5165\u8c37\u6b4c\u9a8c\u8bc1\u7801");
+            }
+            final long googleCodes = Long.parseLong(googleCode);
+            final long t = System.currentTimeMillis();
+            final GoogleAuthenticatorUtil ga = new GoogleAuthenticatorUtil();
+            final boolean r = ga.check_code(member.getGoogleKey(), googleCodes, t);
+            if (!r) {
+                return MessageResult.error("\u8c37\u6b4c\u9a8c\u8bc1\u5931\u8d25");
+            }
+        }
+        if (!code.equals(this.redisUtil.get("PHONE_WITHDRAW_MONEY_CODE_PREFIX_" + member.getMobilePhone()))) {
+            return MessageResult.error(this.sourceService.getMessage("VERIFICATION_CODE_INCORRECT"));
+        }
+        this.redisUtil.delete(new String[] { "PHONE_WITHDRAW_MONEY_CODE_PREFIX_" + member.getMobilePhone() });
+        isTrue(Md5.md5Digest(jyPassword + member.getSalt()).toLowerCase().equals(mbPassword), this.sourceService.getMessage("ERROR_JYPASSWORD"));
         MessageResult result = memberWalletService.freezeBalance(memberWallet, amount);
         if (result.getCode() != 0) {
             throw new InformationExpiredException(msService.getMessage("INFORMATION_EXPIRED"));

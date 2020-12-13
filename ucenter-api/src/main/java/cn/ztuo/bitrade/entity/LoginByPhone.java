@@ -32,8 +32,15 @@ public class LoginByPhone {
     @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[\\s\\S]{8,16}$",message = "{LoginByEmail.password.Pattern}")
     private String password;
 
+    @NotBlank(message = "{LoginByPhone.username.null}")
+    @Length(min = 3, max = 20, message = "{LoginByPhone.username.length}")
+    private String username;
+
     @NotBlank(message = "{LoginByPhone.country.null}")
     private String country;
+
+    @NotBlank(message = "{LoginByPhone.code.null}")
+    private String code;
 
 //    @NotBlank(message = "{LoginByPhone.ticket.null}")
     private String ticket;

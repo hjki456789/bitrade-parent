@@ -9,6 +9,7 @@ import cn.ztuo.bitrade.entity.transform.AuthMember;
 import cn.ztuo.bitrade.service.MemberApiKeyService;
 import cn.ztuo.bitrade.util.GeneratorUtil;
 import cn.ztuo.bitrade.util.MessageResult;
+import cn.ztuo.bitrade.util.RedisUtil;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -17,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -39,6 +41,8 @@ public class OpenApiController extends BaseController {
 
     @Autowired
     private MemberApiKeyService memberApiKeyService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 获取ApiKey
@@ -70,6 +74,15 @@ public class OpenApiController extends BaseController {
     })
     public MessageResult saveApiKey(@ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember member,MemberApiKey memberApiKey){
         log.info("-------新增API-key:"+ JSONObject.toJSONString(memberApiKey));
+        String code = memberApiKey.getCode();
+        Assert.isTrue(StringUtils.isNotEmpty(code), "请输入验证码");
+        final Object cacheCode = redisUtil.get("API_BIND_CODE_PREFIX_" + member.getMobilePhone());
+        if (cacheCode == null) {
+            return MessageResult.error("验证码已过期");
+        }
+        if (!code.equalsIgnoreCase(cacheCode.toString())) {
+            return MessageResult.error("验证码不正确");
+        }
         List<MemberApiKey> all = memberApiKeyService.findAllByMemberId(member.getId());
         if (all.isEmpty() || all.size()<5){
             memberApiKey.setId(null);

@@ -3,10 +3,7 @@ package cn.ztuo.bitrade.entity;
 import cn.ztuo.bitrade.constant.CommonStatus;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -46,6 +43,9 @@ public class MemberApiKey {
     private Date createTime;
 
     private CommonStatus status;
+
+    @Transient
+    private String code;
 
     public MemberApiKey() {
     }

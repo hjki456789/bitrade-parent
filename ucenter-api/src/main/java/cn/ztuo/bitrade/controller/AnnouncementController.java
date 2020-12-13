@@ -2,6 +2,7 @@ package cn.ztuo.bitrade.controller;
 
 import cn.ztuo.bitrade.annotation.MultiDataSource;
 import cn.ztuo.bitrade.constant.Locale;
+import cn.ztuo.bitrade.entity.Waiter;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import cn.ztuo.bitrade.entity.Announcement;
@@ -62,6 +63,16 @@ public class AnnouncementController extends BaseController {
         Announcement announcement = announcementService.findById(id);
         Assert.notNull(announcement, "validate id!");
         return success(announcement);
+    }
+
+    @PostMapping({ "waiterQRcode" })
+    public MessageResult waiterQRcode() {
+        Waiter waiter = new Waiter();
+        waiter.setName("aemex");
+        waiter.setQrUrl("https://supermode.oss-cn-beijing.aliyuncs.com/aemex.jpeg");
+        waiter.setQrDownloadUrl("https://zcoin.oss-cn-beijing.aliyuncs.com/download/aemex.jpeg");
+        waiter.setQrAzDownloadUrl("https://www.aemex.io/download/aemexAz.png");
+        return MessageResult.success("SUCCESS", (Object)waiter);
     }
 
 

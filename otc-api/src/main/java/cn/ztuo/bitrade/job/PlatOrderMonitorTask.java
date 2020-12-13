@@ -15,7 +15,6 @@ import cn.ztuo.bitrade.exception.*;
 import java.util.*;
 import cn.ztuo.bitrade.constant.*;
 import cn.ztuo.bitrade.entity.*;
-import org.slf4j.*;
 
 @Component
 @Slf4j

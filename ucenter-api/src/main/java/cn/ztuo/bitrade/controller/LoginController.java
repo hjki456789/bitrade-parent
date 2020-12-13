@@ -4,10 +4,12 @@ import cn.ztuo.bitrade.constant.LoginStatus;
 import cn.ztuo.bitrade.constant.SysConstant;
 import cn.ztuo.bitrade.entity.LoginInfo;
 import cn.ztuo.bitrade.entity.Member;
+import cn.ztuo.bitrade.entity.MemberGrade;
 import cn.ztuo.bitrade.entity.Sign;
 import cn.ztuo.bitrade.entity.transform.AuthMember;
 import cn.ztuo.bitrade.event.MemberEvent;
 import cn.ztuo.bitrade.exception.AuthenticationException;
+import cn.ztuo.bitrade.service.MemberGradeService;
 import cn.ztuo.bitrade.service.MemberLoginRecordService;
 import cn.ztuo.bitrade.service.MemberService;
 import cn.ztuo.bitrade.service.SignService;
@@ -57,6 +59,9 @@ public class LoginController extends BaseController {
 
     @Autowired
     private MemberLoginRecordService memberLoginRecordService;
+
+    @Autowired
+    private MemberGradeService memberGradeService;
 
     @Value("${person.promote.prefix:}")
     private String promotePrefix;
@@ -130,12 +135,16 @@ public class LoginController extends BaseController {
 
         try {
             LoginInfo loginInfo = getLoginInfo(username, password, ip,host, request);
+            MemberGrade memberGrade = this.memberGradeService.findOne(loginInfo.getMemberGradeId());
             if(StringUtils.isNotBlank(member.getRealName())){
                 loginInfo.setUsername(member.getRealName());
             }else {
                 loginInfo.setUsername(username);
             }
             member.setLastLoginTime(DateUtil.getCurrentDate());
+            if (memberGrade != null) {
+                loginInfo.setMemberGradeName(memberGrade.getGradeName());
+            }
             return success(loginInfo);
         } catch (Exception e) {
             return error(e.getMessage());

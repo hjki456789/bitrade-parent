@@ -26,10 +26,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static cn.ztuo.bitrade.constant.SysConstant.SESSION_MEMBER;
@@ -57,8 +54,18 @@ public class PromotionController {
     @Autowired
     private RewardStatisticsService rewardStatisticsService;
     @Autowired
-    private DataDictionaryService dictionaryService ;
+    private DataDictionaryService dictionaryService;
 
+    @Autowired
+    private MemberWalletService memberWalletService;
+    @Autowired
+    private MemberGradeService memberGradeService;
+    @Autowired
+    private ContractDoubleDirectionWalletService contractDoubleDirectionWalletService;
+    @Autowired
+    private ContractWalletService contractWalletService;
+    @Autowired
+    private MemberTeamService memberTeamService;
 
 
     /**
@@ -67,14 +74,48 @@ public class PromotionController {
      * @param member
      * @return
      */
-    @RequestMapping(value = "/record" ,method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/record", method = {RequestMethod.GET, RequestMethod.POST})
     @ApiOperation(value = "邀请记录查询")
     @MultiDataSource(name = "second")
     public MessageResult promotionRecord(
             PageModel pageModel,
             @ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember member) {
-
-        Predicate predicate = QMember.member.inviterId.eq(member.getId());
+        MessageResult messageResult = MessageResult.success();
+        //2020-12-13日新增
+        List<PromotionMember> dataList = new ArrayList<>();
+        List<MemberTeam> memberTeamList = this.memberTeamService.getTeamByMemberId(member.getId());
+        if (memberTeamList != null) {
+            List<MemberGrade> memberGradeList = this.memberGradeService.findAll();
+            Map<String, MemberGrade> memberGradeMap = new HashMap<String, MemberGrade>();
+            for (MemberGrade memberGrade : memberGradeList) {
+                memberGradeMap.put(memberGrade.getGradeCode() + "", memberGrade);
+            }
+            for (MemberTeam memberTeam : memberTeamList) {
+                Member lowerMember = this.memberService.findOne(memberTeam.getLowerMemberId());
+                if (lowerMember == null) {
+                    continue;
+                }
+                MemberGrade memberGrade2 = memberGradeMap.get(lowerMember.getMemberGradeId() + "");
+                if (memberGrade2 == null) {
+                    continue;
+                }
+                PromotionMember promotionMember = PromotionMember.builder()
+                        .createTime(lowerMember.getRegistrationTime())
+                        .level(PromotionLevel.ONE)
+                        .username(lowerMember.getUsername())
+                        .memberGradeId(lowerMember.getMemberGradeId())
+                        .memberId(lowerMember.getId())
+                        .amout(memberTeam.getAmount())
+                        .memberGradeName(memberGrade2.getGradeName())
+                        .generation((int) memberTeam.getGeneration())
+                        .isValidMember(memberTeam.getIsValidMember()).build();
+                dataList.add(promotionMember);
+            }
+        }
+        PageResult<PromotionMember> pageResult = (PageResult<PromotionMember>) new PageResult(dataList, 1, dataList.size(), Long.valueOf(dataList.size()));
+        messageResult.setData(pageResult);
+        //github旧版
+/*        Predicate predicate = QMember.member.inviterId.eq(member.getId());
         Page<Member> page = memberService.findAll(predicate,pageModel.getPageable());
 
         List<Member> list = page.getContent() ;
@@ -100,8 +141,6 @@ public class PromotionController {
                 }
             });
         }
-
-        MessageResult messageResult = MessageResult.success();
         PageResult<PromotionMember> pageResult = new PageResult<>(list1.stream().sorted((x, y) -> {
             if (x.getCreateTime().after(y.getCreateTime())) {
                 return -1;
@@ -109,7 +148,7 @@ public class PromotionController {
                 return 1;
             }
         }).collect(Collectors.toList()) ,pageModel.getPageNo()+1,page.getSize(),page.getTotalElements());
-        messageResult.setData(pageResult);
+        messageResult.setData(pageResult);*/
         return messageResult;
     }
 
@@ -119,7 +158,7 @@ public class PromotionController {
      * @param member
      * @return
      */
-    @RequestMapping(value = "/reward/record",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/reward/record", method = {RequestMethod.GET, RequestMethod.POST})
     @ApiOperation(value = "邀请奖励记录查询")
     @MultiDataSource(name = "second")
     public MessageResult rewardRecord(
@@ -127,9 +166,9 @@ public class PromotionController {
             @ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember member) {
         Predicate predicate = QRewardRecord.rewardRecord.member.id.eq(member.getId()).and(QRewardRecord.rewardRecord.type.eq(RewardRecordType.PROMOTION));
 
-        Page<RewardRecord> page = rewardRecordService.findAll(predicate,pageModel);
+        Page<RewardRecord> page = rewardRecordService.findAll(predicate, pageModel);
 
-        List<RewardRecord> list = page.getContent() ;
+        List<RewardRecord> list = page.getContent();
 
         MessageResult result = MessageResult.success();
 
@@ -138,71 +177,73 @@ public class PromotionController {
                         .createTime(x.getCreateTime())
                         .remark(x.getRemark())
                         .symbol(x.getCoin().getUnit())
-                        .orderMember(StringUtils.isEmpty(x.getOrderMember().getMobilePhone())?
-                                MaskUtil.maskEmail(x.getOrderMember().getEmail()):MaskUtil.maskMobile(x.getOrderMember().getMobilePhone()))
+                        .orderMember(StringUtils.isEmpty(x.getOrderMember().getMobilePhone()) ?
+                                MaskUtil.maskEmail(x.getOrderMember().getEmail()) : MaskUtil.maskMobile(x.getOrderMember().getMobilePhone()))
                         .build()
-        ).collect(Collectors.toList()),pageModel.getPageNo()+1,page.getSize(),page.getTotalElements());
+        ).collect(Collectors.toList()), pageModel.getPageNo() + 1, page.getSize(), page.getTotalElements());
         result.setData(pageResult);
         return result;
     }
 
     /**
      * 获取推广统计数据
+     *
      * @param member
      * @return
      */
-    @RequestMapping(value = "/summary",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/summary", method = {RequestMethod.GET, RequestMethod.POST})
     @ApiOperation(value = "获取推广统计数据")
     @MultiDataSource(name = "second")
-    public  Map<String,Object> summary(@ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember member){
-        Map<String,Object> map = new HashMap<>();
+    public Map<String, Object> summary(@ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember member) {
+        Map<String, Object> map = new HashMap<>();
         /*Predicate predicate = QRewardRecord.rewardRecord.member.id.eq(member.getId()).and(QRewardRecord.rewardRecord.type.eq(RewardRecordType.PROMOTION));
         map.put("summary",rewardRecordService.findCount(predicate));*/
         Predicate predicate1 = QMember.member.inviterId.eq(member.getId());
-        map.put("count",memberService.findCount(predicate1));
+        map.put("count", memberService.findCount(predicate1));
         Predicate predicate2 = QMember.member.inviterParentId.eq(member.getId());
-        map.put("indirectCount",memberService.findCount(predicate2));
+        map.put("indirectCount", memberService.findCount(predicate2));
         List<Map<String, Object>> results = transactionService.findTransactionSum(member.getId(), TransactionType.PROMOTION_AWARD);
         BigDecimal amount = BigDecimal.ZERO;
-        for(Map<String, Object> result:results){
+        for (Map<String, Object> result : results) {
             CoinExchangeFactory.ExchangeRate rate = coinExchangeFactory.get(result.get("symbol").toString());
-            amount = amount.add(new BigDecimal(result.get("amount").toString()).multiply((rate!=null&&rate.getUsdRate()!=null)?rate.getUsdRate():BigDecimal.ZERO));
+            amount = amount.add(new BigDecimal(result.get("amount").toString()).multiply((rate != null && rate.getUsdRate() != null) ? rate.getUsdRate() : BigDecimal.ZERO));
         }
         CoinExchangeFactory.ExchangeRate rate = coinExchangeFactory.get("SE");
 
-        map.put("amount",amount.setScale(2,BigDecimal.ROUND_HALF_UP));
-        map.put("amountSE",amount.divide((rate==null&&rate.getUsdRate()!=null)?BigDecimal.ZERO:rate.getUsdRate(),0, RoundingMode.HALF_DOWN));
+        map.put("amount", amount.setScale(2, BigDecimal.ROUND_HALF_UP));
+        map.put("amountSE", amount.divide((rate == null && rate.getUsdRate() != null) ? BigDecimal.ZERO : rate.getUsdRate(), 0, RoundingMode.HALF_DOWN));
         return map;
     }
 
 
     /**
      * 推广奖励记录
+     *
      * @return
      */
-    @RequestMapping(value = "/reward/statistics",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/reward/statistics", method = {RequestMethod.GET, RequestMethod.POST})
     @ApiOperation(value = "邀请奖励榜单")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "month", value = "月份 格式 YYYY-MM 不传默认为当月", required = false, dataType = "Long"),
     })
     @MultiDataSource(name = "second")
     public MessageResult RewardStatistics(String month) {
-        if(StringUtils.isEmpty(month)){
+        if (StringUtils.isEmpty(month)) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
             month = sdf.format(new Date());
         }
         DataDictionary dictionary = dictionaryService.findByBond(SysConstant.COMMISSION_DISPLAY_QUANTITY);
-        List<Object[]> list = rewardStatisticsService.findAll(month,Integer.valueOf(dictionary.getValue()));
+        List<Object[]> list = rewardStatisticsService.findAll(month, Integer.valueOf(dictionary.getValue()));
         Map map = new HashMap();
-        list.forEach(itme->{
+        list.forEach(itme -> {
             Member member1 = memberService.findOne(Long.valueOf(itme[2].toString()));
-            itme[2] = StringUtils.isEmpty(member1.getMobilePhone())?
-                    MaskUtil.maskEmail(member1.getEmail()):MaskUtil.maskMobile(member1.getMobilePhone());
+            itme[2] = StringUtils.isEmpty(member1.getMobilePhone()) ?
+                    MaskUtil.maskEmail(member1.getEmail()) : MaskUtil.maskMobile(member1.getMobilePhone());
         });
         MessageResult result = MessageResult.success();
 
         List<PromotionRewardStatistics> pageResult = list.stream().map(x ->
-                PromotionRewardStatistics.builder().amount(new BigDecimal(x[1].toString()).setScale(2,RoundingMode.HALF_DOWN))
+                PromotionRewardStatistics.builder().amount(new BigDecimal(x[1].toString()).setScale(2, RoundingMode.HALF_DOWN))
                         .createTime(x[0].toString())
                         .orderMember(x[2].toString())
                         .build()

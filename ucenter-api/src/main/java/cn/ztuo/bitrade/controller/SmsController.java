@@ -110,4 +110,309 @@ public class SmsController {
             return success(localeMessageSourceService.getMessage("SEND_SMS_SUCCESS"));
         }
     }
+    @PostMapping({ "/code" })
+    public MessageResult sendCheckCode(final String phone, final String country) throws Exception {
+        Assert.isTrue(!this.memberService.phoneIsExist(phone), this.localeMessageSourceService.getMessage("PHONE_ALREADY_EXISTS"));
+        Assert.notNull((Object)country, this.localeMessageSourceService.getMessage("REQUEST_ILLEGAL"));
+        final Country country2 = this.countryService.findOne(country);
+        Assert.notNull((Object)country2, this.localeMessageSourceService.getMessage("REQUEST_ILLEGAL"));
+        final String key = "PHONE_REG_CODE_" + phone;
+        final Object code = this.redisUtil.get(key);
+        if (code != null && !BigDecimalUtils.compare(DateUtil.diffMinute((Date)this.redisUtil.get(key + "Time")), BigDecimal.ONE)) {
+            return MessageResult.error(this.localeMessageSourceService.getMessage("FREQUENTLY_REQUEST"));
+        }
+        final String randomCode = String.valueOf(GeneratorUtil.getRandomNumber(100000, 999999));
+        MessageResult result;
+        if (this.driverName.equalsIgnoreCase("two_five_three")) {
+            result = this.smsProvider.sendVerifyMessage(country2.getAreaCode() + phone, randomCode);
+        }
+        else if (country2.getAreaCode().equals("86")) {
+            Assert.isTrue(ValidateUtil.isMobilePhone(phone.trim()), this.localeMessageSourceService.getMessage("PHONE_EMPTY_OR_INCORRECT"));
+            result = this.smsProvider.sendVerifyMessage(phone, randomCode);
+        }
+        else {
+            result = this.smsProvider.sendNationalMessage(randomCode, country2.getAreaCode(), phone);
+        }
+        if (result.getCode() == 0) {
+            this.redisUtil.delete(new String[] { key });
+            this.redisUtil.delete(new String[] { key + "Time" });
+            this.redisUtil.set(key, (Object)randomCode, 10L, TimeUnit.MINUTES);
+            this.redisUtil.set(key + "Time", (Object)new Date(), 10L, TimeUnit.MINUTES);
+            return MessageResult.success(this.localeMessageSourceService.getMessage("SEND_SMS_SUCCESS"));
+        }
+        return MessageResult.error(this.localeMessageSourceService.getMessage("SEND_SMS_FAILED"));
+    }
+
+    public MessageResult sendSMSCode(final Member member, final String prefix) {
+        final String randomCode = String.valueOf(GeneratorUtil.getRandomNumber(100000, 999999));
+        try {
+            MessageResult result;
+            if (this.driverName.equalsIgnoreCase("two_five_three")) {
+                result = this.smsProvider.sendVerifyMessage(member.getCountry().getAreaCode() + member.getMobilePhone(), randomCode);
+            }
+            else if (member.getCountry().getAreaCode().equals("86")) {
+                result = this.smsProvider.sendVerifyMessage(member.getMobilePhone(), randomCode);
+            }
+            else {
+                result = this.smsProvider.sendNationalMessage(randomCode, member.getCountry().getAreaCode(), member.getMobilePhone());
+            }
+            if (result.getCode() == 0) {
+                final String key = prefix + member.getMobilePhone();
+                this.redisUtil.delete(new String[] { key });
+                this.redisUtil.set(key, (Object)randomCode, 10L, TimeUnit.MINUTES);
+                return MessageResult.success(this.localeMessageSourceService.getMessage("SEND_SMS_SUCCESS"));
+            }
+            return MessageResult.error(this.localeMessageSourceService.getMessage("SEND_SMS_FAILED"));
+        }
+        catch (Exception e) {
+            return MessageResult.error(this.localeMessageSourceService.getMessage("SEND_SMS_FAILED"));
+        }
+    }
+
+    @RequestMapping(value = { "/transaction/code" }, method = { RequestMethod.POST })
+    public MessageResult sendResetTransactionCode(@SessionAttribute("API_MEMBER") final AuthMember user) throws Exception {
+        final Member member = this.memberService.findOne(Long.valueOf(user.getId()));
+        Assert.hasText(member.getMobilePhone(), this.localeMessageSourceService.getMessage("NOT_BIND_PHONE"));
+        final String randomCode = String.valueOf(GeneratorUtil.getRandomNumber(100000, 999999));
+        MessageResult result;
+        if (this.driverName.equalsIgnoreCase("two_five_three")) {
+            result = this.smsProvider.sendVerifyMessage(member.getCountry().getAreaCode() + member.getMobilePhone(), randomCode);
+        }
+        else if (member.getCountry().getAreaCode().equals("86")) {
+            result = this.smsProvider.sendVerifyMessage(member.getMobilePhone(), randomCode);
+        }
+        else {
+            result = this.smsProvider.sendNationalMessage(randomCode, member.getCountry().getAreaCode(), member.getMobilePhone());
+        }
+        if (result.getCode() == 0) {
+            final String key = "PHONE_UPDATE_PASSWORD_" + member.getMobilePhone();
+            this.redisUtil.delete(new String[] { key });
+            this.redisUtil.set(key, (Object)randomCode, 10L, TimeUnit.MINUTES);
+            return MessageResult.success(this.localeMessageSourceService.getMessage("SEND_SMS_SUCCESS"));
+        }
+        return MessageResult.error(this.localeMessageSourceService.getMessage("SEND_SMS_FAILED"));
+    }
+
+
+    @RequestMapping(value = { "/update/password/code" }, method = { RequestMethod.POST })
+    public MessageResult updatePasswordCode(@SessionAttribute("API_MEMBER") final AuthMember user) throws Exception {
+        final Member member = this.memberService.findOne(Long.valueOf(user.getId()));
+        Assert.hasText(member.getMobilePhone(), this.localeMessageSourceService.getMessage("NOT_BIND_PHONE"));
+        final String key = "PHONE_UPDATE_PASSWORD_" + member.getMobilePhone();
+        final Object code = this.redisUtil.get(key);
+        if (code != null && !BigDecimalUtils.compare(DateUtil.diffMinute((Date)this.redisUtil.get(key + "Time")), BigDecimal.ONE)) {
+            return MessageResult.error(this.localeMessageSourceService.getMessage("FREQUENTLY_REQUEST"));
+        }
+        final String randomCode = String.valueOf(GeneratorUtil.getRandomNumber(100000, 999999));
+        MessageResult result;
+        if (this.driverName.equalsIgnoreCase("two_five_three")) {
+            result = this.smsProvider.sendVerifyMessage(member.getCountry().getAreaCode() + member.getMobilePhone(), randomCode);
+        }
+        else if ("86".equals(member.getCountry().getAreaCode())) {
+            result = this.smsProvider.sendVerifyMessage(member.getMobilePhone(), randomCode);
+        }
+        else {
+            result = this.smsProvider.sendNationalMessage(randomCode, member.getCountry().getAreaCode(), member.getMobilePhone());
+        }
+        if (result.getCode() == 0) {
+            this.redisUtil.delete(new String[] { key });
+            this.redisUtil.delete(new String[] { key + "Time" });
+            this.redisUtil.set(key, (Object)randomCode, 10L, TimeUnit.MINUTES);
+            this.redisUtil.set(key + "Time", (Object)new Date(), 10L, TimeUnit.MINUTES);
+            return MessageResult.success(this.localeMessageSourceService.getMessage("SEND_SMS_SUCCESS"));
+        }
+        return MessageResult.error(this.localeMessageSourceService.getMessage("SEND_SMS_FAILED"));
+    }
+
+    @RequestMapping(value = { "/add/address/code" }, method = { RequestMethod.POST })
+    public MessageResult addAddressCode(@SessionAttribute("API_MEMBER") final AuthMember user) throws Exception {
+        final Member member = this.memberService.findOne(Long.valueOf(user.getId()));
+        Assert.hasText(member.getMobilePhone(), this.localeMessageSourceService.getMessage("NOT_BIND_PHONE"));
+        final String randomCode = String.valueOf(GeneratorUtil.getRandomNumber(100000, 999999));
+        MessageResult result;
+        if (this.driverName.equalsIgnoreCase("two_five_three")) {
+            result = this.smsProvider.sendVerifyMessage(member.getCountry().getAreaCode() + member.getMobilePhone(), randomCode);
+        }
+        else if ("86".equals(member.getCountry().getAreaCode())) {
+            result = this.smsProvider.sendVerifyMessage(member.getMobilePhone(), randomCode);
+        }
+        else {
+            result = this.smsProvider.sendNationalMessage(randomCode, member.getCountry().getAreaCode(), member.getMobilePhone());
+        }
+        if (result.getCode() == 0) {
+            final String key = "PHONE_ADD_ADDRESS_" + member.getMobilePhone();
+            this.redisUtil.delete(new String[] { key });
+            this.redisUtil.set(key, (Object)randomCode, 10L, TimeUnit.MINUTES);
+            return MessageResult.success(this.localeMessageSourceService.getMessage("SEND_SMS_SUCCESS"));
+        }
+        return MessageResult.error(this.localeMessageSourceService.getMessage("SEND_SMS_FAILED"));
+    }
+
+    @RequestMapping(value = { "/reset/code" }, method = { RequestMethod.POST })
+    public MessageResult resetPasswordCode(final String account) throws Exception {
+        final Member member = this.memberService.findByPhone(account);
+        Assert.notNull((Object)member, this.localeMessageSourceService.getMessage("MEMBER_NOT_EXISTS"));
+        final String randomCode = String.valueOf(GeneratorUtil.getRandomNumber(100000, 999999));
+        MessageResult result;
+        if (this.driverName.equalsIgnoreCase("two_five_three")) {
+            result = this.smsProvider.sendVerifyMessage(member.getCountry().getAreaCode() + member.getMobilePhone(), randomCode);
+        }
+        else if ("86".equals(member.getCountry().getAreaCode())) {
+            result = this.smsProvider.sendVerifyMessage(member.getMobilePhone(), randomCode);
+        }
+        else {
+            result = this.smsProvider.sendNationalMessage(randomCode, member.getCountry().getAreaCode(), member.getMobilePhone());
+        }
+        if (result.getCode() == 0) {
+            final String key = "RESET_PASSWORD_CODE_" + member.getMobilePhone();
+            this.redisUtil.delete(new String[] { key });
+            this.redisUtil.set(key, (Object)randomCode, 10L, TimeUnit.MINUTES);
+            return MessageResult.success(this.localeMessageSourceService.getMessage("SEND_SMS_SUCCESS"));
+        }
+        return MessageResult.error(this.localeMessageSourceService.getMessage("SEND_SMS_FAILED"));
+    }
+
+    @RequestMapping(value = { "/change/code" }, method = { RequestMethod.POST })
+    public MessageResult resetPhoneCode(@SessionAttribute("API_MEMBER") final AuthMember user) throws Exception {
+        final Member member = this.memberService.findOne(Long.valueOf(user.getId()));
+        Assert.hasText(member.getMobilePhone(), this.localeMessageSourceService.getMessage("NOT_BIND_PHONE"));
+        final String randomCode = String.valueOf(GeneratorUtil.getRandomNumber(100000, 999999));
+        MessageResult result;
+        if (this.driverName.equalsIgnoreCase("two_five_three")) {
+            result = this.smsProvider.sendVerifyMessage(member.getCountry().getAreaCode() + member.getMobilePhone(), randomCode);
+        }
+        else if ("86".equals(member.getCountry().getAreaCode())) {
+            result = this.smsProvider.sendVerifyMessage(member.getMobilePhone(), randomCode);
+        }
+        else {
+            result = this.smsProvider.sendNationalMessage(randomCode, member.getCountry().getAreaCode(), member.getMobilePhone());
+        }
+        if (result.getCode() == 0) {
+            final String key = "PHONE_CHANGE_CODE_" + member.getMobilePhone();
+            this.redisUtil.delete(new String[] { key });
+            this.redisUtil.set(key, (Object)randomCode, 10L, TimeUnit.MINUTES);
+            return MessageResult.success(this.localeMessageSourceService.getMessage("SEND_SMS_SUCCESS"));
+        }
+        return MessageResult.error(this.localeMessageSourceService.getMessage("SEND_SMS_FAILED"));
+    }
+
+    @RequestMapping(value = { "/google/code" }, method = { RequestMethod.POST })
+    public MessageResult resetGoogleCode(@SessionAttribute("API_MEMBER") final AuthMember user) throws Exception {
+        final Member member = this.memberService.findOne(Long.valueOf(user.getId()));
+        Assert.notNull((Object)member, this.localeMessageSourceService.getMessage("MEMBER_NOT_EXISTS"));
+        Assert.hasText(member.getMobilePhone(), this.localeMessageSourceService.getMessage("NOT_BIND_PHONE"));
+        final String randomCode = String.valueOf(GeneratorUtil.getRandomNumber(100000, 999999));
+        MessageResult result;
+        if (this.driverName.equalsIgnoreCase("two_five_three")) {
+            result = this.smsProvider.sendVerifyMessage(member.getCountry().getAreaCode() + member.getMobilePhone(), randomCode);
+        }
+        else if ("86".equals(member.getCountry().getAreaCode())) {
+            result = this.smsProvider.sendVerifyMessage(member.getMobilePhone(), randomCode);
+        }
+        else {
+            result = this.smsProvider.sendNationalMessage(randomCode, member.getCountry().getAreaCode(), member.getMobilePhone());
+        }
+        if (result.getCode() == 0) {
+            final String key = "RESET_PASSWORD_CODE_" + member.getMobilePhone();
+            this.redisUtil.delete(new String[] { key });
+            this.redisUtil.set(key, (Object)randomCode, 10L, TimeUnit.MINUTES);
+            return MessageResult.success(this.localeMessageSourceService.getMessage("SEND_SMS_SUCCESS"));
+        }
+        return MessageResult.error(this.localeMessageSourceService.getMessage("SEND_SMS_FAILED"));
+    }
+
+    @RequestMapping(value = { "/withdraw/code" }, method = { RequestMethod.POST })
+    public MessageResult withdrawCode(@SessionAttribute("API_MEMBER") final AuthMember user) throws Exception {
+        final Member member = this.memberService.findOne(Long.valueOf(user.getId()));
+        Assert.hasText(member.getMobilePhone(), this.localeMessageSourceService.getMessage("NOT_BIND_PHONE"));
+        SmsController.log.info("===提币验证码发送===mobile：" + member.getMobilePhone());
+        final String randomCode = String.valueOf(GeneratorUtil.getRandomNumber(100000, 999999));
+        MessageResult result;
+        if ("86".equals(member.getCountry().getAreaCode())) {
+            result = this.smsProvider.sendVerifyMessage(member.getMobilePhone(), randomCode);
+        }
+        else {
+            result = this.smsProvider.sendNationalMessage(randomCode, member.getCountry().getAreaCode(), member.getMobilePhone());
+        }
+        if (result.getCode() == 0) {
+            final String key = "PHONE_WITHDRAW_MONEY_CODE_PREFIX_" + member.getMobilePhone();
+            this.redisUtil.delete(new String[] { key });
+            this.redisUtil.set(key, (Object)randomCode, 10L, TimeUnit.MINUTES);
+            return MessageResult.success(this.localeMessageSourceService.getMessage("SEND_SMS_SUCCESS"));
+        }
+        return MessageResult.error(this.localeMessageSourceService.getMessage("SEND_SMS_FAILED"));
+    }
+
+    @RequestMapping(value = { "/trade/code" }, method = { RequestMethod.POST })
+    public MessageResult tradeCode(@SessionAttribute("API_MEMBER") final AuthMember user) throws Exception {
+        final Member member = this.memberService.findOne(Long.valueOf(user.getId()));
+        Assert.hasText(member.getMobilePhone(), this.localeMessageSourceService.getMessage("NOT_BIND_PHONE"));
+        SmsController.log.info("===交易密码验证码发送===mobile：" + member.getMobilePhone());
+        final String randomCode = String.valueOf(GeneratorUtil.getRandomNumber(100000, 999999));
+        MessageResult result;
+        if ("86".equals(member.getCountry().getAreaCode())) {
+            result = this.smsProvider.sendVerifyMessage(member.getMobilePhone(), randomCode);
+        }
+        else {
+            result = this.smsProvider.sendNationalMessage(randomCode, member.getCountry().getAreaCode(), member.getMobilePhone());
+        }
+        if (result.getCode() == 0) {
+            final String key = "PHONE_trade_CODE_PREFIX_" + member.getMobilePhone();
+            this.redisUtil.delete(new String[] { key });
+            this.redisUtil.set(key, (Object)randomCode, 10L, TimeUnit.MINUTES);
+            return MessageResult.success(this.localeMessageSourceService.getMessage("SEND_SMS_SUCCESS"));
+        }
+        return MessageResult.error(this.localeMessageSourceService.getMessage("SEND_SMS_FAILED"));
+    }
+
+    @RequestMapping(value = { "api/code" }, method = { RequestMethod.POST })
+    public MessageResult bindApiSendCode(@SessionAttribute("API_MEMBER") final AuthMember user) throws Exception {
+        final Member member = this.memberService.findOne(Long.valueOf(user.getId()));
+        Assert.hasText(member.getMobilePhone(), this.localeMessageSourceService.getMessage("NOT_BIND_PHONE"));
+        SmsController.log.info("===交易密码验证码发送===mobile：" + member.getMobilePhone());
+        final String randomCode = String.valueOf(GeneratorUtil.getRandomNumber(100000, 999999));
+        MessageResult result;
+        if ("86".equals(member.getCountry().getAreaCode())) {
+            result = this.smsProvider.sendVerifyMessage(member.getMobilePhone(), randomCode);
+        }
+        else {
+            result = this.smsProvider.sendNationalMessage(randomCode, member.getCountry().getAreaCode(), member.getMobilePhone());
+        }
+        if (result.getCode() == 0) {
+            final String key = "API_BIND_CODE_PREFIX_" + member.getMobilePhone();
+            this.redisUtil.delete(new String[] { key });
+            this.redisUtil.set(key, (Object)randomCode, 10L, TimeUnit.MINUTES);
+            return MessageResult.success(this.localeMessageSourceService.getMessage("SEND_SMS_SUCCESS"));
+        }
+        return MessageResult.error(this.localeMessageSourceService.getMessage("SEND_SMS_FAILED"));
+    }
+
+    @RequestMapping(value = { "contractMemberApi/code" }, method = { RequestMethod.POST })
+    public MessageResult bindContractApiSendCode(@SessionAttribute("API_MEMBER") final AuthMember user, @RequestParam(value = "sourceType", required = false) final Integer sourceType) throws Exception {
+        final Member member = this.memberService.findOne(Long.valueOf(user.getId()));
+        Assert.hasText(member.getMobilePhone(), this.localeMessageSourceService.getMessage("NOT_BIND_PHONE"));
+        SmsController.log.info("===验证码发送===mobile：" + member.getMobilePhone());
+        final String randomCode = String.valueOf(GeneratorUtil.getRandomNumber(100000, 999999));
+        MessageResult result;
+        if ("86".equals(member.getCountry().getAreaCode())) {
+            result = this.smsProvider.sendVerifyMessage(member.getMobilePhone(), randomCode);
+        }
+        else {
+            result = this.smsProvider.sendNationalMessage(randomCode, member.getCountry().getAreaCode(), member.getMobilePhone());
+        }
+        if (result.getCode() == 0) {
+            String key;
+            if (null != sourceType && sourceType == 1) {
+                key = "CONTRACT_API_DELETE_CODE_PREFIX" + member.getMobilePhone();
+            }
+            else {
+                key = "CONTRACT_API_BIND_CODE_PREFIX" + member.getMobilePhone();
+            }
+            this.redisUtil.delete(new String[] { key });
+            this.redisUtil.set(key, (Object)randomCode, 10L, TimeUnit.MINUTES);
+            return MessageResult.success(this.localeMessageSourceService.getMessage("SEND_SMS_SUCCESS"));
+        }
+        return MessageResult.error(this.localeMessageSourceService.getMessage("SEND_SMS_FAILED"));
+    }
+
 }

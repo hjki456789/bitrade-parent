@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static cn.ztuo.bitrade.constant.SysConstant.SESSION_MEMBER;
@@ -91,6 +92,13 @@ public class OtcWalletController extends BaseController {
                 wallet.getCoin().setCnyRate(rate.getCnyRate());
             } else {
                 log.info("unit = {} , rate = null ", wallet.getCoin().getUnit());
+            }
+            if(wallet.getCoin().getName().equals("BTC")){
+                wallet.setBalance(wallet.getBalance().setScale(6, RoundingMode.DOWN));
+                wallet.setFrozenBalance(wallet.getFrozenBalance().setScale(6, RoundingMode.DOWN));
+            }else{
+                wallet.setBalance(wallet.getBalance().setScale(4, RoundingMode.DOWN));
+                wallet.setFrozenBalance(wallet.getFrozenBalance().setScale(4, RoundingMode.DOWN));
             }
         });
         return success(result);

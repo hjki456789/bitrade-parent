@@ -2,9 +2,7 @@ package cn.ztuo.bitrade.controller;
 
 
 import cn.ztuo.bitrade.annotation.MultiDataSource;
-import cn.ztuo.bitrade.constant.CommonStatus;
-import cn.ztuo.bitrade.constant.PageModel;
-import cn.ztuo.bitrade.constant.TransactionType;
+import cn.ztuo.bitrade.constant.*;
 import cn.ztuo.bitrade.core.Convert;
 import cn.ztuo.bitrade.dao.MemberWalletSeHistoryDao;
 import cn.ztuo.bitrade.dao.MemberWalletRelationDao;
@@ -12,8 +10,10 @@ import cn.ztuo.bitrade.entity.*;
 import cn.ztuo.bitrade.entity.transform.AuthMember;
 import cn.ztuo.bitrade.service.*;
 import cn.ztuo.bitrade.system.CoinExchangeFactory;
+import cn.ztuo.bitrade.util.BigDecimalUtils;
 import cn.ztuo.bitrade.util.MessageResult;
 import cn.ztuo.bitrade.util.PredicateUtils;
+import cn.ztuo.bitrade.vo.OtcWalletVO;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Multimaps;
@@ -30,11 +30,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -75,6 +77,28 @@ public class AssetController extends BaseController{
     @Autowired
     private LocaleMessageSourceService messageSource;
 
+    @Autowired
+    private ContractWalletService contractWalletService;
+    @Autowired
+    private CoinConvertService coinConvertService;
+    @Autowired
+    private ContractCoinInfoService contractCoinInfoService;
+    @Autowired
+    private MemberConvertTransactionService convertTransactionService;
+    @Autowired
+    private ContractDoubleDirectionWalletService contractDoubleDirectionWalletService;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private ContractOrderService contractOrderService;
+    @Autowired
+    private MemberDepositService memberDepositService;
+    @Autowired
+    private WithdrawRecordService withdrawRecordService;
+    @Autowired
+    private MemberTransactionService memberTransactionService;
+
+
     /**
      * 用户钱包信息
      *
@@ -113,6 +137,14 @@ public class AssetController extends BaseController{
                 }
             } else {
                 log.info("unit = {} , rate = null ", wallet.getCoin().getUnit());
+            }
+            if (wallet.getCoin().getName().equals("BTC")) {
+                wallet.setBalance(wallet.getBalance().setScale(6, RoundingMode.DOWN));
+                wallet.setFrozenBalance(wallet.getFrozenBalance().setScale(6, RoundingMode.DOWN));
+            }
+            else {
+                wallet.setBalance(wallet.getBalance().setScale(4, RoundingMode.DOWN));
+                wallet.setFrozenBalance(wallet.getFrozenBalance().setScale(4, RoundingMode.DOWN));
             }
         });
         MessageResult mr = MessageResult.success(messageSource.getMessage("SUCCESS"));
@@ -274,5 +306,295 @@ public class AssetController extends BaseController{
         return result;
     }
 
+
+
+    @RequestMapping({ "convertTransaction" })
+    public MessageResult convertTransaction(@SessionAttribute("API_MEMBER") final AuthMember member, final String baseCoin, final String convertCoin, final Double amount) {
+        final MessageResult mr = MessageResult.success("success");
+        if (amount <= 0.0) {
+            mr.setCode(4);
+            mr.setMessage("illegal parameter");
+            return mr;
+        }
+        final Coin rateBase = this.coinService.findOne(baseCoin);
+        final Coin rateConvert = this.coinService.findOne(convertCoin);
+        if (rateBase == null || rateConvert == null || rateConvert.getUsdRate().doubleValue() == 0.0) {
+            mr.setCode(6);
+            mr.setMessage("get rate falure");
+            return mr;
+        }
+        final double rate = rateBase.getUsdRate().divide(rateConvert.getUsdRate(), 8, 1).doubleValue();
+        final MemberWallet baseWallet = walletService.findByCoinAndMemberId(rateBase, Long.valueOf(member.getId()));
+        final MemberWallet convertWallet = walletService.findByCoinAndMemberId(rateConvert, Long.valueOf(member.getId()));
+        if (baseWallet == null || convertWallet == null) {
+            mr.setCode(4);
+            mr.setMessage("wallet not found");
+            return mr;
+        }
+        if (baseWallet.getBalance().doubleValue() < amount) {
+            mr.setCode(5);
+            mr.setMessage("balance not enough");
+            return mr;
+        }
+        final CoinConvert coinConvert = this.coinConvertService.findByBaseAndConvert(baseCoin, convertCoin);
+        if (coinConvert == null) {
+            mr.setCode(7);
+            mr.setMessage("get fee falure");
+            return mr;
+        }
+        walletService.decreaseBalance(baseWallet.getId(), new BigDecimal(amount), baseWallet.getVersion());
+        final double changeAmount = (amount - amount * coinConvert.getFee()) * rate;
+        walletService.increaseBalance(convertWallet.getId(), new BigDecimal(changeAmount), convertWallet.getVersion());
+        final MemberConvertTransaction convertTransaction = new MemberConvertTransaction();
+        convertTransaction.setMemberId(baseWallet.getMemberId());
+        convertTransaction.setBaseCoin(baseCoin);
+        convertTransaction.setConvertCoin(convertCoin);
+        convertTransaction.setAmount(amount);
+        convertTransaction.setConvertAmount(Double.valueOf(changeAmount));
+        convertTransaction.setFeeAmount(Double.valueOf(amount * coinConvert.getFee()));
+        convertTransaction.setRate(Double.valueOf(rate));
+        convertTransaction.setCreateTime(new Date());
+        convertTransaction.setSequence(Long.valueOf(System.currentTimeMillis()));
+        this.convertTransactionService.save(convertTransaction);
+        return mr;
+    }
+
+    @RequestMapping({ "convertTransactionLog" })
+    public MessageResult convertTransactionLog(@SessionAttribute("API_MEMBER") final AuthMember member, final Long sequence) {
+        final List<MemberConvertTransaction> datas = (List<MemberConvertTransaction>)this.convertTransactionService.findListBySequence(Long.valueOf(member.getId()), sequence);
+        final MessageResult mr = MessageResult.success("success");
+        mr.setData((Object)datas);
+        return mr;
+    }
+
+    @RequestMapping(value = { "transferCoins" }, method = { RequestMethod.POST })
+    public MessageResult transferCoins(final int type) throws Exception {
+        if (type != 0) {
+            return this.error("参数错误");
+        }
+        final List<ContractCoinInfo> contractCoins = (List<ContractCoinInfo>)this.contractCoinInfoService.getNormalCoin();
+        if (contractCoins == null || contractCoins.size() == 0) {
+            return this.error("暂无数据");
+        }
+        final List<TransferCoinResult> transferCoins = new ArrayList<TransferCoinResult>();
+        for (final ContractCoinInfo contractCoin : contractCoins) {
+            final Coin coin = this.coinService.findOne(contractCoin.getName());
+            if (coin != null) {
+                TransferCoinResult transferCoin = new TransferCoinResult();
+                transferCoin.setName(contractCoin.getName());
+                transferCoin.setUnit(contractCoin.getUnit());
+                transferCoin.setImg(coin.getImg());
+                transferCoins.add(transferCoin);
+            }
+        }
+        final MessageResult mr = MessageResult.success("success");
+        mr.setData((Object)transferCoins);
+        return mr;
+    }
+
+    @RequestMapping(value = { "transfer" }, method = { RequestMethod.POST })
+    public MessageResult transferWallet(@SessionAttribute("API_MEMBER") final AuthMember user, final OtcWalletVO otcWalletVO) throws Exception {
+        if ("0".equals(otcWalletVO.getDirection()) || "1".equals(otcWalletVO.getDirection())) {
+            AssetController.log.info("---------币币账户到法币账户互转:userId=" + user.getId() + "," + JSONObject.toJSONString((Object)otcWalletVO));
+            final OtcCoin coin = this.otcCoinService.findByUnit(otcWalletVO.getCoinName());
+            if (coin == null) {
+                return this.error("不支持的法币币种");
+            }
+            final BigDecimal amount = otcWalletVO.getAmount().setScale(coin.getCoinScale(), 1);
+            final Member member = this.memberService.findOne(Long.valueOf(user.getId()));
+            Assert.isTrue(member.getMemberLevel() != MemberLevelEnum.GENERAL, "请先进行实名认证!");
+            Assert.isTrue(BigDecimalUtils.compare(amount, BigDecimal.ZERO), this.sourceService.getMessage("参数异常"));
+            final Coin memberCoin = this.coinService.findByUnit(coin.getUnit());
+            final MemberWallet memberWallet = walletService.findByCoinAndMemberId(memberCoin, Long.valueOf(user.getId()));
+            Assert.isTrue(memberWallet.getIsLock() == BooleanEnum.IS_FALSE, "钱包已锁定");
+            OtcWallet otcWallet = this.otcWalletService.findByOtcCoinAndMemberId(member.getId(), coin);
+            if (otcWallet == null) {
+                final OtcWallet otcWalletNew = new OtcWallet();
+                otcWalletNew.setCoin(memberCoin);
+                otcWalletNew.setIsLock(Integer.valueOf(0));
+                otcWalletNew.setMemberId(member.getId());
+                otcWalletNew.setBalance(BigDecimal.ZERO);
+                otcWalletNew.setFrozenBalance(BigDecimal.ZERO);
+                otcWalletNew.setReleaseBalance(BigDecimal.ZERO);
+                otcWalletNew.setVersion(Integer.valueOf(0));
+                otcWallet = this.otcWalletService.save(otcWalletNew);
+                if (otcWallet == null) {
+                    return this.error("法币账户创建失败，请联系客服");
+                }
+            }
+            Assert.isTrue(otcWallet.getIsLock() == 0, "钱包已锁定");
+            if ("0".equals(otcWalletVO.getDirection())) {
+                Assert.isTrue(BigDecimalUtils.compare(memberWallet.getBalance(), amount), this.sourceService.getMessage("INSUFFICIENT_BALANCE"));
+                final int subResult = this.otcWalletService.coin2Otc(memberWallet, otcWallet, amount);
+                if (subResult == 1) {
+                    return this.success("划转成功");
+                }
+                return this.error("划转失败");
+            }
+            else {
+                if (!"1".equals(otcWalletVO.getDirection())) {
+                    return this.error("参数异常");
+                }
+                Assert.isTrue(BigDecimalUtils.compare(otcWallet.getBalance(), amount), this.sourceService.getMessage("INSUFFICIENT_BALANCE"));
+                final int addResult = this.otcWalletService.otc2Coin(memberWallet, otcWallet, amount);
+                if (addResult == 1) {
+                    return this.success("划转成功");
+                }
+                return this.error("划转失败");
+            }
+        }
+        else if ("2".equals(otcWalletVO.getDirection()) || "3".equals(otcWalletVO.getDirection())) {
+            AssetController.log.info("---------币币账户到合约账户互转:userId=" + user.getId() + "," + JSONObject.toJSONString((Object)otcWalletVO));
+            if (!"USDT".equals(otcWalletVO.getCoinName())) {
+                return this.error("不支持的合约币种");
+            }
+            final BigDecimal amount2 = otcWalletVO.getAmount();
+            final Member member2 = this.memberService.findOne(Long.valueOf(user.getId()));
+            Assert.isTrue(member2.getMemberLevel() != MemberLevelEnum.GENERAL, "请先进行实名认证!");
+            Assert.isTrue(BigDecimalUtils.compare(amount2, BigDecimal.ZERO), this.sourceService.getMessage("参数异常"));
+            final Coin memberCoin2 = new Coin();
+            memberCoin2.setName(otcWalletVO.getCoinName());
+            final MemberWallet memberWallet2 = walletService.findByCoinAndMemberId(memberCoin2, Long.valueOf(user.getId()));
+            Assert.isTrue(memberWallet2.getIsLock() == BooleanEnum.IS_FALSE, "钱包已锁定");
+            ContractWallet contractWallet = this.contractWalletService.findByMemberIdAndCoin(user.getId(), otcWalletVO.getCoinName());
+            if (contractWallet == null) {
+                final ContractWallet contractWalletNew = new ContractWallet();
+                contractWalletNew.setCoin(memberCoin2);
+                contractWalletNew.setMember(member2);
+                contractWallet = this.contractWalletService.save(contractWalletNew);
+                if (contractWallet == null) {
+                    return this.error("合约账户创建失败，请联系客服");
+                }
+            }
+            Assert.isTrue(contractWallet.getIs_lock() == 0, "钱包已锁定");
+            if ("2".equals(otcWalletVO.getDirection())) {
+                Assert.isTrue(BigDecimalUtils.compare(memberWallet2.getBalance(), amount2), this.sourceService.getMessage("INSUFFICIENT_BALANCE"));
+                final int subResult2 = this.contractWalletService.coin2Contract(memberWallet2, contractWallet, amount2);
+                if (subResult2 == 1) {
+                    return this.success("划转成功");
+                }
+                return this.error("划转失败");
+            }
+            else {
+                if (!"3".equals(otcWalletVO.getDirection())) {
+                    return this.error("参数异常");
+                }
+                final long holdingCount = this.contractOrderService.countMemberHoldingOrders(Long.valueOf(user.getId()));
+                if (holdingCount > 0L) {
+                    return this.error("存在持仓中的合约订单，不允许划转");
+                }
+                Assert.isTrue(BigDecimalUtils.compare(contractWallet.getBalance(), amount2), this.sourceService.getMessage("INSUFFICIENT_BALANCE"));
+                final int addResult2 = this.contractWalletService.Contract2Coin(memberWallet2, contractWallet, amount2);
+                if (addResult2 == 1) {
+                    return this.success("划转成功");
+                }
+                return this.error("划转失败");
+            }
+        }
+        else if ("4".equals(otcWalletVO.getDirection())) {
+            AssetController.log.info("---------币币账户到币币锁仓账户:userId=" + user.getId() + "," + JSONObject.toJSONString((Object)otcWalletVO));
+            final Coin coin2 = this.coinService.findByUnit(otcWalletVO.getCoinName());
+            if (null == coin2 || coin2.getCoinArea() != 1) {
+                return this.error("不支持的解封区币种");
+            }
+            final BigDecimal amount = otcWalletVO.getAmount();
+            final Member member = this.memberService.findOne(Long.valueOf(user.getId()));
+            Assert.isTrue(member.getMemberLevel() != MemberLevelEnum.GENERAL, "请先进行实名认证!");
+            Assert.isTrue(BigDecimalUtils.compare(amount, BigDecimal.ZERO), this.sourceService.getMessage("参数异常"));
+            final Coin memberCoin = new Coin();
+            memberCoin.setName(otcWalletVO.getCoinName());
+            final MemberWallet memberWallet = walletService.findByCoinAndMemberId(memberCoin, Long.valueOf(user.getId()));
+            Assert.isTrue(memberWallet.getIsLock() == BooleanEnum.IS_FALSE, "钱包已锁定");
+            Assert.isTrue(BigDecimalUtils.compare(memberWallet.getBalance(), amount), this.sourceService.getMessage("INSUFFICIENT_BALANCE"));
+            final BigDecimal leftAmount = this.getCoinAmount(user.getId(), otcWalletVO.getCoinName());
+            if (leftAmount.compareTo(BigDecimal.ZERO) <= 0 || amount.compareTo(leftAmount) > 0) {
+                return MessageResult.error(this.sourceService.getMessage("INSUFFICIENT_BALANCE"));
+            }
+            final int addResult = walletService.Balance2BlockBalance(memberWallet, amount);
+            if (addResult == 1) {
+                return this.success("划转成功");
+            }
+            return this.error("划转失败");
+        }
+        else {
+            if (!"5".equals(otcWalletVO.getDirection()) && !"6".equals(otcWalletVO.getDirection())) {
+                return this.error("参数异常");
+            }
+            AssetController.log.info("---------币币账户到双仓合约账户互转:userId=" + user.getId() + "," + JSONObject.toJSONString((Object)otcWalletVO));
+            if (!"USDT".equals(otcWalletVO.getCoinName())) {
+                return this.error("不支持的合约币种");
+            }
+            final BigDecimal amount2 = otcWalletVO.getAmount();
+            final Member member2 = this.memberService.findOne(Long.valueOf(user.getId()));
+            Assert.isTrue(member2.getMemberLevel() != MemberLevelEnum.GENERAL, "请先进行实名认证!");
+            Assert.isTrue(BigDecimalUtils.compare(amount2, BigDecimal.ZERO), this.sourceService.getMessage("参数异常"));
+            final Coin memberCoin2 = new Coin();
+            memberCoin2.setName(otcWalletVO.getCoinName());
+            final MemberWallet memberWallet2 = walletService.findByCoinAndMemberId(memberCoin2, Long.valueOf(user.getId()));
+            Assert.isTrue(memberWallet2.getIsLock() == BooleanEnum.IS_FALSE, "钱包已锁定");
+            ContractDoubleDirectionWallet contractDoubleDirectionWallet = this.contractDoubleDirectionWalletService.getContractDoubleDirectionWalletByMemberIdAndCoin(member2.getId(), otcWalletVO.getCoinName());
+            if (contractDoubleDirectionWallet == null) {
+                final ContractDoubleDirectionWallet contractDoubleDirectionWalletNew = new ContractDoubleDirectionWallet();
+                contractDoubleDirectionWalletNew.setCoin(memberCoin2);
+                contractDoubleDirectionWalletNew.setIsLock(BooleanEnum.IS_FALSE);
+                contractDoubleDirectionWalletNew.setMemberId(member2.getId());
+                contractDoubleDirectionWalletNew.setBalance(BigDecimal.ZERO);
+                contractDoubleDirectionWalletNew.setFrozenBalance(BigDecimal.ZERO);
+                contractDoubleDirectionWalletNew.setVersion(0);
+                contractDoubleDirectionWallet = this.contractDoubleDirectionWalletService.save(contractDoubleDirectionWalletNew);
+                if (contractDoubleDirectionWallet == null) {
+                    return this.error("双仓合约账户创建失败，请联系客服");
+                }
+            }
+            Assert.isTrue(contractDoubleDirectionWallet.getIsLock() == BooleanEnum.IS_FALSE, "钱包已锁定");
+            if ("5".equals(otcWalletVO.getDirection())) {
+                Assert.isTrue(BigDecimalUtils.compare(memberWallet2.getBalance(), amount2), this.sourceService.getMessage("INSUFFICIENT_BALANCE"));
+                final int subResult2 = this.contractDoubleDirectionWalletService.coin2DoubleDirection(memberWallet2, contractDoubleDirectionWallet, amount2);
+                if (subResult2 == 1) {
+                    return this.success("划转成功");
+                }
+                return this.error("划转失败");
+            }
+            else {
+                if (!"6".equals(otcWalletVO.getDirection())) {
+                    return this.error("参数异常");
+                }
+                Assert.isTrue(BigDecimalUtils.compare(contractDoubleDirectionWallet.getBalance(), amount2), this.sourceService.getMessage("INSUFFICIENT_BALANCE"));
+                final int addResult3 = this.contractDoubleDirectionWalletService.doubleDirection2Coin(memberWallet2, contractDoubleDirectionWallet, amount2);
+                if (addResult3 == 1) {
+                    return this.success("划转成功");
+                }
+                return this.error("划转失败");
+            }
+        }
+    }
+
+    private BigDecimal getCoinAmount(final long memberId, final String baseCoin) {
+        BigDecimal rechargeAmount = this.memberDepositService.sumMemberDepositByUnit(memberId, baseCoin);
+        rechargeAmount = ((null != rechargeAmount) ? rechargeAmount : BigDecimal.ZERO);
+        BigDecimal withdrawAmount = this.withdrawRecordService.sumMemberWithdrawByUnit(memberId, baseCoin);
+        withdrawAmount = ((null != withdrawAmount) ? withdrawAmount : BigDecimal.ZERO);
+        BigDecimal transferAmount = this.memberTransactionService.sumByTransactionType(memberId, baseCoin, TransactionType.COIN_TWO_COIN_BLOCK);
+        transferAmount = ((null != transferAmount) ? transferAmount : BigDecimal.ZERO);
+        transferAmount = transferAmount.multiply(new BigDecimal("-1"));
+        BigDecimal manualRecharge = this.memberTransactionService.sumByTransactionType(memberId, baseCoin, TransactionType.ADMIN_RECHARGE);
+        manualRecharge = ((null != manualRecharge) ? manualRecharge : BigDecimal.ZERO);
+        if (manualRecharge.compareTo(BigDecimal.ZERO) < 0) {
+            manualRecharge = BigDecimal.ZERO;
+        }
+        BigDecimal rechargeLeftAmount = rechargeAmount.add(manualRecharge).subtract(withdrawAmount).subtract(transferAmount);
+        if (rechargeLeftAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            rechargeLeftAmount = BigDecimal.ZERO;
+        }
+        return rechargeLeftAmount;
+    }
+
+    @RequestMapping(value = { "transferLog" }, method = { RequestMethod.POST })
+    public MessageResult transferWallet(@SessionAttribute("API_MEMBER") final AuthMember user, final Long sequence) throws Exception {
+        final MessageResult mr = MessageResult.success("success");
+        final List<MemberTransaction> datas = (List<MemberTransaction>)this.memberTransactionService.findListBySequence(Long.valueOf(user.getId()), sequence);
+        mr.setData((Object)datas);
+        return mr;
+    }
 
 }

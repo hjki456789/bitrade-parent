@@ -5,17 +5,26 @@ import cn.ztuo.bitrade.constant.CommonStatus;
 import cn.ztuo.bitrade.constant.PageModel;
 import cn.ztuo.bitrade.entity.*;
 import cn.ztuo.bitrade.entity.transform.AuthMember;
+import cn.ztuo.bitrade.entity.unblock.UnblockMemberReward;
 import cn.ztuo.bitrade.pagination.PageResult;
 import cn.ztuo.bitrade.service.*;
+import cn.ztuo.bitrade.service.unblock.UnblockMemberRewardService;
 import cn.ztuo.bitrade.util.MessageResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static cn.ztuo.bitrade.constant.SysConstant.SESSION_MEMBER;
 
@@ -40,6 +49,13 @@ public class MemberController extends BaseController {
 
     @Autowired
     private MemberVerifyRecordService memberVerifyRecordService;
+
+    @Autowired
+    private MemberTeamService memberTeamService;
+    @Autowired
+    private UnblockMemberRewardService unblockMemberRewardService;
+
+
 
     /**
      * 签到
@@ -83,7 +99,7 @@ public class MemberController extends BaseController {
     }
 
     /**
-     * 查询用户登录记录
+     * 法币设置--提醒
      * @return
      * @throws Exception
      */
@@ -115,5 +131,39 @@ public class MemberController extends BaseController {
                                         PageModel pageModel) {
         PageResult<MemberVerifyRecord> result = memberVerifyRecordService.query(user.getId(),pageModel.getPageNo(),pageModel.getPageSize());
         return success(result);
+    }
+
+
+    @PostMapping({ "/getRewardStatisticsInfo" })
+    public MessageResult getRewardStatisticsInfo(@SessionAttribute("API_MEMBER") final AuthMember authMember, @RequestParam(value = "uid", required = false) final Long uid) {
+        final Member member = this.memberService.findOne(Long.valueOf(authMember.getId()));
+        Assert.notNull((Object)member, "无效的用户");
+        final long memberCount = this.memberTeamService.countTeamNumByMemberId(authMember.getId());
+        final List<Object[]> memberRewards = (List<Object[]>)this.unblockMemberRewardService.statisticsMemberRewards(authMember.getId(), uid);
+        final List<Map<String, Object>> rewardMap = new ArrayList<Map<String, Object>>();
+        if (null != memberRewards) {
+            for (final Object[] memberReward : memberRewards) {
+                final String coin = memberReward[0].toString();
+                final BigDecimal amount = new BigDecimal(memberReward[1].toString());
+                final Map<String, Object> coinMap = new HashMap<String, Object>();
+                coinMap.put("coin", coin);
+                coinMap.put("amount", amount);
+                rewardMap.add(coinMap);
+            }
+        }
+        final Map<String, Object> map = new HashMap<String, Object>();
+        map.put("teamMemberNum", memberCount);
+        map.put("memberRewards", rewardMap);
+        return MessageResult.success("SUCCESS", (Object)map);
+    }
+
+    @PostMapping({ "/getRewardRecordList" })
+    public MessageResult getRewardRecordList(@SessionAttribute("API_MEMBER") final AuthMember authMember, @RequestParam(value = "coin", required = false) String coin, @RequestParam(value = "uid", required = false) final Long uid, final int pageNo, final int pageSize) {
+        coin = "USDT";
+        final Page<UnblockMemberReward> list = (Page<UnblockMemberReward>)this.unblockMemberRewardService.getRewardRecordList(authMember.getId(), uid, coin, pageNo, pageSize);
+        if (null == list) {
+            return MessageResult.error("\u65e0\u8bb0\u5f55");
+        }
+        return MessageResult.success("SUCCESS", (Object)list);
     }
 }

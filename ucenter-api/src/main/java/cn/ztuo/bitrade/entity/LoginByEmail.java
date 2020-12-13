@@ -24,6 +24,10 @@ public class LoginByEmail {
     @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[\\s\\S]{8,16}$",message = "{LoginByEmail.password.Pattern}")
     private String password;
 
+    @NotBlank(message = "{LoginByEmail.username.null}")
+    @Length(min = 3, max = 20, message = "{LoginByEmail.username.length}")
+    private String username;
+
     @NotBlank(message =  "{LoginByEmail.country.null}")
     private String country;
 
@@ -33,6 +37,7 @@ public class LoginByEmail {
 //    @NotBlank
     private String randStr;
 
+    @NotBlank(message = "{LoginByEmail.promotion.null}")
     private String promotion;
 
 }

@@ -198,9 +198,50 @@ public class ApproveController extends BaseController{
         //生成密码
         String jyPass = Md5.md5Digest(jyPassword + member.getSalt()).toLowerCase();
         member.setJyPassword(jyPass);
-        member.setUsername(name);
+        //member.setUsername(name);
         return MessageResult.success(msService.getMessage("SETTING_JY_PASSWORD"));
     }
+
+    /**
+     * 修改资金密码
+     * @param oldPassword
+     * @param newPassword
+     * @param msgCode
+     * @param googleCode
+     * @param user
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "修改资金密码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "oldPassword", value = "旧密码", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "newPassword", value = "新密码", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "msgCode", value = "平台验证码", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "googleCode", value = "谷歌验证码", required = true, dataType = "String"),
+    })
+    @RequestMapping({ "/update/transaction/password" })
+    @Transactional(rollbackFor = { Exception.class })
+    public MessageResult updateTransaction(@RequestParam("oldPassword") final String oldPassword, @RequestParam("newPassword") final String newPassword, @RequestParam(value = "msgCode", required = false) final String msgCode, @RequestParam(value = "googleCode", required = false) final String googleCode, @SessionAttribute("API_MEMBER") final AuthMember user) throws Exception {
+        Assert.isTrue(ValidateUtils.validatePassword(newPassword), this.msService.getMessage("JY_PASSWORD_LENGTH_ILLEGAL"));
+        Assert.isTrue(org.apache.commons.lang3.StringUtils.isNotEmpty(msgCode), "请输入验证码");
+        final Member member = this.memberService.findOne(Long.valueOf(user.getId()));
+        if (member.getGoogleState() == 1) {
+            if (!org.apache.commons.lang.StringUtils.isNotEmpty(googleCode)) {
+                return MessageResult.error("请输入谷歌验证码");
+            }
+            final long googleCodes = Long.parseLong(googleCode);
+            final long t = System.currentTimeMillis();
+            final GoogleAuthenticatorUtil ga = new GoogleAuthenticatorUtil();
+            final boolean r = ga.check_code(member.getGoogleKey(), googleCodes, t);
+            if (!r) {
+                return MessageResult.error("谷歌验证失败");
+            }
+        }
+        Assert.isTrue(Md5.md5Digest(oldPassword + member.getSalt()).toLowerCase().equals(member.getJyPassword()), this.msService.getMessage("ERROR_JYPASSWORD"));
+        member.setJyPassword(Md5.md5Digest(newPassword + member.getSalt()).toLowerCase());
+        return MessageResult.success(this.msService.getMessage("SETTING_JY_PASSWORD"));
+    }
+
 
     /**
      * 重置资金密码
@@ -236,13 +277,12 @@ public class ApproveController extends BaseController{
     @ApiOperation(value = "绑定手机号")
     @Transactional(rollbackFor = Exception.class)
     @SecurityVerification(SysConstant.TOKEN_PHONE_BIND)
-    public MessageResult bindPhone(String phone, String code, @ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember user) throws Exception {
+    public MessageResult bindPhone(HttpServletRequest request,String phone, String code, String password, @ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember user) throws Exception {
+        hasText(password, this.msService.getMessage("MISSING_LOGIN_PASSWORD"));
         hasText(phone, msService.getMessage("MISSING_PHONE"));
         hasText(code, msService.getMessage("MISSING_VERIFICATION_CODE"));
-        if ("中国".equals(user.getLocation().getCountry())) {
-            if (!ValidateUtil.isMobilePhone(phone.trim())) {
+        if ("中国".equals(user.getLocation().getCountry()) && !ValidateUtil.isMobilePhone(phone.trim())) {
                 return MessageResult.error(msService.getMessage("PHONE_FORMAT_ERROR"));
-            }
         }
         Object cache = redisUtil.get(SysConstant.PHONE_BIND_CODE_PREFIX + phone);
         notNull(cache, msService.getMessage("NO_GET_VERIFICATION_CODE"));
@@ -255,9 +295,13 @@ public class ApproveController extends BaseController{
         }
         Member member = memberService.findOne(user.getId());
         isTrue(member.getMobilePhone() == null, msService.getMessage("REPEAT_PHONE_REQUEST"));
-        member.setMobilePhone(phone);
-        member.setPhoneState(1);
-        return MessageResult.success(msService.getMessage("SETTING_SUCCESS"));
+        if (member.getPassword().equals(Md5.md5Digest(password + member.getSalt()).toLowerCase())) {
+            member.setMobilePhone(phone);
+            member.setPhoneState(1);
+            return MessageResult.success(this.msService.getMessage("SETTING_SUCCESS"));
+        }
+        request.removeAttribute("API_MEMBER");
+        return MessageResult.error(this.msService.getMessage("PASSWORD_ERROR"));
     }
 
 
@@ -279,12 +323,38 @@ public class ApproveController extends BaseController{
             HttpServletRequest request,
             String oldPassword,
             String newPassword,
+            String code,
+            @RequestParam(value = "googleCode", required = false) final String googleCode,
+            @RequestParam(value = "codeMold", defaultValue = "0") final Integer codeMold,
             @ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember user) throws Exception {
         hasText(oldPassword, msService.getMessage("MISSING_OLD_PASSWORD"));
         hasText(newPassword, msService.getMessage("MISSING_NEW_PASSWORD"));
         isTrue(ValidateUtils.validatePassword(newPassword), msService.getMessage("PASSWORD_LENGTH_ILLEGAL"));
         Member member = memberService.findOne(user.getId());
+        if(member.getGoogleState()==1){
+            if(StringUtils.isEmpty(googleCode)){
+                  return MessageResult.error("\u8bf7\u8f93\u5165\u8c37\u6b4c\u9a8c\u8bc1\u7801");
+            }
+            long googleCodes = Long.parseLong(googleCode);
+            long t = System.currentTimeMillis();
+            GoogleAuthenticatorUtil ga = new GoogleAuthenticatorUtil();
+            boolean r = ga.check_code(member.getGoogleKey(), googleCodes, t);
+            if (!r) {
+                return MessageResult.error("\u8c37\u6b4c\u9a8c\u8bc1\u5931\u8d25");
+            }
+        }
         isTrue(Md5.md5Digest(oldPassword + member.getSalt()).toLowerCase().equals(member.getPassword()), msService.getMessage("PASSWORD_ERROR"));
+        String key = "";
+        if (codeMold == 0) {
+            key = "PHONE_UPDATE_PASSWORD_";
+        }
+        else if (codeMold == 1) {
+            key = "RESET_PASSWORD_CODE_";
+        }
+        MessageResult res = this.checkCode(key, member, code, codeMold);
+        if (res.getCode() != 0) {
+            return res;
+        }
         request.removeAttribute(SysConstant.SESSION_MEMBER);
         member.setPassword(Md5.md5Digest(newPassword + member.getSalt()).toLowerCase());
         //修改/重置登录密码 24小时不允许提币
@@ -304,7 +374,11 @@ public class ApproveController extends BaseController{
     @ApiOperation(value = "绑定邮箱")
     @Transactional(rollbackFor = Exception.class)
     @SecurityVerification(SysConstant.TOKEN_EMAIL_BIND)
-    public MessageResult bindEmail(String code, String email, @ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember user){
+    public MessageResult bindEmail(
+            HttpServletRequest request,
+            String password,
+            String code, String email, @ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember user) throws Exception{
+        hasText(password, this.msService.getMessage("MISSING_LOGIN_PASSWORD"));
         hasText(code, msService.getMessage("MISSING_VERIFICATION_CODE"));
         hasText(email, msService.getMessage("MISSING_EMAIL"));
         isTrue(ValidateUtil.isEmail(email), msService.getMessage("EMAIL_FORMAT_ERROR"));
@@ -313,6 +387,10 @@ public class ApproveController extends BaseController{
         isTrue(code.equals(cache.toString()), msService.getMessage("VERIFICATION_CODE_INCORRECT"));
         Member member = memberService.findOne(user.getId());
         isTrue(member.getEmail() == null, msService.getMessage("REPEAT_EMAIL_REQUEST"));
+        if (!Md5.md5Digest(password + member.getSalt()).toLowerCase().equals(member.getPassword())) {
+            request.removeAttribute("API_MEMBER");
+            return MessageResult.error(this.msService.getMessage("PASSWORD_ERROR"));
+        }
         member.setEmail(email);
         member.setEmailState(1);
         return MessageResult.success(msService.getMessage("SETTING_SUCCESS"));
@@ -328,7 +406,11 @@ public class ApproveController extends BaseController{
     @ApiOperation(value = "换邮箱")
     @Transactional(rollbackFor = Exception.class)
     @SecurityVerification(SysConstant.TOKEN_EMAIL_UNTIE)
-    public MessageResult updateEmail(@ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember user, String newEmailCode,String newEmail){
+    public MessageResult updateEmail(@ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember user,
+                                     HttpServletRequest request,
+                                     String password,
+                                     String newEmailCode,String newEmail)throws Exception{
+        hasText(password, this.msService.getMessage("MISSING_LOGIN_PASSWORD"));
         hasText(newEmailCode, msService.getMessage("MISSING_VERIFICATION_CODE"));
         hasText(newEmail, msService.getMessage("MISSING_EMAIL"));
         Member member = memberService.findOne(user.getId());
@@ -337,6 +419,10 @@ public class ApproveController extends BaseController{
         notNull(newEmailCache, msService.getMessage("NO_GET_VERIFICATION_CODE"));
         isTrue(newEmailCode.equals(newEmailCache.toString()), msService.getMessage("VERIFICATION_CODE_INCORRECT"));
         redisUtil.delete(SysConstant.EMAIL_UPDATE_CODE_PREFIX + newEmail);
+        if (!Md5.md5Digest(password + member.getSalt()).toLowerCase().equals(member.getPassword())) {
+            request.removeAttribute("API_MEMBER");
+            return MessageResult.error(this.msService.getMessage("PASSWORD_ERROR"));
+        }
         member.setEmail(newEmail);
         return MessageResult.success();
     }
@@ -841,25 +927,24 @@ public class ApproveController extends BaseController{
         hasText(code, msService.getMessage("MISSING_VERIFICATION_CODE"));
         Member member1 = memberService.findByPhone(phone);
         isTrue(member1 == null, msService.getMessage("PHONE_ALREADY_BOUND"));
-        Object cache = redisUtil.get(SysConstant.PHONE_BIND_CODE_PREFIX + phone);
+        Object cache = redisUtil.get(SysConstant.PHONE_BIND_CODE_PREFIX + member.getMobilePhone());
         notNull(cache, msService.getMessage("NO_GET_VERIFICATION_CODE"));
         if (member.getCountry().getAreaCode().equals("86")) {
             if (!ValidateUtil.isMobilePhone(phone.trim())) {
                 return MessageResult.error(msService.getMessage("PHONE_FORMAT_ERROR"));
             }
         }
-        if (member.getPassword().equals(Md5.md5Digest(password + member.getSalt()).toLowerCase())) {
-            if (!code.equals(cache.toString())) {
-                return MessageResult.error(msService.getMessage("VERIFICATION_CODE_INCORRECT"));
-            } else {
-                redisUtil.delete(SysConstant.PHONE_BIND_CODE_PREFIX + phone);
-            }
-            member.setMobilePhone(phone);
-            return MessageResult.success(msService.getMessage("SETTING_SUCCESS"));
-        } else {
+        if (!member.getPassword().equals(Md5.md5Digest(password + member.getSalt()).toLowerCase())) {
             request.removeAttribute(SysConstant.SESSION_MEMBER);
-            return MessageResult.error(msService.getMessage("PASSWORD_ERROR"));
+            return MessageResult.error(this.msService.getMessage("PASSWORD_ERROR"));
         }
+        if (!code.equals(cache.toString())) {
+            request.removeAttribute(SysConstant.SESSION_MEMBER);
+            return MessageResult.error(this.msService.getMessage("VERIFICATION_CODE_INCORRECT"));
+        }
+        redisUtil.delete(SysConstant.PHONE_BIND_CODE_PREFIX + member.getMobilePhone());
+        member.setMobilePhone(phone);
+        return MessageResult.success(msService.getMessage("SETTING_SUCCESS"));
     }
 
     /**
@@ -884,7 +969,7 @@ public class ApproveController extends BaseController{
         if(orderNum>0){
             return MessageResult.error(msService.getMessage("ADVERTISE_IN_PROGRESS_ERROR"));
         }
-        
+
         if (member.getCertifiedBusinessStatus() == CANCEL_AUTH) {
             return MessageResult.error(msService.getMessage("REFUND_SUBMITTED_ERROR"));
         }

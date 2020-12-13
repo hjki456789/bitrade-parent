@@ -48,5 +48,6 @@ public class MemberSecurity {
     private MemberLevelEnum memberLevel;
 
     private BooleanEnum isQuick;
+    private String memberGradeName;
 
 }

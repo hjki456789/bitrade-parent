@@ -44,11 +44,19 @@ public class AntiAttackAspect {
     @Pointcut("execution(public * cn.ztuo.bitrade.controller.VerifyController.smsCode(..))" +
             "||execution(public * cn.ztuo.bitrade.controller.VerifyController.regSmsCode(..))" +
             "||execution(public * cn.ztuo.bitrade.controller.SmsController.setBindPhoneCode(..))")
+/*    @Pointcut("execution(public * cn.ztuo.bitrade.controller.RegisterController.sendBindEmail(..))" +
+            "||execution(public * cn.ztuo.bitrade.controller.RegisterController.sendAddAddress(..))" +
+            "||execution(public * cn.ztuo.bitrade.controller.SmsController.sendResetTransactionCode(..))" +
+            "||execution(public * cn.ztuo.bitrade.controller.SmsController.setBindPhoneCode(..))" +
+            "||execution(public * cn.ztuo.bitrade.controller.SmsController.updatePasswordCode(..))" +
+            "||execution(public * cn.ztuo.bitrade.controller.SmsController.addAddressCode(..))" +
+            "||execution(public * cn.ztuo.bitrade.controller.SmsController.resetPhoneCode(..))")*/
     public void antiAttack() {
     }
 
     @Before("antiAttack()")
     public void doBefore(JoinPoint joinPoint) throws Throwable {
+        log.info("❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤❤");
         check(joinPoint, "sms");
     }
 

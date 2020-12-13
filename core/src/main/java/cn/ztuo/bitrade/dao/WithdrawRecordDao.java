@@ -7,6 +7,7 @@ import cn.ztuo.bitrade.entity.WithdrawRecord;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -26,4 +27,11 @@ public interface WithdrawRecordDao extends BaseDao<WithdrawRecord> {
 
     @Query("select sum(w.totalAmount) from WithdrawRecord w where w.status <> 2 and w.coin= :coin and w.createTime between :startTime and :endTime")
     Double countWithdrawAmountByTimeAndMemberIdAndCoin(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("coin") Coin coin);
+
+    @Query(value = "SELECT  ifnull(SUM(a.total_amount),0) from withdraw_record a  where a.coin_id=:unit  and a.member_id=:memberId AND a.status!=2", nativeQuery = true)
+    BigDecimal sumMemberWithdrawByUnit(@Param("memberId") final long p0, @Param("unit") final String p1);
+
+    @Query(value = "SELECT  ifnull(SUM(a.total_amount),0) from withdraw_record a  where a.coin_id=:unit  and a.member_id=:memberId AND a.status =:status", nativeQuery = true)
+    BigDecimal sumMemberWithdrawByUnitAndStatus(@Param("memberId") final long p0, @Param("unit") final String p1, @Param("status") final int p2);
+
 }

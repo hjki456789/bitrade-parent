@@ -26,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -263,5 +264,13 @@ public class WithdrawRecordService extends BaseService {
 
     public Page<WithdrawRecord> findAll(Predicate predicate, PageModel pageModel) {
         return withdrawApplyDao.findAll(predicate, pageModel.getPageable());
+    }
+
+    public BigDecimal sumMemberWithdrawByUnit(final long memberId, final String unit) {
+        return this.withdrawApplyDao.sumMemberWithdrawByUnit(memberId, unit);
+    }
+
+    public BigDecimal sumMemberWithdrawByUnitAndStatus(final long memberId, final String unit, final int status) {
+        return this.withdrawApplyDao.sumMemberWithdrawByUnitAndStatus(memberId, unit, status);
     }
 }

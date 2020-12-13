@@ -8,6 +8,7 @@ import cn.ztuo.bitrade.service.LocaleMessageSourceService;
 import cn.ztuo.bitrade.service.MemberService;
 import cn.ztuo.bitrade.util.GoogleAuthenticatorUtil;
 import cn.ztuo.bitrade.util.MessageResult;
+import cn.ztuo.bitrade.util.RedisUtil;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,9 @@ public class GoogleAuthenticationController extends BaseController{
 
     @Autowired
     private LocaleMessageSourceService messageSource;
+
+    @Autowired
+    private RedisUtil redisUtil;
     /**
      * 验证google
      * @author shenzucai
@@ -115,8 +119,20 @@ public class GoogleAuthenticationController extends BaseController{
 
     @RequestMapping(value = "/jcgoogle" ,method = RequestMethod.POST)
     @SecurityVerification(SysConstant.TOKEN_RESET_GOOGLE_AUTH)
-    public MessageResult jcgoogle(@ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember user) {
+    public MessageResult jcgoogle(@ApiIgnore @SessionAttribute(SESSION_MEMBER) AuthMember user,String smsCode, String codes) {
         Member member = memberService.findOne(user.getId());
+        String GoogleKey = member.getGoogleKey();
+        if (!smsCode.equals(redisUtil.get("RESET_PASSWORD_CODE_" + member.getMobilePhone()))) {
+            return this.error(messageSource.getMessage("VERIFICATION_CODE_INCORRECT"));
+        }
+        redisUtil.delete(new String[] { "RESET_PASSWORD_CODE_" + member.getMobilePhone() });
+        long code = Long.parseLong(codes);
+        long t = System.currentTimeMillis();
+        GoogleAuthenticatorUtil ga = new GoogleAuthenticatorUtil();
+        boolean r = ga.check_code(GoogleKey, code, t);
+        if (!r) {
+            return MessageResult.error("验证失败");
+        }
         member.setGoogleDate(new Date());
         member.setGoogleState(0);
         Member result = memberService.save(member);

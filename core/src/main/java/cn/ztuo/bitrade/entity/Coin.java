@@ -235,7 +235,8 @@ public class Coin {
     @JsonIgnore
     private List<CoinChainRelation> coinChainRelationList;
 
-
+    @Column(columnDefinition = "varchar(255) default null comment '图标url'")
+    private String img;
     private String contractAddress;
     private int chainType;
     private int enablePool;

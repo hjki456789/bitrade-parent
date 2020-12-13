@@ -4,12 +4,18 @@ import cn.ztuo.bitrade.annotation.MultiDataSource;
 import cn.ztuo.bitrade.constant.CommonStatus;
 import cn.ztuo.bitrade.constant.PageModel;
 import cn.ztuo.bitrade.entity.Coin;
+import cn.ztuo.bitrade.entity.CoinConvert;
+import cn.ztuo.bitrade.entity.CoinConvertResult;
+import cn.ztuo.bitrade.entity.ConvertInfo;
+import cn.ztuo.bitrade.service.CoinConvertService;
 import cn.ztuo.bitrade.service.CoinService;
 import cn.ztuo.bitrade.service.LocalizationExtendService;
 import cn.ztuo.bitrade.service.LocalizationService;
+import cn.ztuo.bitrade.system.CoinExchangeFactory;
 import cn.ztuo.bitrade.util.MessageResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -32,12 +38,16 @@ import java.util.Map;
 @RestController
 @RequestMapping("coin")
 @Api(tags = "币种管理")
+@Slf4j
 public class CoinController extends BaseController {
     @Autowired
     private CoinService coinService;
-
     @Autowired
     private LocalizationExtendService localizationExtendService;
+    @Autowired
+    private CoinConvertService coinConvertService;
+    @Autowired
+    private CoinExchangeFactory coinExchangeFactory;
 
     @GetMapping("legal")
     @ApiOperation(value = "查询所有法币币种")
@@ -53,6 +63,50 @@ public class CoinController extends BaseController {
     public MessageResult findLegalCoinPage(PageModel pageModel) {
         Page all = coinService.findLegalCoinPage(pageModel);
         return success(all);
+    }
+
+
+    @RequestMapping({ "coinConvert" })
+    public MessageResult findCoinConvert() {
+        List<CoinConvert> coinConverts = this.coinConvertService.findAll();
+        List<CoinConvertResult> resultData = new ArrayList<>();
+        Map<String, List<ConvertInfo>> convertsMap = new HashMap<>();
+        List<ConvertInfo> converts=new ArrayList<>();
+        coinConverts.forEach(coinConvert -> {
+            Coin rateBase = this.coinService.findOne(coinConvert.getBaseCoin());
+            Coin rateConvert = this.coinService.findOne(coinConvert.getConvertCoin());
+            if (rateBase != null && rateConvert != null && rateConvert.getUsdRate().doubleValue() != 0.0) {
+                String baseCoin = coinConvert.getBaseCoin();
+                double rate = rateBase.getUsdRate().divide(rateConvert.getUsdRate(), 8, 1).doubleValue();
+                ConvertInfo convertInfo = new ConvertInfo();
+                convertInfo.setConvertCoin(coinConvert.getConvertCoin());
+                convertInfo.setConvertCoinImg(rateConvert.getImg());
+                convertInfo.setRate(rate);
+                convertInfo.setFee(coinConvert.getFee());
+                if (convertsMap.containsKey(baseCoin)) {
+                    convertsMap.get(baseCoin).add(convertInfo);
+                }
+                else {
+                    converts.add(convertInfo);
+                    convertsMap.put(baseCoin, converts);
+                }
+            }
+            else {
+                log.info("unit = {} , rate = null ", (Object)(coinConvert.getBaseCoin() + " or " + coinConvert.getConvertCoin()));
+            }
+            return;
+        });
+        for (String key : convertsMap.keySet()) {
+            Coin coinBase = this.coinService.findOne(key);
+            CoinConvertResult coinConvertResult = new CoinConvertResult();
+            coinConvertResult.setBaseCoin(key);
+            coinConvertResult.setBaseCoinImg(coinBase.getImg());
+            coinConvertResult.setConvertInfos(convertsMap.get(key));
+            resultData.add(coinConvertResult);
+        }
+        MessageResult mr = MessageResult.success("success");
+        mr.setData((Object)resultData);
+        return mr;
     }
 
     @RequestMapping(value = "supported",method = {RequestMethod.GET,RequestMethod.POST})

@@ -1,6 +1,5 @@
 package cn.ztuo.bitrade.entity;
 
-import cn.ztuo.bitrade.annotation.Excel;
 import cn.ztuo.bitrade.constant.LoginStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -9,7 +8,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * 会员用户
+ * 会员用户登录记录
  *
  * @author Seven
  * @date 2019年01月02日

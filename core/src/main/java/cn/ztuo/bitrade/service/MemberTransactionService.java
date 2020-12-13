@@ -354,4 +354,41 @@ public class MemberTransactionService extends BaseService {
         }
         return resultList;
     }
+
+    public BigDecimal sumByTransactionType(final long memberId, final String coin, final TransactionType type) {
+        return this.transactionDao.sumByTransactionType(memberId, coin, type.getOrdinal());
+    }
+    public BigDecimal sumRecharge(final long memberId, final String coin) {
+        return this.transactionDao.sumRecharge(memberId, coin);
+    }
+
+    public BigDecimal findAndSumIntoContractById(final Long id) {
+        return this.transactionDao.findAndSumIntoContractById(id);
+    }
+
+    public void deleteByMemberId(final Long memberId) {
+        this.transactionDao.deleteByMemberId(memberId);
+    }
+    public List<MemberTransaction> findListBySequence(final Long memberId, Long sequence) {
+        if (sequence == null || sequence == 0L) {
+            sequence = System.currentTimeMillis();
+        }
+        return this.transactionDao.findListBySequence(memberId, sequence);
+    }
+    public Page<MemberTransaction> getLimitRecord(final Long memberId, final int pageNo, final int pageSize, final String startTime, final String endTime, final TransactionType type) {
+        final Sort orders = Sort.by(new Sort.Order[] { new Sort.Order(Sort.Direction.DESC, "sequence") });
+        final PageRequest pageRequest = PageRequest.of(pageNo - 1, pageSize, orders);
+        final Criteria<MemberTransaction> specification = new Criteria<MemberTransaction>();
+        specification.add(Restrictions.eq("memberId", memberId, true));
+        if (StringUtils.isNotEmpty((CharSequence)startTime) && StringUtils.isNotEmpty((CharSequence)endTime) && Long.valueOf(startTime) < Long.valueOf(endTime)) {
+            specification.add(Restrictions.gte("sequence", Long.valueOf(startTime), true));
+            specification.add(Restrictions.lte("sequence", Long.valueOf(endTime), true));
+        }
+        if (null != type) {
+            specification.add(Restrictions.eq("type", type, true));
+        }
+        return this.transactionDao.findAll(specification, pageRequest);
+    }
+
+
 }
