@@ -24,6 +24,8 @@ public class ExchangePushJob {
     private Map<String,List<CoinThumb>> thumbQueue = new HashMap<>();
     private Map<String, KLine> klineQueue = new ConcurrentHashMap<>();
 
+    private Map<String, List<CoinThumb>> contractThumbQueue=new HashMap<>();;
+
     public void addTrades(String symbol, List<ExchangeTrade> trades){
         List<ExchangeTrade> list = tradesQueue.get(symbol);
         if(list == null){
@@ -46,6 +48,19 @@ public class ExchangePushJob {
         }
     }
 
+    public void addPlates(final String symbol, final TradePlate plate, final String source) {
+        if (!StringUtils.isNotEmpty((CharSequence)source) || !source.equals("contract")) {
+            List<TradePlate> list = this.plateQueue.get(symbol);
+            if (list == null) {
+                list = new ArrayList<TradePlate>();
+                this.plateQueue.put(symbol, list);
+            }
+            synchronized (list) {
+                list.add(plate);
+            }
+        }
+    }
+
     public void addThumb(String symbol, CoinThumb thumb){
         List<CoinThumb> list = thumbQueue.get(symbol);
         if(list == null){
@@ -54,6 +69,28 @@ public class ExchangePushJob {
         }
         synchronized (list) {
             list.add(thumb);
+        }
+    }
+    public void addThumb(final String symbol, final CoinThumb thumb, final String source) {
+        if (StringUtils.isNotEmpty((CharSequence)source) && source.equals("contract")) {
+            List<CoinThumb> list = this.contractThumbQueue.get(symbol);
+            if (list == null) {
+                list = new ArrayList<CoinThumb>();
+                this.contractThumbQueue.put(symbol, list);
+            }
+            synchronized (list) {
+                list.add(thumb);
+            }
+        }
+        else {
+            List<CoinThumb> list = this.thumbQueue.get(symbol);
+            if (list == null) {
+                list = new ArrayList<CoinThumb>();
+                this.thumbQueue.put(symbol, list);
+            }
+            synchronized (list) {
+                list.add(thumb);
+            }
         }
     }
 
@@ -147,6 +184,21 @@ public class ExchangePushJob {
             messagingTemplate.convertAndSend("/topic/market/kline/" + entry.getKey(), entry.getValue());
             nettyHandler.pushKLine(entry.getKey(), entry.getValue());
             entryIterator.remove();
+        }
+    }
+    @Scheduled(fixedRate = 500L)
+    public void pushContractThumb() {
+        for (final Map.Entry<String, List<CoinThumb>> entry : this.contractThumbQueue.entrySet()) {
+            final String symbol = entry.getKey();
+            final List<CoinThumb> thumbs = entry.getValue();
+            if (thumbs.size() > 0) {
+                synchronized (thumbs) {
+                    final CoinThumb thumb = thumbs.get(thumbs.size() - 1);
+                    this.messagingTemplate.convertAndSend("/topic/market/contract/thumb", thumb);
+                    this.nettyHandler.pushThumb(symbol, thumb, "contract");
+                    thumbs.clear();
+                }
+            }
         }
     }
 }

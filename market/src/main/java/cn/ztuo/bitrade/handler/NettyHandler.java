@@ -28,6 +28,7 @@ public class NettyHandler implements MarketHandler {
     @Autowired
     private HawkPushServiceApi hawkPushService;
     private String topicOfSymbol = "SYMBOL_THUMB";
+    private String topicOfContractSymbol="CONTRACT_SYMBOL_THUMB";
 
     public void subscribeTopic(Channel channel, String topic){
         String userKey = channel.id().asLongText();
@@ -142,6 +143,35 @@ public class NettyHandler implements MarketHandler {
         }
         catch (Exception e){
            log.info("推送Order异常={}",e);
+        }
+    }
+
+    @Override
+    public void handleTrade(final String source, final String symbol, final ExchangeTrade exchangeTrade, final CoinThumb thumb) {
+        if (!StringUtils.isNotEmpty((CharSequence)source)) {
+            this.hawkPushService.pushMsg(NettyCacheUtils.getChannel(symbol), (short)20023, JSONObject.toJSONString((Object)exchangeTrade).getBytes());
+        }
+    }
+
+    public void pushThumb(final String symbol, final CoinThumb thumb, final String source) {
+        final byte[] body = JSON.toJSONString((Object)thumb).getBytes();
+        if (StringUtils.isNotEmpty((CharSequence)source) && source.equals("contract")) {
+            this.hawkPushService.pushMsg(NettyCacheUtils.getChannel(this.topicOfContractSymbol), (short)20043, body);
+        }
+        else {
+            this.hawkPushService.pushMsg(NettyCacheUtils.getChannel(this.topicOfSymbol), (short)20003, body);
+        }
+    }
+
+    @Override
+    public void handleKLine(final String source, final String symbol, final KLine kLine) {
+        if ("contract".equals(source)) {
+            kLine.setSymbol(symbol);
+            this.hawkPushService.pushMsg(NettyCacheUtils.getChannel(this.topicOfContractSymbol), (short)20040, JSONObject.toJSONString((Object)kLine).getBytes());
+        }
+        else {
+            kLine.setSymbol(symbol);
+            this.hawkPushService.pushMsg(NettyCacheUtils.getChannel(symbol), (short)20025, JSONObject.toJSONString((Object)kLine).getBytes());
         }
     }
 }

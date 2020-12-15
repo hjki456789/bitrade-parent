@@ -16,6 +16,9 @@ public class WebsocketMarketHandler implements MarketHandler{
     @Autowired
     private ExchangePushJob pushJob;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
     /**
      * 推送币种简化信息
      * @param symbol
@@ -32,5 +35,15 @@ public class WebsocketMarketHandler implements MarketHandler{
     public void handleKLine(String symbol, KLine kLine) {
         //推送K线数据
         pushJob.addKLine(symbol, kLine);
+    }
+
+    @Override
+    public void handleTrade(final String source, final String symbol, final ExchangeTrade exchangeTrade, final CoinThumb thumb) {
+        this.pushJob.addThumb(symbol, thumb, source);
+    }
+
+    @Override
+    public void handleKLine(final String source, final String symbol, final KLine kLine) {
+        this.messagingTemplate.convertAndSend(("/topic/market/" + source + "/kline/" + symbol), kLine);
     }
 }

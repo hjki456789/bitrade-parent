@@ -56,6 +56,11 @@
             <version>1.0</version>
         </dependency>
         <dependency>
+            <groupId>cn.ztuo.bitrade</groupId>
+            <artifactId>contract-core</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>io.reactivex</groupId>
             <artifactId>rxjava</artifactId>
         </dependency>

@@ -11,6 +11,7 @@ import cn.ztuo.bitrade.handler.WebsocketMarketHandler;
 import cn.ztuo.bitrade.job.ExchangePushJob;
 import cn.ztuo.bitrade.processor.CoinProcessor;
 import cn.ztuo.bitrade.processor.CoinProcessorFactory;
+import cn.ztuo.bitrade.processor.ContractCoinProcessor;
 import cn.ztuo.bitrade.processor.DefaultCoinProcessor;
 import cn.ztuo.bitrade.service.DataDictionaryService;
 import cn.ztuo.bitrade.service.ExchangeOrderService;
@@ -103,6 +104,32 @@ public class ExchangeTradeConsumer {
                 }
             });
             exchangeRate.setCoinProcessorFactory(coinProcessorFactory);
+        }
+    }
+
+    @KafkaListener(topics = { "contract-market-symbol" }, containerFactory = "kafkaListenerContainerFactory")
+    public void onAddContractCoin(final List<ConsumerRecord<String, String>> records) {
+        for (int i = 0; i < records.size(); ++i) {
+            final ConsumerRecord<String, String> record = records.get(i);
+            final List<ContractCoin> contractCoins = (List<ContractCoin>)JSON.parseArray((String)record.value(), (Class)ContractCoin.class);
+
+            contractCoins.forEach(contractCoin -> {
+                CoinProcessor coinProcessor = this.coinProcessorFactory.getProcessor("contract", contractCoin.getSymbol());
+                if (coinProcessor == null) {
+                    CoinProcessor processor = new ContractCoinProcessor(contractCoin.getSymbol(), contractCoin.getBaseSymbol());
+                    processor.addHandler(this.mongoMarketHandler);
+                    processor.addHandler(this.wsHandler);
+                    processor.addHandler(this.nettyHandler);
+                    processor.setMarketService(this.marketService);
+                    processor.setExchangeRate(this.exchangeRate);
+                    processor.initializeThumb();
+                    processor.initializeUsdRate();
+                    processor.setIsHalt(false);
+                    this.coinProcessorFactory.addProcessor("contract", contractCoin.getSymbol(), processor);
+                }
+                return;
+            });
+            this.exchangeRate.setCoinProcessorFactory(this.coinProcessorFactory);
         }
     }
 
@@ -210,6 +237,28 @@ public class ExchangeTradeConsumer {
             }
         }
     }
+
+
+    @KafkaListener(topics = { "contract-exchange-trade-mocker" }, containerFactory = "kafkaListenerContainerFactory")
+    public void handleContractExchangeMockerTrade(final List<ConsumerRecord<String, String>> records) {
+        for (int i = 0; i < records.size(); ++i) {
+            final ConsumerRecord<String, String> record = records.get(i);
+            this.logger.info("contract-exchange-trade-mocker topic={},accessKey={},value={}", new Object[] { record.topic(), record.key(), record.value() });
+            try {
+                final List<ExchangeTrade> trades = (List<ExchangeTrade>)JSON.parseArray((String)record.value(), (Class)ExchangeTrade.class);
+                final String symbol = (String)record.key();
+                final CoinProcessor coinProcessor = this.coinProcessorFactory.getProcessor("contract", symbol);
+                if (coinProcessor != null) {
+                    coinProcessor.process(trades);
+                }
+            }
+            catch (Exception e) {
+                this.logger.info("处理合约模拟交易ERROR={}", (Throwable)e);
+            }
+        }
+    }
+
+
 
     /**
      * 订单取消成功

@@ -171,11 +171,20 @@ public class DefaultCoinProcessor implements CoinProcessor {
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
+            if (this.currentKLine.getOpenPrice().compareTo(BigDecimal.ZERO) == 0 && null != this.coinThumb) {
+                this.currentKLine.setOpenPrice(this.coinThumb.getClose());
+                this.currentKLine.setLowestPrice(this.coinThumb.getClose());
+                this.currentKLine.setHighestPrice(this.coinThumb.getClose());
+                this.currentKLine.setClosePrice(this.coinThumb.getClose());
+            }
             //1Min时间要是下一整分钟的
             calendar.add(Calendar.MINUTE, 1);
             currentKLine.setTime(calendar.getTimeInMillis());
             currentKLine.setPeriod("1min");
             currentKLine.setCount(0);
+            if (this.currentKLine.getOpenPrice().compareTo(BigDecimal.ZERO) > 0) {
+                this.handleKLineStorage(this.currentKLine);
+            }
         }
     }
 
@@ -535,6 +544,46 @@ public class DefaultCoinProcessor implements CoinProcessor {
         }
         service.saveKLine(symbol, kLine);
         createNewKLine(kLine.getPeriod());
+    }
+
+    private void generateKLineNext(final int range, final int field, final long time, final BigDecimal closePrice) {
+        final Calendar calendarNext = Calendar.getInstance();
+        calendarNext.setTimeInMillis(time);
+        calendarNext.add(field, range);
+        final long endTickNext = calendarNext.getTimeInMillis();
+        final long startTickNext = time;
+        final List<ExchangeTrade> exchangeTrades = this.service.findTradeByTimeRange(this.symbol, startTickNext, endTickNext, "");
+        final KLine kLine = new KLine();
+        kLine.setTime(startTickNext);
+        String rangeUnit = "";
+        if (field == 12) {
+            rangeUnit = "min";
+        }
+        else if (field == 11) {
+            rangeUnit = "hour";
+        }
+        else if (field == 7) {
+            rangeUnit = "week";
+        }
+        else if (field == 6) {
+            rangeUnit = "day";
+        }
+        else if (field == 2) {
+            rangeUnit = "month";
+        }
+        kLine.setPeriod(range + rangeUnit);
+        for (final ExchangeTrade exchangeTrade : exchangeTrades) {
+            this.processTrade(kLine, exchangeTrade);
+        }
+        if (kLine.getOpenPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            kLine.setOpenPrice(closePrice);
+            kLine.setHighestPrice(closePrice);
+            kLine.setLowestPrice(closePrice);
+            kLine.setClosePrice(closePrice);
+        }
+        for (final MarketHandler storage : this.handlers) {
+            storage.handleKLine("", this.symbol, kLine);
+        }
     }
 
     @Override

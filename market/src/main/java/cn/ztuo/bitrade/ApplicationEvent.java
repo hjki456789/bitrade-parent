@@ -1,9 +1,11 @@
 package cn.ztuo.bitrade;
 
 import cn.ztuo.bitrade.component.CoinExchangeRate;
+import cn.ztuo.bitrade.entity.ContractCoin;
 import cn.ztuo.bitrade.entity.ExchangeCoin;
 import cn.ztuo.bitrade.processor.CoinProcessor;
 import cn.ztuo.bitrade.processor.CoinProcessorFactory;
+import cn.ztuo.bitrade.service.ContractCoinService;
 import cn.ztuo.bitrade.service.ExchangeCoinService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class ApplicationEvent implements ApplicationListener<ContextRefreshedEve
     private CoinExchangeRate coinExchangeRate;
     @Value("${exchange.anchored-coins:USDT-USD}")
     private String legalAnchoredCoins;
+
+    @Autowired
+    private ContractCoinService contractCoinService;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
@@ -48,6 +53,14 @@ public class ApplicationEvent implements ApplicationListener<ContextRefreshedEve
         List<ExchangeCoin> coins = exchangeCoinService.findAllEnabled();
         coins.forEach(coin->{
             CoinProcessor processor = coinProcessorFactory.getProcessor(coin.getSymbol());
+            processor.initializeThumb();
+            processor.initializeUsdRate();
+            processor.setIsHalt(false);
+        });
+
+        List<ContractCoin> contractCoins = contractCoinService.findAllEnabled();
+        contractCoins.forEach(contractCoin -> {
+            CoinProcessor processor = this.coinProcessorFactory.getProcessor("contract", contractCoin.getSymbol());
             processor.initializeThumb();
             processor.initializeUsdRate();
             processor.setIsHalt(false);

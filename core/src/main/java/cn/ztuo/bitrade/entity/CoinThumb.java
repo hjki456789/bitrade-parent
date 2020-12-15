@@ -32,4 +32,13 @@ public class CoinThumb {
 
     private String cnName;
 
+
+    private BigDecimal buy=BigDecimal.ZERO;
+    private BigDecimal sell=BigDecimal.ZERO;
+    private int symbolArea;
+    private int contractType;
+    private int canBuyUp;
+    private int canBuyDown;
+    private String coinSymbolImageUrl;
+
 }

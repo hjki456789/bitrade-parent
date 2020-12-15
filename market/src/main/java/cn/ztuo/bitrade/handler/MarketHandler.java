@@ -26,4 +26,8 @@ public interface MarketHandler {
      * @param kLine
      */
     void handleKLine(String symbol, KLine kLine);
+
+    void handleTrade( String source,  String symbol,  ExchangeTrade exchangeTrade,  CoinThumb thumb);
+
+    void handleKLine( String source,  String symbol,  KLine kLine);
 }

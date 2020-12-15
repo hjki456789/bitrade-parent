@@ -1,6 +1,8 @@
 package cn.ztuo.bitrade.component;
 
 import cn.ztuo.bitrade.annotation.RedisCache;
+import cn.ztuo.bitrade.component.huobientity.HuobiDetail;
+import cn.ztuo.bitrade.component.huobientity.HuobiResponse;
 import cn.ztuo.bitrade.constant.RedissonKeyConstant;
 import cn.ztuo.bitrade.dto.BiTuple;
 import cn.ztuo.bitrade.entity.Coin;
@@ -9,9 +11,14 @@ import cn.ztuo.bitrade.processor.CoinProcessor;
 import cn.ztuo.bitrade.processor.CoinProcessorFactory;
 import cn.ztuo.bitrade.service.CoinService;
 import cn.ztuo.bitrade.service.ExchangeCoinService;
+import com.alibaba.fastjson.JSON;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -148,20 +155,39 @@ public class CoinExchangeRate {
         } else return BigDecimal.ZERO;
     }
 
-    public void syncLegalRate() {
-//        HttpResponse<JsonNode> resp = Unirest.get(url)
-//                .queryString("pairs", forexPairs)
-//                .queryString("api_key", forexApiKey)
-//                .asJson();
-//        log.info("forex result:{}", resp.getBody());
-//        JSONArray result = JSON.parseArray(resp.getBody().toString());
-//        result.forEach(json -> {
-//            JSONObject obj = (JSONObject) json;
-//            legalRateMap.put(obj.getString("symbol"),obj.getBigDecimal("price"));
-//        });
-        legalRateMap.put("USDCNH", BigDecimal.valueOf(6.7));
-        legalRateMap.put("CNHUSD", BigDecimal.valueOf(0.14925));
-        log.info("rate map:{}", legalRateMap);
+    public void syncLegalRate() throws Exception {
+         HttpResponse<JsonNode> resp = Unirest.get("https://otc-api.huobi.de.com/v1/data/market/detail").asJson();
+         HuobiResponse response = (HuobiResponse) JSON.parseObject((resp.getBody()).toString(), (Class)HuobiResponse.class);
+        if (null != response && response.getCode() == 200 && null != response.getData() && null != response.getData().getDetail() && response.getData().getDetail().size() >= 0) {
+            for ( HuobiDetail ele : response.getData().getDetail()) {
+                if (ele.getCoinName().equals("USDT")) {
+                    BigDecimal buy = BigDecimal.ZERO;
+                    if (StringUtils.isNotEmpty(ele.getBuy())) {
+                        buy = new BigDecimal(ele.getBuy());
+                }
+                    BigDecimal sell = BigDecimal.ZERO;
+                    if (StringUtils.isNotEmpty(ele.getSell())) {
+                        sell = new BigDecimal(ele.getSell());
+                    }
+                    if (buy.compareTo(BigDecimal.ZERO) <= 0 || sell.compareTo(BigDecimal.ZERO) <= 0) {
+                        continue;
+                    }
+                     BigDecimal all = buy.add(sell);
+                     BigDecimal half = all.divide(new BigDecimal("2"), 2, RoundingMode.HALF_UP);
+                    if (half.compareTo(new BigDecimal("6")) < 0 || half.compareTo(new BigDecimal("8")) > 0) {
+                        continue;
+                    }
+                    this.legalRateMap.put("USDCNH", half);
+                     BigDecimal reverse = new BigDecimal("1").divide(half, 6, RoundingMode.HALF_UP);
+                    this.legalRateMap.put("CNHUSD", reverse);
+                }
+            }
+        }
+        else if (!this.legalRateMap.containsKey("USDCNH")) {
+            this.legalRateMap.put("USDCNH", BigDecimal.valueOf(7L));
+            this.legalRateMap.put("CNHUSD", BigDecimal.valueOf(0.142857));
+        }
+        CoinExchangeRate.log.info("rate map:{}", (Object)this.legalRateMap);
     }
 
     public Map<String, String> getLegalAnchoredCoins() {

@@ -2,7 +2,10 @@ package cn.ztuo.bitrade.service;
 
 
 import cn.ztuo.bitrade.util.GeneratorUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.parser.Feature;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -31,8 +34,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -78,6 +83,9 @@ public class ExchangeOrderService extends BaseService {
     private MemberGradeService gradeService;
     @Autowired
     private RobotTransactionService robotTransactionService;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public Page<ExchangeOrder> findAll(Predicate predicate, Pageable pageable) {
         return exchangeOrderRepository.findAll(predicate, pageable);
@@ -868,4 +876,141 @@ public class ExchangeOrderService extends BaseService {
     public List<ExchangeOrder> findOrdersBySymbol(final String symbol, final Long startTime, final Long endTime) {
         return this.exchangeOrderRepository.findOrdersBySymbol(symbol, startTime, endTime);
     }
+
+    public Map<String, TradePlateItem> getFirstSellAndBuy(final String symbol) {
+        final Map<String, TradePlateItem> map = new HashMap<>();
+        try {
+            final Map<String, List<TradePlateItem>> depthFistrMap = this.getDepth(symbol, 1);
+            if (null != depthFistrMap) {
+                final List<TradePlateItem> buyItem = depthFistrMap.get("bid");
+                if (null != buyItem && buyItem.size() > 0) {
+                    map.put("firstBuy", buyItem.get(0));
+                }
+            }
+            if (null != depthFistrMap) {
+                final List<TradePlateItem> sellItem = depthFistrMap.get("ask");
+                if (null != sellItem && sellItem.size() > 0) {
+                    map.put("firstSell", sellItem.get(0));
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    public Map<String, List<TradePlateItem>> getDepth(final String symbol, final int size) {
+        final Map<String, List<TradePlateItem>> result = new HashMap<>();
+        try {
+            final String serviceName = "SERVICE-EXCHANGE-TRADE";
+            final String url = "http://" + serviceName + "/monitor/plate?symbol=" + symbol;
+            final ResponseEntity<HashMap> resultMap = restTemplate.getForEntity(url, (Class)HashMap.class, new Object[0]);
+            Map<String, List<TradePlateItem>> map = (Map<String, List<TradePlateItem>>)resultMap.getBody();
+            final String mapStr = JSON.toJSONString(map);
+            map = JSON.parseObject(mapStr, new TypeReference<Map<String, List<TradePlateItem>>>() {}, new Feature[0]);
+            final List<TradePlateItem> askList = map.get("ask");
+            final List<TradePlateItem> bidList = map.get("bid");
+            if (bidList.size() > size) {
+                result.put("bid", bidList.subList(0, size));
+            }
+            else {
+                result.put("bid", bidList);
+            }
+            if (askList.size() > size) {
+                result.put("ask", askList.subList(0, size));
+            }
+            else {
+                result.put("ask", askList);
+            }
+        }
+        catch (Exception e) {
+            ExchangeOrderService.log.info(">>>>>>>\u83b7\u53d6\u76d8\u53e3\u4fe1\u606f\u5f02\u5e38>>>>>>>", (Throwable)e);
+            result.put("bid", new ArrayList<TradePlateItem>());
+            result.put("ask", new ArrayList<TradePlateItem>());
+        }
+        return result;
+    }
+
+    public List<ExchangeOrder> findHistoryOrdersByMemberId(final Long memberId) {
+        final Criteria<ExchangeOrder> specification = (Criteria<ExchangeOrder>)new Criteria();
+        specification.add(Restrictions.eq("memberId", memberId, false));
+        final List<ExchangeOrderStatus> list = new ArrayList<ExchangeOrderStatus>();
+        list.add(ExchangeOrderStatus.COMPLETED);
+        list.add(ExchangeOrderStatus.CANCELED);
+        list.add(ExchangeOrderStatus.OVERTIMED);
+        specification.add(Restrictions.in("status", (Collection)list, false));
+        return (List<ExchangeOrder>)this.exchangeOrderRepository.findAll(specification);
+    }
+
+    public void deleteHistoryOrdersByMemberId(final Long memberId) {
+        this.exchangeOrderRepository.deleteHistoryOrdersByMemberId(memberId);
+    }
+
+    public void delete(final ExchangeOrder exchangeOrder) {
+        this.exchangeOrderRepository.delete(exchangeOrder);
+    }
+
+    public void delete(final String orderId) {
+        this.exchangeOrderRepository.deleteById(orderId);
+    }
+
+    public ExchangeOrder findLastSellOrderByMember(final Long memberId, final String symbol) {
+        final Sort orders =Sort.by(new Sort.Order[] { new Sort.Order(Sort.Direction.DESC, "time") });
+        final PageRequest pageRequest = PageRequest.of(0, 1, orders);
+        final Criteria<ExchangeOrder> specification = (Criteria<ExchangeOrder>)new Criteria();
+        specification.add(Restrictions.eq("memberId", memberId, false));
+        specification.add(Restrictions.eq("symbol", symbol, false));
+        specification.add(Restrictions.eq("direction", ExchangeOrderDirection.SELL, true));
+        final Page<ExchangeOrder> page = (Page<ExchangeOrder>)this.exchangeOrderRepository.findAll(specification, (Pageable)pageRequest);
+        if (null != page && null != page.getContent() && page.getContent().size() > 0) {
+            return page.getContent().get(0);
+        }
+        return null;
+    }
+
+    public ExchangeOrder findLastBuyOrderByMember(final Long memberId, final String symbol) {
+        final Sort orders = Sort.by(new Sort.Order[] { new Sort.Order(Sort.Direction.DESC, "time") });
+        final PageRequest pageRequest = PageRequest.of(0, 1, orders);
+        final Criteria<ExchangeOrder> specification = (Criteria<ExchangeOrder>)new Criteria();
+        specification.add(Restrictions.eq("memberId", memberId, false));
+        specification.add(Restrictions.eq("symbol", symbol, false));
+        specification.add(Restrictions.eq("direction", ExchangeOrderDirection.BUY, true));
+        final Page<ExchangeOrder> page = (Page<ExchangeOrder>)this.exchangeOrderRepository.findAll(specification, (Pageable)pageRequest);
+        if (null != page && null != page.getContent() && page.getContent().size() > 0) {
+            return page.getContent().get(0);
+        }
+        return null;
+    }
+
+    public List<ExchangeOrder> findHistoryBuyOrdersByMemberIdAndTime(final Long memberId, final String symbol, final Long startTimestamp, final Long currentTimestamp) {
+        final Criteria<ExchangeOrder> specification = (Criteria<ExchangeOrder>)new Criteria();
+        specification.add(Restrictions.eq("memberId", memberId, false));
+        specification.add(Restrictions.eq("symbol", symbol, false));
+        specification.add(Restrictions.eq("direction", ExchangeOrderDirection.BUY, true));
+        specification.add(Restrictions.gte("time", startTimestamp, false));
+        specification.add(Restrictions.lt("time", currentTimestamp, false));
+        return (List<ExchangeOrder>)this.exchangeOrderRepository.findAll(specification);
+    }
+
+    public List<ExchangeOrder> findOpenOrdersByMemberIdAndSymbol(final Long memberId, final String symbol) {
+        final Criteria<ExchangeOrder> specification = (Criteria<ExchangeOrder>)new Criteria();
+        specification.add(Restrictions.eq("memberId", memberId, false));
+        specification.add(Restrictions.eq("symbol", symbol, false));
+        specification.add(Restrictions.eq("direction", ExchangeOrderDirection.SELL, true));
+        final List<ExchangeOrderStatus> list = new ArrayList<ExchangeOrderStatus>();
+        list.add(ExchangeOrderStatus.TRADING);
+        list.add(ExchangeOrderStatus.WAITING_TRIGGER);
+        specification.add(Restrictions.in("status", (Collection)list, false));
+        return (List<ExchangeOrder>)this.exchangeOrderRepository.findAll(specification);
+    }
+
+    public List<ExchangeOrder> findUnblockOrders(final String symbol, final Long startTime, final Long endTime) {
+        return this.exchangeOrderRepository.findUnblockOrders(symbol, startTime, endTime);
+    }
+
+    public List<ExchangeOrder> findOrdersByMemberId(final long memberId, final String symbol, final Long startTime, final Long endTime) {
+        return this.exchangeOrderRepository.findOrdersByMemberId(memberId, symbol, startTime, endTime);
+    }
+
 }

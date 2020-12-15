@@ -32,6 +32,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -74,6 +75,13 @@ public class MarketController extends BaseController {
     private CoinAreaService coinAreaService;
     @Autowired
     private LocalizationExtendService localizationExtendService;
+
+    @Autowired
+    private ContractCoinService contractCoinService;
+    @Autowired
+    private ExchangeOrderService exchangeOrderService;
+    @Autowired
+    private CoinService coincService;
 
     /**
      * 查询默认交易对儿
@@ -165,9 +173,10 @@ public class MarketController extends BaseController {
         Map<String, List<CoinThumb>> result = new HashMap<>();
         List<ExchangeCoin> recommendCoin = exchangeCoinService.findAllByFlag(1);
         List<CoinThumb> recommendThumbs = new ArrayList<>();
+        List<Coin> coins = this.coincService.findAll();
+        List<ContractCoin> contractCoins = contractCoinService.findAllEnabled();
         for (ExchangeCoin coin : recommendCoin) {
             CoinProcessor processor = coinProcessorFactory.getProcessor(coin.getSymbol());
-
             if (processor != null) {
                 CoinThumb thumb = processor.getThumb();
                 List<KLine> lines = marketService.findAllKLine(thumb.getSymbol(), firstTimeOfToday, nowTime, "1hour");
@@ -176,7 +185,24 @@ public class MarketController extends BaseController {
                     trend.add(line.getClosePrice());
                 }
                 thumb.setTrend(trend);
-                if(locale.equals(Locale.ZH_CN)){
+                if (coins != null) {
+                    for (Coin coin2 : coins) {
+                        if (coin.getCoinSymbol().equalsIgnoreCase(coin2.getName())) {
+                            thumb.setCoinSymbolImageUrl(coin2.getImg());
+                            break;
+                        }
+                    }
+                }
+                for (ContractCoin contractCoin : contractCoins) {
+                    if (contractCoin.getSymbol().equalsIgnoreCase(thumb.getSymbol())) {
+                        thumb.setContractType(contractCoin.getContractType());
+                        thumb.setCanBuyUp(contractCoin.getCanBuyUp());
+                        thumb.setCanBuyDown(contractCoin.getCanBuyDown());
+                        recommendThumbs.add(thumb);
+                        break;
+                    }
+                }
+                if (locale.equals(Locale.ZH_CN)) {
                     String cnName = localizationExtendService.getLocaleInfo("Coin", locale, coin.getCoinSymbol(), "name");
                     thumb.setCnName(StringUtils.firstNonBlank(cnName, ""));
                 }
@@ -184,7 +210,7 @@ public class MarketController extends BaseController {
             }
         }
         result.put("recommend", recommendThumbs);
-        List<CoinThumb> allThumbs = findSymbolThumb(false,null);
+        List<CoinThumb> allThumbs = findSymbolThumb(false, null);
         Collections.sort(allThumbs, (o1, o2) -> o2.getChg().compareTo(o1.getChg()));
         int limit = allThumbs.size() > 5 ? 5 : allThumbs.size();
         result.put("changeRank", allThumbs.subList(0, limit));
@@ -211,10 +237,10 @@ public class MarketController extends BaseController {
      *
      * @return
      */
-    @RequestMapping(value = "symbol-thumb", method = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(value = "symbol-thumb", method = {RequestMethod.POST, RequestMethod.GET})
     @ApiOperation(value = "获取币种缩略行情")
     @MultiDataSource(name = "second")
-    public List<CoinThumb> findSymbolThumb(Boolean isLever,Integer areaId) {
+    public List<CoinThumb> findSymbolThumb(Boolean isLever, Integer areaId) {
         List<CoinThumb> thumbs = new ArrayList<>();
         if (isLever != null && isLever) {
             List<LeverCoin> leverCoinList = leverCoinService.findByEnable(BooleanEnum.IS_TRUE);
@@ -228,16 +254,17 @@ public class MarketController extends BaseController {
             }
         } else {
             List<ExchangeCoin> coins;
-            if(areaId==null || areaId == 0){
+            if (areaId == null || areaId == 0) {
                 coins = exchangeCoinService.findByCoin(null);
-            }else{
-                coins = exchangeCoinService.findByCoin(null,areaId);
+            } else {
+                coins = exchangeCoinService.findByCoin(null, areaId);
             }
             //List<ExchangeCoin> coins = exchangeCoinService.findAllEnabled();
             for (ExchangeCoin coin : coins) {
                 CoinProcessor processor = coinProcessorFactory.getProcessor(coin.getSymbol());
                 if (processor != null) {
                     CoinThumb thumb = processor.getThumb();
+                    //thumb.setSymbolArea(coin.getSymbolArea());
                     thumbs.add(thumb);
                 }
             }
@@ -245,15 +272,25 @@ public class MarketController extends BaseController {
         return thumbs;
     }
 
-    @RequestMapping(value = "symbol-thumb-trend", method = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping({"singal-symbol-thumb"})
+    public MessageResult findSymbolThumbBySymbol(String symbol) {
+        CoinProcessor processor = this.coinProcessorFactory.getProcessor("", symbol);
+        if (processor != null) {
+            CoinThumb thumb = processor.getThumb();
+            return MessageResult.success("\u8bf7\u6c42\u6210\u529f", (Object) thumb);
+        }
+        return MessageResult.error("\u5931\u8d25");
+    }
+
+    @RequestMapping(value = "symbol-thumb-trend", method = {RequestMethod.POST, RequestMethod.GET})
     @ApiOperation(value = "获取币种行情")
     @MultiDataSource(name = "second")
-    public JSONArray findSymbolThumbWithTrend(String coinName,Integer areaId) {
+    public JSONArray findSymbolThumbWithTrend(String coinName, Integer areaId) {
         List<ExchangeCoin> coins = new ArrayList<>();
-        if(areaId==null || areaId == 0){
+        if (areaId == null || areaId == 0) {
             coins = exchangeCoinService.findByCoin(coinName);
-        }else{
-            coins = exchangeCoinService.findByCoin(coinName,areaId);
+        } else {
+            coins = exchangeCoinService.findByCoin(coinName, areaId);
         }
 
         //List<CoinThumb> thumbs = new ArrayList<>();
@@ -283,15 +320,72 @@ public class MarketController extends BaseController {
         return array;
     }
 
-    @RequestMapping(value = "symbol-thumb-price", method = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping({"contract-symbol-thumb"})
+    public List<CoinThumb> findContractSymbolThumb() {
+        List<CoinThumb> thumbs = new ArrayList<CoinThumb>();
+        List<ContractCoin> coins = (List<ContractCoin>) this.contractCoinService.findAllEnabled();
+        for (ContractCoin coin : coins) {
+            CoinProcessor processor = this.coinProcessorFactory.getProcessor("contract", coin.getSymbol());
+            if (processor != null) {
+                CoinThumb thumb = processor.getThumb();
+                if (thumb == null) {
+                    continue;
+                }
+                thumb.setContractType(coin.getContractType());
+                thumb.setCanBuyDown(coin.getCanBuyDown());
+                thumb.setCanBuyUp(coin.getCanBuyUp());
+                thumb.setCoinSymbolImageUrl(coin.getCoinSymbolImageUrl());
+                thumbs.add(thumb);
+            }
+        }
+        return thumbs;
+    }
+
+    @RequestMapping({"contract-singal-symbol-thumb"})
+    public MessageResult findContractSymbolThumbBySymbol(String symbol) {
+        CoinProcessor processor = this.coinProcessorFactory.getProcessor("contract", symbol);
+        if (processor != null) {
+            CoinThumb thumb = processor.getThumb();
+            return MessageResult.success("\u8bf7\u6c42\u6210\u529f", (Object) thumb);
+        }
+        return MessageResult.error("error");
+    }
+
+    @RequestMapping({"contract-symbol-thumb-trend"})
+    public JSONArray findContractSymbolThumbWithTrend() {
+        List<ContractCoin> coins = (List<ContractCoin>) this.contractCoinService.findAllEnabled();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(13, 0);
+        calendar.set(14, 0);
+        calendar.set(12, 0);
+        long nowTime = calendar.getTimeInMillis();
+        calendar.add(11, -24);
+        JSONArray array = new JSONArray();
+        long firstTimeOfToday = calendar.getTimeInMillis();
+        for (ContractCoin coin : coins) {
+            CoinProcessor processor = this.coinProcessorFactory.getProcessor("contract", coin.getSymbol());
+            CoinThumb thumb = processor.getThumb();
+            JSONObject json = (JSONObject) JSON.toJSON((Object) thumb);
+            List<KLine> lines = (List<KLine>) this.marketService.findAllKLine(thumb.getSymbol(), firstTimeOfToday, nowTime, "1hour", "contract");
+            JSONArray trend = new JSONArray();
+            for (KLine line : lines) {
+                trend.add((Object) line.getClosePrice());
+            }
+            json.put("trend", (Object) trend);
+            array.add((Object) json);
+        }
+        return array;
+    }
+
+    @RequestMapping(value = "symbol-thumb-price", method = {RequestMethod.POST, RequestMethod.GET})
     @ApiOperation(value = "获取Symbol价格")
     @MultiDataSource(name = "second")
     public JSONArray findSymbolThumbWithPrice(String symbol) {
         JSONArray array = new JSONArray();
         List<ExchangeCoin> coins;
-        if(StringUtils.isEmpty(symbol)){
+        if (StringUtils.isEmpty(symbol)) {
             coins = exchangeCoinService.findAllEnabled();
-        }else {
+        } else {
             coins = exchangeCoinService.findByCoin(symbol);
         }
         for (ExchangeCoin coin : coins) {
@@ -299,8 +393,8 @@ public class MarketController extends BaseController {
             if (processor != null) {
                 CoinThumb thumb = processor.getThumb();
                 JSONObject json = new JSONObject();
-                json.put("symbol",coin.getSymbol());
-                json.put("price",thumb.getCloseStr());
+                json.put("symbol", coin.getSymbol());
+                json.put("price", thumb.getCloseStr());
                 array.add(json);
             }
         }
@@ -354,6 +448,49 @@ public class MarketController extends BaseController {
         return array;
     }
 
+    @RequestMapping({"historyForAndroid"})
+    public Map<String, Object> findKHistoryForAndroid(String symbol,
+                                                      long from,
+                                                      long to,
+                                                      String resolution,
+                                                      @RequestParam(value = "source", required = false, defaultValue = "")
+                                                              String source, @RequestParam(value = "type", required = false, defaultValue = "") String type) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String period = "";
+        if (resolution.endsWith("H") || resolution.endsWith("h")) {
+            period = resolution.substring(0, resolution.length() - 1) + "hour";
+        } else if (resolution.endsWith("D") || resolution.endsWith("d")) {
+            period = resolution.substring(0, resolution.length() - 1) + "day";
+        } else if (resolution.endsWith("W") || resolution.endsWith("w")) {
+            period = resolution.substring(0, resolution.length() - 1) + "week";
+        } else if (resolution.endsWith("M") || resolution.endsWith("m")) {
+            period = resolution.substring(0, resolution.length() - 1) + "month";
+        } else {
+            Integer val = Integer.parseInt(resolution);
+            if (val < 60) {
+                period = resolution + "min";
+            } else {
+                period = val / 60 + "hour";
+            }
+        }
+        List<KLine> list = (List<KLine>) this.marketService.findAllKLine(symbol, from, to, period, source);
+        JSONArray array = new JSONArray();
+        for (KLine item : list) {
+            JSONArray group = new JSONArray();
+            group.add(0, (Object) item.getTime());
+            group.add(1, (Object) item.getOpenPrice());
+            group.add(2, (Object) item.getHighestPrice());
+            group.add(3, (Object) item.getLowestPrice());
+            group.add(4, (Object) item.getClosePrice());
+            group.add(5, (Object) item.getVolume());
+            array.add((Object) group);
+        }
+        map.put("type", type);
+        map.put("data", array);
+        return map;
+    }
+
+
     /**
      * 查询最近成交记录
      *
@@ -405,18 +542,18 @@ public class MarketController extends BaseController {
         Map<String, BigDecimal> map = new HashMap<>();
         map.put("todayAmount", coinProcessorFactory.getProcessorMap().values().stream().filter(item -> item.getThumb() != null).map(processor -> {
             BigDecimal turnover = processor.getThumb().getTurnover();
-            BigDecimal rate = coinExchangeRate.getCoinLegalRate("USD",processor.getBaseCoin());
-            return turnover.multiply(rate==null?BigDecimal.ZERO:rate);
+            BigDecimal rate = coinExchangeRate.getCoinLegalRate("USD", processor.getBaseCoin());
+            return turnover.multiply(rate == null ? BigDecimal.ZERO : rate);
         }).reduce(BigDecimal.ZERO, BigDecimal::add));
         Coin coin = coinService.findByUnit("SE");
         BigDecimal todaySeAmount = BigDecimal.ZERO;
         BigDecimal seReleaseAmount = BigDecimal.ZERO;
         BigDecimal seBurnAmount = BigDecimal.ZERO;
-        if(coin != null){
+        if (coin != null) {
             todaySeAmount = coinProcessorFactory.getProcessorListByCoin("SE").stream().filter(item -> item.getThumb() != null).map(processor -> {
                 BigDecimal turnover = processor.getThumb().getTurnover();
-                BigDecimal rate = coinExchangeRate.getCoinLegalRate("USD",processor.getBaseCoin());
-                return turnover.multiply(rate==null?BigDecimal.ZERO:rate);
+                BigDecimal rate = coinExchangeRate.getCoinLegalRate("USD", processor.getBaseCoin());
+                return turnover.multiply(rate == null ? BigDecimal.ZERO : rate);
             }).reduce(BigDecimal.ZERO, BigDecimal::add);
             seReleaseAmount = coin.getReleaseAmount();
             seBurnAmount = coin.getBurnAmount();
@@ -430,17 +567,18 @@ public class MarketController extends BaseController {
     @RequestMapping(value = "symbol-rank", method = {RequestMethod.POST, RequestMethod.GET})
     @ApiOperation(value = "获取交易所币种榜单")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="type", value = "类型", allowableValues = "0,1,2", required = true),
-            @ApiImplicitParam(name="limit", value = "数量上限", required = true)
+            @ApiImplicitParam(name = "type", value = "类型", allowableValues = "0,1,2", required = true),
+            @ApiImplicitParam(name = "limit", value = "数量上限", required = true)
     })
     public MessageResult getSymbolRank(String type, int limit) {
         DataDictionary bond = dataDictionaryService.findByBond(SysConstant.HOME_PAGE_DISPLAY_QUANTITY);
-        if(bond != null) {
+        if (bond != null) {
             try {
                 limit = Integer.parseInt(bond.getValue());
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
-        switch (type){
+        switch (type) {
             case "0":
                 return success(coinRankProcessor.getChangeRankList(limit));
             case "1":
@@ -457,19 +595,19 @@ public class MarketController extends BaseController {
     @MultiDataSource(name = "second")
     public MessageResult findCoinArea() {
         String locale = LocaleContextHolder.getLocale().toLanguageTag();
-        if(StringUtils.isEmpty(locale)){
+        if (StringUtils.isEmpty(locale)) {
             locale = Locale.ZH_CN;
         }
-        Object redisResult = redisUtil.get(SysConstant.DEFAULT_AREA+locale);
+        Object redisResult = redisUtil.get(SysConstant.DEFAULT_AREA + locale);
         if (redisResult == null) {
             List<CoinArea> coinAreas = coinAreaService.findAll();
             List<CoinArea> coinArea = new ArrayList<>();
-            for(CoinArea area:coinAreas){
-                area.setName(localizationExtendService.getLocaleInfo("CoinArea",locale,area.getId().toString(),"name"));
+            for (CoinArea area : coinAreas) {
+                area.setName(localizationExtendService.getLocaleInfo("CoinArea", locale, area.getId().toString(), "name"));
                 coinArea.add(area);
             }
             if (coinArea != null) {
-                redisUtil.set(SysConstant.DEFAULT_AREA+locale, coinArea,10, TimeUnit.MINUTES);
+                redisUtil.set(SysConstant.DEFAULT_AREA + locale, coinArea, 10, TimeUnit.MINUTES);
                 return success(coinArea);
             } else {
                 return success("");
