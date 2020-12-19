@@ -1,0 +1,16 @@
+package cn.ztuo.bitrade.exchanges.okex.enums;
+
+public enum AlgorithmEnum {
+    HMAC_SHA256("HmacSHA256"),
+    MD5("MD5");
+
+    private String algorithm;
+
+    private AlgorithmEnum(final String algorithm) {
+        this.algorithm = algorithm;
+    }
+
+    public String algorithm() {
+        return this.algorithm;
+    }
+}

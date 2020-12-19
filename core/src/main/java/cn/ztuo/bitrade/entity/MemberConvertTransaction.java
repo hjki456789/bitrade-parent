@@ -3,6 +3,8 @@ package cn.ztuo.bitrade.entity;
 import org.hibernate.validator.constraints.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.*;
 
 import org.hibernate.annotations.*;

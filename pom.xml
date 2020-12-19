@@ -30,7 +30,8 @@
         <module>contract-core</module>
         <module>contract-api</module>
 		<module>community-core</module>
-	</modules>
+        <module>contract-strategy-api</module>
+    </modules>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

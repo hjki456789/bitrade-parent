@@ -25,15 +25,13 @@ public class EncryptionUtils {
         }
     }
 
-    public static String getMd5Lower(final String str) {
+    public static String getMd5Lower( String str) {
         try {
-            final MessageDigest bmd5 = MessageDigest.getInstance("MD5");
+             MessageDigest bmd5 = MessageDigest.getInstance("MD5");
             bmd5.update(str.getBytes());
-            final StringBuilder buf = new StringBuilder();
-            final byte[] digest;
-            final byte[] b = digest = bmd5.digest();
-            for (final int i : digest) {
-                final byte value = (byte) i;
+             StringBuilder buf = new StringBuilder();
+             byte[] digest = bmd5.digest();
+            for ( int i : digest) {
                 if (i < 0) {
                     i += 256;
                 }

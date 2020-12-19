@@ -17,7 +17,8 @@ public enum ContractOrderStatus implements BaseEnum {
     STOP_LOSS("止损"),
     FOLLOW_CLOSE("跟随平仓"),
     ONE_CLICK_NO_CONFIRM("一键下单待确认"),
-    ONE_CLICK_CANCEL("一键下单取消");
+    ONE_CLICK_CANCEL("一键下单取消"),
+    ONE_CLICK_CANCEL_APPLY("一键下单取消申请");
 
     private String cnName;
 

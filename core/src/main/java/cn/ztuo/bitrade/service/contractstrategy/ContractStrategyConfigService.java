@@ -29,8 +29,8 @@ public class ContractStrategyConfigService {
         return (ContractStrategyConfig) this.contractStrategyConfigRepository.saveAndFlush(config);
     }
 
-    public int deleteById(final Long id) {
-        return this.contractStrategyConfigRepository.deleteById(id);
+    public void deleteById(final Long id) {
+        this.contractStrategyConfigRepository.deleteById(id);
     }
 
     public ContractStrategyConfig findBySymbolAndStatus(final String symbol, final CommonStatus status) {

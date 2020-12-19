@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.*;
 
 public interface ContractStrategyConfigRepository extends BaseDao<ContractStrategyConfig> {
     @Transactional
-    int deleteById(final Long p0);
+    void deleteById(final Long p0);
 
     @Query(value = "select a.* from contract_strategy_config a where a.status=:status and a.symbol = :symbol limit 1", nativeQuery = true)
     ContractStrategyConfig findBySymbolAndStatus(@Param("symbol") final String p0, @Param("status") final int p1);

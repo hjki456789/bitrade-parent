@@ -16,6 +16,10 @@ public interface ContractDoubleMemberStrategyOrderDao extends BaseDao<ContractDo
     @Query(value = "select a.* from contract_double_member_strategy_order a  WHERE a.status=0  and a.match_status not in (5,6,7)  LIMIT 1000", nativeQuery = true)
     List<ContractDoubleMemberStrategyOrder> findAllNeedCheckOrders();
 
+    @Query(value = "select a.* from contract_double_member_strategy_order a  WHERE a.status=0  and a.from_exchange_id=:fromExchangeId and a.match_status not in (5,6,7)  LIMIT 1000", nativeQuery = true)
+    List<ContractDoubleMemberStrategyOrder> findAllNeedCheckOrders(@Param("fromExchangeId") final Integer p0);
+
+
     @Transactional
     @Modifying
     @Query("UPDATE ContractDoubleMemberStrategyOrder strategyOrder SET  strategyOrder.matchStatus=:matchStatus, strategyOrder.updateTime=:updateTime  WHERE  strategyOrder.id=:id")
@@ -28,6 +32,9 @@ public interface ContractDoubleMemberStrategyOrderDao extends BaseDao<ContractDo
 
     @Query(value = "select a.* from contract_double_member_strategy_order a  WHERE a.status=0  and a.match_status in (5,6)  and a.close_match_status not in (5,6,7)  LIMIT 1000", nativeQuery = true)
     List<ContractDoubleMemberStrategyOrder> findAllNeedCheckCloseOrders();
+
+    @Query(value = "select a.* from contract_double_member_strategy_order a  WHERE a.status=0  and a.from_exchange_id=:fromExchangeId and a.match_status in (5,6)  and a.close_match_status not in (5,6,7)  LIMIT 1000", nativeQuery = true)
+    List<ContractDoubleMemberStrategyOrder> findAllNeedCheckCloseOrders(@Param("fromExchangeId") final Integer p0);
 
     @Transactional
     @Modifying

@@ -5,6 +5,8 @@ import java.math.*;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "member_team")

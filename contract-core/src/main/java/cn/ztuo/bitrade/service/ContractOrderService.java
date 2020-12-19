@@ -345,4 +345,13 @@ public class ContractOrderService extends BaseService<ContractExchangeOrder> {
         specification.add((Criterion) Restrictions.eq("member", memberId, true));
         return (Page<ContractExchangeOrder>) this.contractOrderRepository.findAll((Specification) specification, (Pageable) pageRequest);
     }
+
+    public List<ContractExchangeOrder> findOneClickOrdersByStatus(final ContractOrderStatus status) {
+        final Criteria<ContractExchangeOrder> specification = (Criteria<ContractExchangeOrder>)new Criteria();
+        if (null != status) {
+            specification.add((Criterion)Restrictions.eq("status", (Object)status, true));
+        }
+        specification.add((Criterion)Restrictions.eq("isOneClickOrder", (Object)1, true));
+        return (List<ContractExchangeOrder>)this.contractOrderRepository.findAll((Specification)specification);
+    }
 }

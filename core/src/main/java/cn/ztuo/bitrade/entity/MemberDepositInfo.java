@@ -8,6 +8,8 @@ import java.util.*;
 import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table

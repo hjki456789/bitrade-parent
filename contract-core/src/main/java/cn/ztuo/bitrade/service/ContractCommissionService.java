@@ -36,7 +36,7 @@ public class ContractCommissionService {
     protected JPAQueryFactory queryFactory;
 
     public Page<ContractCommissionInfo> findAll(final Predicate predicate, final Pageable pageable) {
-        return (Page<ContractCommissionInfo>) this.contractCommissionRepository.findAll(predicate, pageable);
+        return this.contractCommissionRepository.findAll(predicate, pageable);
     }
 
     @Transactional(readOnly = true)

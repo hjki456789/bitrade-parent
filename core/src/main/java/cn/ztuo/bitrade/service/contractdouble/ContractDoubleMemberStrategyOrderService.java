@@ -34,6 +34,11 @@ public class ContractDoubleMemberStrategyOrderService {
         return this.contractDoubleMemberStrategyOrderDao.findAllNeedCheckOrders();
     }
 
+
+    public List<ContractDoubleMemberStrategyOrder> findAllNeedCheckOrders(final Integer fromExchangeId) {
+        return this.contractDoubleMemberStrategyOrderDao.findAllNeedCheckOrders(fromExchangeId);
+    }
+
     @Transactional(rollbackFor = {Exception.class})
     public int updateMatchStatus(final Long id, final int matchStatus) {
         return this.contractDoubleMemberStrategyOrderDao.updateMatchStatus(id, matchStatus, new Date());
@@ -60,6 +65,11 @@ public class ContractDoubleMemberStrategyOrderService {
     public List<ContractDoubleMemberStrategyOrder> findAllNeedCheckCloseOrders() {
         return this.contractDoubleMemberStrategyOrderDao.findAllNeedCheckCloseOrders();
     }
+
+    public List<ContractDoubleMemberStrategyOrder> findAllNeedCheckCloseOrders(final Integer fromExchangeId) {
+        return this.contractDoubleMemberStrategyOrderDao.findAllNeedCheckCloseOrders(fromExchangeId);
+    }
+
 
     @Transactional(rollbackFor = {Exception.class})
     public int updateCloseMatchStatus(final Long id, final int closeMatchStatus) {
