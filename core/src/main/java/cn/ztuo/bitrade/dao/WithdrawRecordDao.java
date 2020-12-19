@@ -4,9 +4,11 @@ import cn.ztuo.bitrade.constant.WithdrawStatus;
 import cn.ztuo.bitrade.dao.base.BaseDao;
 import cn.ztuo.bitrade.entity.Coin;
 import cn.ztuo.bitrade.entity.WithdrawRecord;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -34,4 +36,12 @@ public interface WithdrawRecordDao extends BaseDao<WithdrawRecord> {
     @Query(value = "SELECT  ifnull(SUM(a.total_amount),0) from withdraw_record a  where a.coin_id=:unit  and a.member_id=:memberId AND a.status =:status", nativeQuery = true)
     BigDecimal sumMemberWithdrawByUnitAndStatus(@Param("memberId") final long p0, @Param("unit") final String p1, @Param("status") final int p2);
 
+
+    @Query("select a from WithdrawRecord a where a.status = 3 and a.withdrawType = 0")
+    List<WithdrawRecord> findByStatusAndType();
+
+    @Transactional
+    @Modifying
+    @Query("update WithdrawRecord withdrawRecord set withdrawRecord.withdrawType =:withdrawType, withdrawRecord.txHash =:txHash where withdrawRecord.id =:id")
+    int updateTypeAndHash(@Param("id") final long p0, @Param("withdrawType") final int p1, @Param("txHash") final String p2);
 }

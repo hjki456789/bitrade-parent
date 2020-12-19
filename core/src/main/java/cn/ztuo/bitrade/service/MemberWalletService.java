@@ -102,6 +102,36 @@ public class MemberWalletService extends BaseService {
         }
     }
 
+    @Transactional(rollbackFor = { Exception.class })
+    public MessageResult recharge(final Coin coin, final String address, final BigDecimal amount, final String txid) {
+        final MemberWallet wallet = this.findByCoinAndAddress(coin, address);
+        if (wallet == null) {
+            return new MessageResult(500, "wallet cannot be null");
+        }
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            return new MessageResult(500, "amount must large then 0");
+        }
+        final MemberDeposit deposit = new MemberDeposit();
+        deposit.setAddress(address);
+        deposit.setAmount(amount);
+        deposit.setMemberId(wallet.getMemberId());
+        deposit.setTxid(txid);
+        deposit.setUnit(wallet.getCoin().getUnit());
+        this.depositDao.save(deposit);
+        wallet.setBalance(wallet.getBalance().add(amount));
+        final MemberTransaction transaction = new MemberTransaction();
+        transaction.setAmount(amount);
+        transaction.setSymbol(wallet.getCoin().getUnit());
+        transaction.setAddress(wallet.getAddress());
+        transaction.setMemberId(wallet.getMemberId());
+        transaction.setType(TransactionType.RECHARGE);
+        transaction.setFee(BigDecimal.ZERO);
+        this.transactionService.save(transaction);
+        final MessageResult messageResult = new MessageResult(0, "success");
+        messageResult.setData(wallet.getMemberId());
+        return messageResult;
+    }
+
     /**
      * 钱包充值
      *

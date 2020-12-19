@@ -273,4 +273,17 @@ public class WithdrawRecordService extends BaseService {
     public BigDecimal sumMemberWithdrawByUnitAndStatus(final long memberId, final String unit, final int status) {
         return this.withdrawApplyDao.sumMemberWithdrawByUnitAndStatus(memberId, unit, status);
     }
+
+
+
+    @Transactional(readOnly = true)
+    public List<WithdrawRecord> findAllByStatusAndType() {
+        return this.withdrawApplyDao.findByStatusAndType();
+    }
+
+    @Transactional(rollbackFor = { Exception.class })
+    public int updateWithdrawTypeAndTxHash(final long id, final int withdrawType, final String txHash) {
+        return this.withdrawApplyDao.updateTypeAndHash(id, withdrawType, txHash);
+    }
+
 }

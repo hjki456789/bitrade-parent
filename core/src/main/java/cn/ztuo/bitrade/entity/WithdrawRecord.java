@@ -92,4 +92,8 @@ public class WithdrawRecord {
      */
     @Enumerated(EnumType.ORDINAL)
     private BooleanEnum isQuick;
+
+    private Integer withdrawType;
+    private String txHash;
+    private int platType;
 }
