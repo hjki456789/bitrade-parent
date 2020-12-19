@@ -31,7 +31,8 @@
         <module>contract-api</module>
 		<module>community-core</module>
         <module>contract-strategy-api</module>
-    </modules>
+		<module>deposit-api</module>
+	</modules>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
