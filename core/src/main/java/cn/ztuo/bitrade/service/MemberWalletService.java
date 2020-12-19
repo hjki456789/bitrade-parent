@@ -1,7 +1,7 @@
 package cn.ztuo.bitrade.service;
 
 import cn.ztuo.bitrade.constant.TransactionType;
-import cn.ztuo.bitrade.dao.MemberWalletRelationDao;
+import cn.ztuo.bitrade.dao.*;
 import cn.ztuo.bitrade.entity.MemberWallet;
 import cn.ztuo.bitrade.entity.QMember;
 import cn.ztuo.bitrade.entity.QMemberWallet;
@@ -10,9 +10,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQuery;
 import cn.ztuo.bitrade.constant.BooleanEnum;
 import cn.ztuo.bitrade.constant.PageModel;
-import cn.ztuo.bitrade.dao.CoinDao;
-import cn.ztuo.bitrade.dao.MemberDepositDao;
-import cn.ztuo.bitrade.dao.MemberWalletDao;
 import cn.ztuo.bitrade.dto.MemberWalletDTO;
 import cn.ztuo.bitrade.entity.*;
 import cn.ztuo.bitrade.entity.Order;
@@ -50,6 +47,9 @@ public class MemberWalletService extends BaseService {
     private MemberDepositDao depositDao;
     @Autowired
     private LocaleMessageSourceService messageSource;
+
+    @Autowired
+    private CoinCollectLogDao coinCollectLogDao;
 
     public static final Integer limit = 1000;
 
@@ -601,6 +601,23 @@ public class MemberWalletService extends BaseService {
     @Transactional(rollbackFor = {Exception.class})
     public void increaseBalanceWithoutVersion(final Long walletId, final BigDecimal amount) {
         this.memberWalletDao.increaseBalanceWithoutVersion(walletId, amount);
+    }
+
+    @Transactional(rollbackFor = { Exception.class })
+    public List<MemberDeposit> getMemberNeedCollectInfos() {
+        final List<MemberDeposit> memberDeposits = this.depositDao.findByCollectType(0);
+        return memberDeposits;
+    }
+
+
+    @Transactional(rollbackFor = { Exception.class })
+    public int updateCollectType(final long id, final int collectType) {
+        return this.depositDao.updateCollectType(id, collectType);
+    }
+
+    @Transactional(rollbackFor = { Exception.class })
+    public void saveCollectLog(final CoinCollectLog coinCollectLog) {
+        this.coinCollectLogDao.save(coinCollectLog);
     }
 
 }

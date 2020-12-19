@@ -58,10 +58,9 @@ public class MemberConsumer {
             MemberWallet memberWallet = memberWalletService.findByCoinUnitAndMemberId(record.key(), json.getLong
                     ("uid"));
             Assert.notNull(memberWallet, "wallet null");
-            if(StringUtils.isNotEmpty(coin.getMasterAddress())){
+            if (StringUtils.isNotEmpty(coin.getMasterAddress())) {
                 memberWallet.setAddress(UUIDUtil.getIdFromMemberIdAndUnit(memberWallet.getMemberId(), coin.getUnit()));
-            }
-            else {
+            } else {
                 String account = "U" + json.getLong("uid");
 
                 List<CoinChainRelation> relations = coin.getCoinChainRelationList();

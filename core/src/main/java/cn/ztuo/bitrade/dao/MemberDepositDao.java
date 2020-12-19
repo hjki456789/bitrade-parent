@@ -34,5 +34,7 @@ public interface MemberDepositDao extends JpaRepository<MemberDeposit, Long>, Qu
     @Query("update MemberDeposit set collect_type = :collectType where id =:id")
     int updateCollectType(@Param("id") final Long id, @Param("collectType") final Integer p1);
 
+    List<MemberDeposit> findByCollectType(final int p0);
+
 
 }
